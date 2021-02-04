@@ -48,6 +48,28 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+.simple-text {
+  font-family: Lobster, cursive;
+  text-transform: inherit !important;
+  font-size: 25px !important;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'),
+    url('assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Lobster'), local('Lobster-Regular'),
+    url('assets/fonts/Lobster/Lobster-Regular.ttf') format('truetype');
+}
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
