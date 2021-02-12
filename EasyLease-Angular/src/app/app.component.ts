@@ -8,8 +8,8 @@ import {faTwitter, faFacebook} from '@fortawesome/free-brands-svg-icons';
 })
 export class AppComponent {
   title = 'Easy Lease';
-  faCog = faCog;
-  faLongArrowAltUp = faLongArrowAltUp;
-  faTwitter = faTwitter;
-  faFacebook = faFacebook;
+  // faCog = faCog;
+  // faLongArrowAltUp = faLongArrowAltUp;
+  // faTwitter = faTwitter;
+  // faFacebook = faFacebook;
 }

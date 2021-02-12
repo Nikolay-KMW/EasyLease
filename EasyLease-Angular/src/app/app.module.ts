@@ -6,15 +6,17 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {AuthModule} from 'src/app/auth/auth.module';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    MatSliderModule,
-    FontAwesomeModule,
+    BrowserModule,
+    //    BrowserAnimationsModule,
+    //    MatSliderModule,
+    //    FontAwesomeModule,
+    AuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

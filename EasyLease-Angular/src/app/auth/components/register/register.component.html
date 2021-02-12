@@ -1,0 +1,63 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 col-xs-12">
+                <div class="card">
+                    <div class="card-header card-header-info">
+                        <h1 class="card-title register-title">Зарегистрироваться</h1>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-xs-center">
+                            <a [routerLink]="[ '/login' ]">Имеете акаунт?</a>
+                        </p>
+                        Backend errors are here
+                        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                            <fieldset>
+                                <fieldset class="example-form">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Email</mat-label>
+                                        <input type="email" matInput [formControl]="emailFormControl"
+                                            placeholder="Ex. pat@example.com">
+                                        <mat-error
+                                            *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                                            Please enter a valid email address
+                                        </mat-error>
+                                        <mat-error *ngIf="emailFormControl.hasError('required')">
+                                            Email is <strong>required</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <input type="text" class="form-control form-control-lg"
+                                        placeholder="Имя пользователя" formControlName="username">
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <input type="text" class="form-control form-control-lg"
+                                        placeholder="Єлектронная почта" formControlName="email">
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <input type="password" class="form-control form-control-lg" placeholder="Пароль"
+                                        formControlName="password">
+                                </fieldset>
+                            </fieldset>
+                            <button class="btn btn-md btn-info pull-right" type="submit">Зарегистрироваться</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <form class="example-form">
+    <mat-form-field class="example-full-width">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
+        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+            Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+            Email is <strong>required</strong>
+        </mat-error>
+    </mat-form-field>
+</form> -->
