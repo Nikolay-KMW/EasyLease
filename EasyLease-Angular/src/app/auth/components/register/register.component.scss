@@ -1,11 +1,22 @@
+.card-title {
+  @extend .register-title;
+}
+
 .register-title {
   font-size: xx-large;
-  text-align: center;
 }
+// .btn {
+//   float: right;
+// }
 
 .pull-right {
   float: right;
 }
+
+// .mwl {
+//   min-width: 150px;
+//   max-width: 500px;
+// }
 
 .example-form {
   min-width: 150px;

@@ -7,10 +7,17 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  form?: FormGroup;
+  form: FormGroup;
   emailFormControl: FormControl;
 
   constructor(private fb: FormBuilder) {
+
+    this.form = this.fb.group({
+      username: ['', Validators.required],
+      email: '',
+      password: '',
+    });
+
     this.emailFormControl = new FormControl('', [
       Validators.required,
       Validators.email,
@@ -23,12 +30,6 @@ export class RegisterComponent implements OnInit {
 
   initializeForm(): void {
     console.log('initializeForm');
-
-    this.form = this.fb.group({
-      username: ['', Validators.required],
-      email: '',
-      password: '',
-    });
   }
 
   onSubmit(): void {

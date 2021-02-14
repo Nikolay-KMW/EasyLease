@@ -1,14 +1,14 @@
-<div class="main-content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6 offset-md-3 col-xs-12">
+<div class="main-content d-flex h-100">
+    <div class="container-fluid align-self-center mw-sm">
+        <div class="row justify-content-center">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h1 class="card-title register-title">Зарегистрироваться</h1>
+                        <h1 class="card-title text-center">Регистрация</h1>
                     </div>
                     <div class="card-body">
-                        <p class="text-xs-center">
-                            <a [routerLink]="[ '/login' ]">Имеете акаунт?</a>
+                        <p class="text-center">
+                            <a [routerLink]="[ '/login' ]">Имеете аккаунт?</a>
                         </p>
                         Backend errors are here
                         <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -33,7 +33,7 @@
                                 </fieldset>
                                 <fieldset class="form-group">
                                     <input type="text" class="form-control form-control-lg"
-                                        placeholder="Єлектронная почта" formControlName="email">
+                                        placeholder="Электронная почта" formControlName="email">
                                 </fieldset>
                                 <fieldset class="form-group">
                                     <input type="password" class="form-control form-control-lg" placeholder="Пароль"
@@ -41,6 +41,9 @@
                                 </fieldset>
                             </fieldset>
                             <button class="btn btn-md btn-info pull-right" type="submit">Зарегистрироваться</button>
+                            <button class="btn btn-md btn-info">
+                                <a [routerLink]="[ '/login' ]">Имеете аккаунт?</a>
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -48,6 +51,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!-- <form class="example-form">
     <mat-form-field class="example-full-width">

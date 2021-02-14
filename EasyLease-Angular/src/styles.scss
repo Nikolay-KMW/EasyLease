@@ -39,6 +39,14 @@ $EasyLease-Angular-theme: mat-light-theme(
 
 /* You can add global styles to this file, and also import other style files */
 
+// Min. width limitation. Example: mw-sm, mw-md, mw-lg, mw-xl
+// Link: https://dou.ua/lenta/articles/bootstrap-classes/
+@each $name, $width in $container-max-widths {
+  .mw-#{$name} {
+    max-width: #{$width};
+  }
+}
+
 html,
 body {
   height: 100%;
