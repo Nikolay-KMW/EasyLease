@@ -1,29 +1,21 @@
-.card-title {
-  @extend .register-title;
-}
+// .card-title {
+//   @extend .register-title;
+// }
 
 .register-title {
   font-size: xx-large;
 }
-// .btn {
-//   float: right;
-// }
 
 .pull-right {
   float: right;
 }
 
-// .mwl {
+// .example-form {
 //   min-width: 150px;
 //   max-width: 500px;
+//   width: 100%;
 // }
 
-.example-form {
-  min-width: 150px;
-  max-width: 500px;
-  width: 100%;
-}
-
-.example-full-width {
-  width: 100%;
-}
+// .example-full-width {
+//   width: 100%;
+// }

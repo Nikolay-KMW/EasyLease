@@ -4,46 +4,76 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h1 class="card-title text-center">Регистрация</h1>
+                        <h1 class="card-title text-center register-title">Регистрация</h1>
                     </div>
                     <div class="card-body">
-                        <p class="text-center">
-                            <a [routerLink]="[ '/login' ]">Имеете аккаунт?</a>
-                        </p>
                         Backend errors are here
                         <form [formGroup]="form" (ngSubmit)="onSubmit()">
                             <fieldset>
-                                <fieldset class="example-form">
-                                    <mat-form-field class="example-full-width">
-                                        <mat-label>Email</mat-label>
-                                        <input type="email" matInput [formControl]="emailFormControl"
-                                            placeholder="Ex. pat@example.com">
+                                <fieldset class="form-group">
+                                    <mat-form-field>
+                                        <mat-label>Имя</mat-label>
+                                        <input type="text" matInput [formControl]="username"
+                                            placeholder="Имя пользователя">
                                         <mat-error
-                                            *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-                                            Please enter a valid email address
+                                            *ngIf="!username.hasError('minLength', 'maxLength') && !username.hasError('required')">
+                                            Имя должно быть от {{minName}} до {{maxName}} символов
                                         </mat-error>
-                                        <mat-error *ngIf="emailFormControl.hasError('required')">
-                                            Email is <strong>required</strong>
+                                        <mat-error *ngIf="username.hasError('required')">
+                                            Имя <strong>обязательное</strong>
                                         </mat-error>
                                     </mat-form-field>
                                 </fieldset>
                                 <fieldset class="form-group">
-                                    <input type="text" class="form-control form-control-lg"
-                                        placeholder="Имя пользователя" formControlName="username">
+                                    <mat-form-field>
+                                        <mat-label>Электронная почта</mat-label>
+                                        <input type="email" matInput [formControl]="email"
+                                            placeholder="Электронная почта">
+                                        <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
+                                            Пожалуйста введите корректный Email адрес
+                                        </mat-error>
+                                        <mat-error *ngIf="email.hasError('required')">
+                                            Email <strong>обязательный</strong>
+                                        </mat-error>
+                                    </mat-form-field>
                                 </fieldset>
                                 <fieldset class="form-group">
-                                    <input type="text" class="form-control form-control-lg"
-                                        placeholder="Электронная почта" formControlName="email">
+                                    <mat-form-field>
+                                        <mat-label>Пароль</mat-label>
+                                        <input type="password" matInput [formControl]="password" placeholder="Пароль">
+                                        <mat-error
+                                            *ngIf="!password.hasError('minLength') && !password.hasError('required')">
+                                            Пароль должен быть не меньше {{minPassword}} символов
+                                        </mat-error>
+                                        <mat-error *ngIf="password.hasError('required')">
+                                            Пароль <strong>обязательный</strong>
+                                        </mat-error>
+                                    </mat-form-field>
                                 </fieldset>
                                 <fieldset class="form-group">
-                                    <input type="password" class="form-control form-control-lg" placeholder="Пароль"
-                                        formControlName="password">
+                                    <mat-form-field>
+                                        <mat-label>Пароль</mat-label>
+                                        <input type="password" matInput [formControl]="confirmPassword"
+                                            placeholder="Пароль">
+                                        <mat-error
+                                            *ngIf="!confirmPassword.hasError('required') && confirmPassword.hasError('mismatch')">
+                                            Пароли не совпадают
+                                        </mat-error>
+                                        <mat-error *ngIf="confirmPassword.hasError('required')">
+                                            Пароль <strong>обязательный</strong>
+                                        </mat-error>
+                                    </mat-form-field>
                                 </fieldset>
                             </fieldset>
-                            <button class="btn btn-md btn-info pull-right" type="submit">Зарегистрироваться</button>
-                            <button class="btn btn-md btn-info">
-                                <a [routerLink]="[ '/login' ]">Имеете аккаунт?</a>
-                            </button>
+                            <div class="row justify-content-between m-1">
+                                <button class="btn btn-md btn-info order-sm-1 order-md-2 h5 col-12 col-md-auto"
+                                    type="submit"><i class="material-icons material-icons md-24">person_add</i>
+                                    &nbsp; Зарегистрироваться</button>
+                                <button class="btn btn-md btn-warning order-sm-2 order-md-1 h5 col-12 col-md-auto"
+                                    [routerLink]="[ '/login' ]">
+                                    <i class="material-icons material-icons md-24">person</i> &nbsp; Войти
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -51,18 +81,3 @@
         </div>
     </div>
 </div>
-
-
-
-<!-- <form class="example-form">
-    <mat-form-field class="example-full-width">
-        <mat-label>Email</mat-label>
-        <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
-        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-            Please enter a valid email address
-        </mat-error>
-        <mat-error *ngIf="emailFormControl.hasError('required')">
-            Email is <strong>required</strong>
-        </mat-error>
-    </mat-form-field>
-</form> -->

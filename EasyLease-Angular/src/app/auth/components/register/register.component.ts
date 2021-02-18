@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 
 @Component({
   selector: 'el-register',
@@ -8,20 +8,28 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   form: FormGroup;
-  emailFormControl: FormControl;
+
+  username: FormControl;
+  email: FormControl;
+  password: FormControl;
+  confirmPassword: FormControl;
+
+  minName: number = 2;
+  maxName: number = 50;
+  minPassword: number = 5;
 
   constructor(private fb: FormBuilder) {
-
     this.form = this.fb.group({
-      username: ['', Validators.required],
-      email: '',
-      password: '',
+      username: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(this.minPassword)]],
+      confirmPassword: ['', [Validators.required, (control: AbstractControl) => this.confirm(control, 'password')]],
     });
 
-    this.emailFormControl = new FormControl('', [
-      Validators.required,
-      Validators.email,
-    ]);
+    this.username = this.form.controls['username'] as FormControl;
+    this.email = this.form.controls['email'] as FormControl;
+    this.password = this.form.controls['password'] as FormControl;
+    this.confirmPassword = this.form.controls['confirmPassword'] as FormControl;
   }
 
   ngOnInit(): void {
@@ -35,4 +43,14 @@ export class RegisterComponent implements OnInit {
   onSubmit(): void {
     console.log(this.form?.value);
   }
+
+  confirm(control: AbstractControl, matchPassword: string): ValidationErrors | null {
+    return control.parent?.get(matchPassword)?.value === control.value ? null : {mismatch: true};
+  }
 }
+
+// export class ConfirmValidators {
+//   static confirm(control: AbstractControl, matchPassword: string): ValidationErrors | null {
+//     return control.parent?.get(matchPassword)?.value === control.value ? null : {mismatch: true};
+//   }
+// }
