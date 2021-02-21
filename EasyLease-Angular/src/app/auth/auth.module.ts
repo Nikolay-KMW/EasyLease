@@ -3,7 +3,8 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
 import {ReactiveFormsModule} from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 //import {RegisterComponent} from './components/register/register.component';
 import {RegisterComponent} from 'src/app/auth/components/register/register.component';
@@ -11,7 +12,14 @@ import {RegisterComponent} from 'src/app/auth/components/register/register.compo
 const routes: Routes = [{path: 'register', component: RegisterComponent}];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   declarations: [RegisterComponent],
 })
 export class AuthModule {}

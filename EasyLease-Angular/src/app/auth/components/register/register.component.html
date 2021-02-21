@@ -66,12 +66,15 @@
                                 </fieldset>
                             </fieldset>
                             <div class="row justify-content-between m-1">
-                                <button class="btn btn-md btn-info order-sm-1 order-md-2 h5 col-12 col-md-auto"
-                                    type="submit"><i class="material-icons material-icons md-24">person_add</i>
-                                    &nbsp; Зарегистрироваться</button>
-                                <button class="btn btn-md btn-warning order-sm-2 order-md-1 h5 col-12 col-md-auto"
-                                    [routerLink]="[ '/login' ]">
-                                    <i class="material-icons material-icons md-24">person</i> &nbsp; Войти
+                                <button class="btn btn-lg btn-info order-sm-1 order-md-2 col-12 col-md-auto"
+                                    type="submit" mat-raised-button color="accent">
+                                    <mat-icon class="md-24">person_add</mat-icon>
+                                    &nbsp; Зарегистрироваться
+                                </button>
+                                <button class="btn btn-lg btn-custom order-sm-2 order-md-1 col-12 col-md-auto"
+                                    [routerLink]="[ '/login' ]" mat-raised-button color="primary">
+                                    <mat-icon class="md-24">person</mat-icon>
+                                    &nbsp; Войти
                                 </button>
                             </div>
                         </form>

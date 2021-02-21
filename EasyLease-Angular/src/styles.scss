@@ -6,16 +6,23 @@
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 
+// My custom typography config
+$custom-typography: mat-typography-config(
+  $font-family: 'Roboto, Helvetica Neue, sans-serif',
+  $headline: mat-typography-level(32px, 48px, 700),
+  $input: mat-typography-level(16px, 1.125, 400),
+);
+
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat-core();
+@include mat-core($custom-typography);
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$EasyLease-Angular-primary: mat-palette($mat-indigo);
-$EasyLease-Angular-accent: mat-palette($mat-purple, A200, A100, A400);
+$EasyLease-Angular-primary: mat-palette($mat-light-blue);
+$EasyLease-Angular-accent: mat-palette($mat-cyan, 500, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $EasyLease-Angular-warn: mat-palette($mat-red);
@@ -53,8 +60,42 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  //font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+// !!!!!! temporary bug fix )
+.content {
+  margin-top: 100px;
+}
+
+//==================== Style for my custom button ===========================
+.btn-custom,
+.btn-custom:hover,
+.btn-custom:active,
+.btn-custom:visited,
+.btn-custom:focus,
+.btn-custom:active:focus {
+  background-color: #00b0ff !important;
+  ////box-shadow: #02a2b8 !important;
+}
+
+.btn-custom:focus,
+.btn-custom:hover,
+.btn-custom:active,
+.btn-custom:not(:disabled):not(.disabled):active,
+.btn-custom:not(:disabled):not(.disabled).active,
+.show > .btn-custom.dropdown-toggle,
+.btn-custom:not(:disabled):not(.disabled):active:focus,
+.btn-custom:not(:disabled):not(.disabled).active:focus {
+  background-color: #029be2 !important;
+  ////border-color: #00bcd4 !important;
+  //box-shadow: 0rem 0.5rem 1rem 0.1rem #9cddfc !important;
+
+  -webkit-box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
+  -moz-box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
+  box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
+}
+//===================================================================
 
 .simple-text {
   font-family: Lobster, cursive;
@@ -143,8 +184,3 @@ body {
   color: rgba(255, 255, 255, 0.3);
 }
 //===================================================================
-
-// !!!!!! temporary bug fix )
-.content {
-  margin-top: 100px;
-}
