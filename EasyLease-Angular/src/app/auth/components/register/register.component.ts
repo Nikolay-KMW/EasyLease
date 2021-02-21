@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {registerAction} from '../../store/actions/register.action';
 
 @Component({
   selector: 'el-register',
@@ -18,7 +20,7 @@ export class RegisterComponent implements OnInit {
   maxName: number = 50;
   minPassword: number = 5;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private store: Store) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
       email: ['', [Validators.required, Validators.email]],
@@ -42,6 +44,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     console.log(this.form?.value);
+    this.store.dispatch(registerAction(this.form.value));
   }
 
   confirm(control: AbstractControl, matchPassword: string): ValidationErrors | null {
