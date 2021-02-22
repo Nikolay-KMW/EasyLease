@@ -1,7 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {Store} from '@ngrx/store';
+import {fas, faSpinner} from '@fortawesome/free-solid-svg-icons';
+import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+
+import {AppStateInterface} from 'src/app/shared/types/appState.interface';
+import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
+import {AuthService} from '../../services/auth.service';
 import {registerAction} from '../../store/actions/register.action';
+import {isSubmittingSelector} from '../../store/selectors';
 
 @Component({
   selector: 'el-register',
@@ -9,42 +16,57 @@ import {registerAction} from '../../store/actions/register.action';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
+  isSubmitting$: Observable<boolean>;
+
   form: FormGroup;
 
-  username: FormControl;
+  userName: FormControl;
   email: FormControl;
   password: FormControl;
   confirmPassword: FormControl;
 
   minName: number = 2;
-  maxName: number = 50;
+  maxName: number = 20;
   minPassword: number = 5;
 
-  constructor(private fb: FormBuilder, private store: Store) {
+  spinner = faSpinner;
+  fas = fas;
+
+  constructor(private fb: FormBuilder, private store: Store<AppStateInterface>, private authService: AuthService) {
     this.form = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
+      userName: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(this.minPassword)]],
       confirmPassword: ['', [Validators.required, (control: AbstractControl) => this.confirm(control, 'password')]],
     });
 
-    this.username = this.form.controls['username'] as FormControl;
+    this.userName = this.form.controls['userName'] as FormControl;
     this.email = this.form.controls['email'] as FormControl;
     this.password = this.form.controls['password'] as FormControl;
     this.confirmPassword = this.form.controls['confirmPassword'] as FormControl;
+
+    this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
   }
 
   ngOnInit(): void {
-    this.initializeForm();
+    // this.initializeForm();
+    // this.initializeValues();
   }
 
-  initializeForm(): void {
-    console.log('initializeForm');
-  }
+  // initializeValues(): void {
+  //   //this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+  // }
+
+  // initializeForm(): void {
+  //   //console.log('initializeForm');
+  // }
 
   onSubmit(): void {
     console.log(this.form?.value);
     this.store.dispatch(registerAction(this.form.value));
+    this.authService.register(this.form.value).subscribe((currentUser: CurrentUserInterface) => {
+      console.log('currentUser', currentUser);
+    });
   }
 
   confirm(control: AbstractControl, matchPassword: string): ValidationErrors | null {

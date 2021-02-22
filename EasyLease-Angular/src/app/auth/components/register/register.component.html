@@ -13,13 +13,13 @@
                                 <fieldset class="form-group">
                                     <mat-form-field>
                                         <mat-label>Имя</mat-label>
-                                        <input type="text" matInput [formControl]="username"
+                                        <input type="text" matInput [formControl]="userName"
                                             placeholder="Имя пользователя">
                                         <mat-error
-                                            *ngIf="!username.hasError('minLength', 'maxLength') && !username.hasError('required')">
+                                            *ngIf="!userName.hasError('minLength', 'maxLength') && !userName.hasError('required')">
                                             Имя должно быть от {{minName}} до {{maxName}} символов
                                         </mat-error>
-                                        <mat-error *ngIf="username.hasError('required')">
+                                        <mat-error *ngIf="userName.hasError('required')">
                                             Имя <strong>обязательное</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -67,9 +67,12 @@
                             </fieldset>
                             <div class="row justify-content-between m-1">
                                 <button class="btn btn-lg btn-info order-sm-1 order-md-2 col-12 col-md-auto"
-                                    type="submit" mat-raised-button color="accent">
+                                    type="submit" mat-raised-button color="accent" [disabled]="isSubmitting$ | async">
+                                    <fa-icon [icon]="spinner" size="lg" [pulse]="true" *ngIf="isSubmitting$ | async">
+                                    </fa-icon>
+                                    &nbsp;
                                     <mat-icon class="md-24">person_add</mat-icon>
-                                    &nbsp; Зарегистрироваться
+                                    &nbsp; Зарегистрироваться &nbsp;
                                 </button>
                                 <button class="btn btn-lg btn-custom order-sm-2 order-md-1 col-12 col-md-auto"
                                     [routerLink]="[ '/login' ]" mat-raised-button color="primary">

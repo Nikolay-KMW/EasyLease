@@ -9,6 +9,8 @@ import {StoreModule} from '@ngrx/store';
 import {AuthModule} from 'src/app/auth/auth.module';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from 'src/environments/environment';
+import {AuthService} from './auth/services/auth.service';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,6 +22,7 @@ import {environment} from 'src/environments/environment';
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     // FontAwesomeModule,
     AuthModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
