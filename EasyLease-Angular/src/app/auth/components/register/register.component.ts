@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {fas, faSpinner} from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
+//import {request} from 'http';
 import {Observable} from 'rxjs';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
@@ -9,6 +10,7 @@ import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {AuthService} from '../../services/auth.service';
 import {registerAction} from '../../store/actions/register.action';
 import {isSubmittingSelector} from '../../store/selectors';
+import {RegisterRequestInterface} from '../../types/registerRequest.interface';
 
 @Component({
   selector: 'el-register',
@@ -20,7 +22,7 @@ export class RegisterComponent implements OnInit {
 
   form: FormGroup;
 
-  userName: FormControl;
+  username: FormControl;
   email: FormControl;
   password: FormControl;
   confirmPassword: FormControl;
@@ -34,13 +36,13 @@ export class RegisterComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private store: Store<AppStateInterface>, private authService: AuthService) {
     this.form = this.fb.group({
-      userName: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
+      username: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(this.minPassword)]],
       confirmPassword: ['', [Validators.required, (control: AbstractControl) => this.confirm(control, 'password')]],
     });
 
-    this.userName = this.form.controls['userName'] as FormControl;
+    this.username = this.form.controls['username'] as FormControl;
     this.email = this.form.controls['email'] as FormControl;
     this.password = this.form.controls['password'] as FormControl;
     this.confirmPassword = this.form.controls['confirmPassword'] as FormControl;
@@ -63,10 +65,11 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     console.log(this.form?.value);
-    this.store.dispatch(registerAction(this.form.value));
-    this.authService.register(this.form.value).subscribe((currentUser: CurrentUserInterface) => {
-      console.log('currentUser', currentUser);
-    });
+
+    const request: RegisterRequestInterface = {
+      user: this.form.value,
+    };
+    this.store.dispatch(registerAction({request}));
   }
 
   confirm(control: AbstractControl, matchPassword: string): ValidationErrors | null {

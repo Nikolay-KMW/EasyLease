@@ -13,13 +13,13 @@
                                 <fieldset class="form-group">
                                     <mat-form-field>
                                         <mat-label>Имя</mat-label>
-                                        <input type="text" matInput [formControl]="userName"
+                                        <input type="text" matInput [formControl]="username"
                                             placeholder="Имя пользователя">
                                         <mat-error
-                                            *ngIf="!userName.hasError('minLength', 'maxLength') && !userName.hasError('required')">
+                                            *ngIf="!username.hasError('minLength', 'maxLength') && !username.hasError('required')">
                                             Имя должно быть от {{minName}} до {{maxName}} символов
                                         </mat-error>
-                                        <mat-error *ngIf="userName.hasError('required')">
+                                        <mat-error *ngIf="username.hasError('required')">
                                             Имя <strong>обязательное</strong>
                                         </mat-error>
                                     </mat-form-field>
