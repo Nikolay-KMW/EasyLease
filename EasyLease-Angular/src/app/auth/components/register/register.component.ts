@@ -2,14 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {fas, faSpinner} from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
-//import {request} from 'http';
 import {Observable} from 'rxjs';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
-import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
+import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
 import {AuthService} from '../../services/auth.service';
 import {registerAction} from '../../store/actions/register.action';
-import {isSubmittingSelector} from '../../store/selectors';
+import {isSubmittingSelector, validationErrorsSelected} from '../../store/selectors';
 import {RegisterRequestInterface} from '../../types/registerRequest.interface';
 
 @Component({
@@ -19,6 +18,7 @@ import {RegisterRequestInterface} from '../../types/registerRequest.interface';
 })
 export class RegisterComponent implements OnInit {
   isSubmitting$: Observable<boolean>;
+  backendErrors$: Observable<BackendErrorInterface | null>;
 
   form: FormGroup;
 
@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
 
   minName: number = 2;
   maxName: number = 20;
-  minPassword: number = 5;
+  minPassword: number = 8;
 
   spinner = faSpinner;
   fas = fas;
@@ -48,6 +48,7 @@ export class RegisterComponent implements OnInit {
     this.confirmPassword = this.form.controls['confirmPassword'] as FormControl;
 
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+    this.backendErrors$ = this.store.pipe(select(validationErrorsSelected));
   }
 
   ngOnInit(): void {
@@ -55,16 +56,8 @@ export class RegisterComponent implements OnInit {
     // this.initializeValues();
   }
 
-  // initializeValues(): void {
-  //   //this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
-  // }
-
-  // initializeForm(): void {
-  //   //console.log('initializeForm');
-  // }
-
   onSubmit(): void {
-    console.log(this.form?.value);
+    //console.log(this.form?.value);
 
     const request: RegisterRequestInterface = {
       user: this.form.value,
