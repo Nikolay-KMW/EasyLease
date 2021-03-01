@@ -15,7 +15,6 @@ export class BackendErrorMessageComponent implements OnInit {
   @Input('formControlForBackendError') formControlProps?: FormControl;
 
   errorMessage: string | undefined;
-  state: boolean = true;
 
   constructor() {}
 
@@ -24,9 +23,8 @@ export class BackendErrorMessageComponent implements OnInit {
       this.errorMessage = this.backendErrorsProps[this.namePropertyProps]?.join(', ');
     }
 
-    if (this.state && this.errorMessage !== undefined) {
-      this.state = false;
-      this.formControlProps?.setErrors({backendErrorMessage: true});
+    if (this.errorMessage !== undefined) {
+      setTimeout(() => this.formControlProps?.setErrors({backendErrorMessage: true}));
     }
 
     // Object.keys(this.backendErrorsProps as BackendErrorInterface).map((name: string) => {

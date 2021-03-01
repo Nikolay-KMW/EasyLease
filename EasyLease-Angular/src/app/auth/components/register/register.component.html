@@ -29,7 +29,6 @@
                                         <mat-error *ngIf="username.hasError('required')">
                                             Имя <strong>обязательное</strong>
                                         </mat-error>
-
                                     </mat-form-field>
                                 </fieldset>
                                 <fieldset class="form-group">
@@ -75,10 +74,13 @@
                                         <mat-label>Пароль</mat-label>
                                         <input type="password" matInput [formControl]="confirmPassword"
                                             placeholder="Пароль">
-                                        <el-backend-error-message *ngIf="(backendErrors$ | async)!"
-                                            [backendErrors]="(backendErrors$ | async)!" nameProperty="confirmPassword"
-                                            [formControlForBackendError]="confirmPassword">
-                                        </el-backend-error-message>
+                                        <mat-error>
+                                            <el-backend-error-message *ngIf="(backendErrors$ | async)!"
+                                                [backendErrors]="(backendErrors$ | async)!"
+                                                nameProperty="confirmPassword"
+                                                [formControlForBackendError]="confirmPassword">
+                                            </el-backend-error-message>
+                                        </mat-error>
                                         <mat-error
                                             *ngIf="!confirmPassword.hasError('required') && confirmPassword.hasError('mismatch')">
                                             Пароли не совпадают
