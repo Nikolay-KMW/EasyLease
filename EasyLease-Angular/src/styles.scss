@@ -69,36 +69,53 @@ body {
 }
 
 //==================== Style for my custom button ===========================
-.btn-custom,
+
+.btn-custom {
+  background-color: #00b0ff;
+}
+
 .btn-custom:hover,
-.btn-custom:active,
 .btn-custom:visited,
 .btn-custom:focus,
-.btn-custom:active:focus {
-  background-color: #00b0ff !important;
-  ////box-shadow: #02a2b8 !important;
-}
-
-.btn-custom:focus,
-.btn-custom:hover,
 .btn-custom:active,
-.btn-custom:not(:disabled):not(.disabled):active,
-.btn-custom:not(:disabled):not(.disabled).active,
-.show > .btn-custom.dropdown-toggle,
-.btn-custom:not(:disabled):not(.disabled):active:focus,
-.btn-custom:not(:disabled):not(.disabled).active:focus {
+.btn-custom:active:focus {
   background-color: #029be2 !important;
-  ////border-color: #00bcd4 !important;
-  //box-shadow: 0rem 0.5rem 1rem 0.1rem #9cddfc !important;
 
-  -webkit-box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
-  -moz-box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
-  box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
+  -webkit-box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3);
+  -moz-box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3);
+  box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3);
 }
 
-:disabled {
-  box-shadow: none !important;
-}
+// .btn-custom,
+// .btn-custom:hover,
+// .btn-custom:active,
+// .btn-custom:visited,
+// .btn-custom:focus,
+// .btn-custom:active:focus {
+//   background-color: #00b0ff !important;
+//   ////box-shadow: #02a2b8 !important;
+// }
+
+// .btn-custom:focus,
+// .btn-custom:hover,
+// .btn-custom:active,
+// .btn-custom:not(:disabled):not(.disabled):active,
+// .btn-custom:not(:disabled):not(.disabled).active,
+// .show > .btn-custom.dropdown-toggle,
+// .btn-custom:not(:disabled):not(.disabled):active:focus,
+// .btn-custom:not(:disabled):not(.disabled).active:focus {
+//   background-color: #029be2 !important;
+//   ////border-color: #00bcd4 !important;
+//   //box-shadow: 0rem 0.5rem 1rem 0.1rem #9cddfc !important;
+
+//   -webkit-box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
+//   -moz-box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
+//   box-shadow: 0px 10px 20px 0px rgba(0, 176, 255, 0.3) !important;
+// }
+
+// :disabled {
+//   box-shadow: none !important;
+// }
 //===================================================================
 
 .simple-text {

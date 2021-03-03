@@ -1,11 +1,12 @@
-// .card-title {
-//   @extend .register-title;
-// }
-
 .register-title {
   font-size: xx-large;
 }
 
-.pull-right {
-  float: right;
+.card-header-info {
+  @extend .gradient-custom-info;
+  //background: #00bcd4 !important;
+}
+
+.gradient-custom-info {
+  background: linear-gradient(90deg, #00b0ff, #00bcd4) !important;
 }

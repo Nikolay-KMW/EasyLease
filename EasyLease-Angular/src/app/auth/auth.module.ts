@@ -8,6 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {StoreModule} from '@ngrx/store';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {EffectsModule} from '@ngrx/effects';
+import {MatRippleModule} from '@angular/material/core';
 
 //import {RegisterComponent} from './components/register/register.component';
 import {RegisterComponent} from 'src/app/auth/components/register/register.component';
@@ -17,8 +18,12 @@ import {RegisterEffect} from './store/effects/register.effect';
 import {BackendErrorMessageModule} from '../shared/modules/backendErrorMessage/backendErrorMessage.module';
 import {PersistanceService} from '../shared/services/persistance.service';
 import {LoginEffect} from './store/effects/login.effect';
+import {LoginComponent} from './components/login/login.component';
 
-const routes: Routes = [{path: 'register', component: RegisterComponent}];
+const routes: Routes = [
+  {path: 'register', component: RegisterComponent},
+  {path: 'login', component: LoginComponent},
+];
 
 @NgModule({
   imports: [
@@ -30,10 +35,11 @@ const routes: Routes = [{path: 'register', component: RegisterComponent}];
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatRippleModule,
     FontAwesomeModule,
     BackendErrorMessageModule,
   ],
-  declarations: [RegisterComponent],
+  declarations: [RegisterComponent, LoginComponent],
   providers: [AuthService, PersistanceService],
 })
 export class AuthModule {}

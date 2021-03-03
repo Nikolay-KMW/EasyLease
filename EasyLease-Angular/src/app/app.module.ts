@@ -8,6 +8,7 @@ import {StoreModule} from '@ngrx/store';
 import {HttpClientModule} from '@angular/common/http';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {MatRippleModule} from '@angular/material/core';
 
 import {AuthModule} from 'src/app/auth/auth.module';
 import {environment} from 'src/environments/environment';
@@ -22,6 +23,7 @@ import {environment} from 'src/environments/environment';
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     EffectsModule.forRoot([]),
     // FontAwesomeModule,
+    MatRippleModule,
     AuthModule,
     HttpClientModule,
   ],

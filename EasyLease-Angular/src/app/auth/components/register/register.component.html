@@ -18,7 +18,8 @@
                                             placeholder="Имя пользователя">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
-                                                [backendErrors]="(backendErrors$ | async)!" nameProperty="username"
+                                                [backendErrors]="(backendErrors$ | async)!"
+                                                namePropertyBackendError="username"
                                                 [formControlForBackendError]="username">
                                             </el-backend-error-message>
                                         </mat-error>
@@ -38,8 +39,8 @@
                                             placeholder="Электронная почта">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
-                                                [backendErrors]="(backendErrors$ | async)!" nameProperty="email"
-                                                [formControlForBackendError]="email">
+                                                [backendErrors]="(backendErrors$ | async)!"
+                                                namePropertyBackendError="email" [formControlForBackendError]="email">
                                             </el-backend-error-message>
                                         </mat-error>
                                         <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
@@ -56,12 +57,13 @@
                                         <input type="password" matInput [formControl]="password" placeholder="Пароль">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
-                                                [backendErrors]="(backendErrors$ | async)!" nameProperty="password"
+                                                [backendErrors]="(backendErrors$ | async)!"
+                                                namePropertyBackendError="password"
                                                 [formControlForBackendError]="password">
                                             </el-backend-error-message>
                                         </mat-error>
                                         <mat-error
-                                            *ngIf="!password.hasError('minLength') && !password.hasError('required') && !username.hasError('backendErrorMessage')">
+                                            *ngIf="!password.hasError('minLength') && !password.hasError('required') && !password.hasError('backendErrorMessage')">
                                             Пароль должен быть не меньше {{minPassword}} символов
                                         </mat-error>
                                         <mat-error *ngIf="password.hasError('required')">
@@ -77,7 +79,7 @@
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
-                                                nameProperty="confirmPassword"
+                                                namePropertyBackendError="confirmPassword"
                                                 [formControlForBackendError]="confirmPassword">
                                             </el-backend-error-message>
                                         </mat-error>
@@ -93,8 +95,7 @@
                             </fieldset>
                             <div class="row justify-content-between m-1">
                                 <button class="btn btn-lg btn-info order-sm-1 order-md-2 col-12 col-md-auto"
-                                    type="submit" mat-raised-button color="accent"
-                                    [disabled]="(isSubmitting$ | async) || form.invalid">
+                                    type="submit" matRipple [disabled]="(isSubmitting$ | async) || form.invalid">
                                     <fa-icon [icon]="spinner" size="lg" [pulse]="true" *ngIf="(isSubmitting$ | async)">
                                     </fa-icon>
                                     &nbsp;
@@ -102,7 +103,7 @@
                                     &nbsp; Зарегистрироваться &nbsp;
                                 </button>
                                 <button class="btn btn-lg btn-custom order-sm-2 order-md-1 col-12 col-md-auto"
-                                    [routerLink]="[ '/login' ]" mat-raised-button color="primary">
+                                    [routerLink]="[ '/login' ]" matRipple>
                                     <mat-icon class="md-24">person</mat-icon>
                                     &nbsp; Войти
                                 </button>

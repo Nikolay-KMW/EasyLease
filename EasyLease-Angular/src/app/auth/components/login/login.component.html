@@ -1,0 +1,74 @@
+<div class="main-content d-flex h-100">
+    <div class="container-fluid align-self-center mw-sm">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-info">
+                        <h1 class="card-title text-center register-title">Войти</h1>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                            <fieldset>
+                                <fieldset class="form-group">
+                                    <mat-form-field>
+                                        <mat-label>Электронная почта</mat-label>
+                                        <input type="email" matInput [formControl]="email"
+                                            placeholder="Электронная почта">
+                                        <mat-error>
+                                            <el-backend-error-message *ngIf="(backendErrors$ | async)!"
+                                                [backendErrors]="(backendErrors$ | async)!"
+                                                namePropertyBackendError="email or password"
+                                                [formControlForBackendError]="email">
+                                            </el-backend-error-message>
+                                        </mat-error>
+                                        <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
+                                            Пожалуйста введите корректный Email адрес
+                                        </mat-error>
+                                        <mat-error *ngIf="email.hasError('required')">
+                                            Email <strong>обязательный</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <mat-form-field>
+                                        <mat-label>Пароль</mat-label>
+                                        <input type="password" matInput [formControl]="password" placeholder="Пароль">
+                                        <mat-error>
+                                            <el-backend-error-message *ngIf="(backendErrors$ | async)!"
+                                                [backendErrors]="(backendErrors$ | async)!"
+                                                namePropertyBackendError="email or password"
+                                                [formControlForBackendError]="password">
+                                            </el-backend-error-message>
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="!password.hasError('minLength') && !password.hasError('required') && !password.hasError('backendErrorMessage')">
+                                            Пароль должен быть не меньше {{minPassword}} символов
+                                        </mat-error>
+                                        <mat-error *ngIf="password.hasError('required')">
+                                            Пароль <strong>обязательный</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </fieldset>
+                            </fieldset>
+                            <div class="row justify-content-between m-1">
+                                <button class="btn btn-lg btn-custom order-sm-1 order-md-2 col-12 col-md-auto"
+                                    type="submit" matRipple [disabled]="(isSubmitting$ | async) || form.invalid">
+                                    <fa-icon [icon]="spinner" size="lg" [pulse]="true" *ngIf="(isSubmitting$ | async)">
+                                    </fa-icon>
+                                    &nbsp;
+                                    <mat-icon class="md-24">person</mat-icon>
+                                    &nbsp; Войти &nbsp;
+                                </button>
+                                <button class="btn btn-lg btn-info order-sm-2 order-md-1 col-12 col-md-auto"
+                                    [routerLink]="[ '/register' ]" matRipple>
+                                    <mat-icon class="md-24">person_add</mat-icon>
+                                    &nbsp; Зарегистрироваться
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
