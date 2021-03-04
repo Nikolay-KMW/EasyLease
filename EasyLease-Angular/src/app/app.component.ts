@@ -7,7 +7,7 @@ import {faTwitter, faFacebook} from '@fortawesome/free-brands-svg-icons';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  title = 'Easy Lease';
+  brandName = 'Easy Lease';
   // faCog = faCog;
   // faLongArrowAltUp = faLongArrowAltUp;
   // faTwitter = faTwitter;

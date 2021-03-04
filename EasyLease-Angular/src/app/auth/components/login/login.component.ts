@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {fas, faSpinner} from '@fortawesome/free-solid-svg-icons';
+import {faSpinner} from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
@@ -28,7 +28,6 @@ export class LoginComponent implements OnInit {
   minPassword: number = 8;
 
   spinner = faSpinner;
-  //fas = fas;
 
   constructor(private fb: FormBuilder, private store: Store<AppStateInterface>, private authService: AuthService) {
     this.form = this.fb.group({

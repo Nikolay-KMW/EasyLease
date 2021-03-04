@@ -1,0 +1,63 @@
+<mat-toolbar class="navbar fixed-top bg-custom" color="primary">
+    <div class="container">
+        <button matRipple class="btn btn-custom btn-lg btn-round btn-fab">
+            <mat-icon class="bar-icon">menu</mat-icon>
+        </button>
+        &nbsp;&nbsp;
+        <div class="logo d-none d-sm-block">
+            <a [routerLink]="['/']" class="brand-text logo-normal">
+                {{brandNameProps}}
+            </a>
+            <mat-icon class="md-24 logo-icon">bubble_chart</mat-icon>
+        </div>
+        <span class="spacer"></span>
+        <div class="pull-right">
+            <button matRipple class=" btn btn-custom btn-lg btn-round btn-fab">
+                <mat-icon class="md-24 bar-icon">favorite</mat-icon>
+            </button>
+            <button matRipple class="btn btn-custom btn-lg btn-round btn-fab">
+                <mat-icon class=" md-24 bar-icon">share</mat-icon>
+            </button>
+            <ng-container *ngIf="!(isLoggedIn$ | async)">
+                <button matRipple class="btn btn-custom btn-lg" [routerLink]="['/articles/new']">
+                    <mat-icon class=" md-24 bar-icon">share</mat-icon>
+                    &nbsp;Новое объявление
+                </button>
+
+                <!-- <li class="">
+                    <a [routerLink]="['/articles/new']" class="">
+                        <mat-icon class=" md-24 bar-icon">share</mat-icon>
+                        &nbsp;Новое объявление
+                    </a>
+                </li>
+                <li class="">
+                    <a [routerLink]="['/settings']" class="">
+                        <mat-icon class=" md-24 bar-icon">share</mat-icon>
+                        &nbsp;Настройки
+                    </a>
+                </li>
+                <li class="">
+                    <a [routerLink]="['/profiles', (currentUser$ | async)!.username]" class="">
+                        <img [src]="(currentUser$ | async)!.image" class="user-pic" />
+                        &nbsp;{{(currentUser$ | async)!.username}}
+                    </a>
+                </li> -->
+            </ng-container>
+            <ng-container *ngIf="isAnonymous$ | async">
+                <li class="nav-item">
+                    <a [routerLink]="['/login']" class="nav-link">
+                        <mat-icon class=" md-24 bar-icon">share</mat-icon>
+                        &nbsp;Войти
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['/register']" class="nav-link">
+                        <mat-icon class=" md-24 bar-icon">share</mat-icon>
+                        &nbsp;Зарегистрироваться
+                    </a>
+                </li>
+            </ng-container>
+
+        </div>
+    </div>
+</mat-toolbar>
