@@ -2,29 +2,18 @@
   flex: 1 1 auto;
 }
 
-.bg-custom {
+.bg-light-blue {
   background-color: #00b0ff !important;
   height: 65px;
 }
 
-// .menu-toolbar {
-//   padding: 4px;
-//   padding-top: 3px;
-//   position: relative;
-//   display: flex;
-//   align-items: center;
-// }
-
-// .md-30 {
-//   font-size: 32px;
-// }
-
-.logo-icon {
-  text-shadow: 0px 0px 6px rgba(211, 248, 0, 0.7), 2px 4px 3px rgba(139, 2, 2, 0.336);
+.link-text {
+  font-size: 18px;
 }
 
-.bar-icon {
-  text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.7), 2px 5px 3px rgba(0, 0, 0, 0.3);
+.logo-icon {
+  color: aquamarine;
+  text-shadow: 0px 0px 6px rgba(211, 248, 0, 0.7), 2px 4px 3px rgba(139, 2, 2, 0.336);
 }
 
 .brand-text {
@@ -34,13 +23,4 @@
   color: azure;
   text-decoration: underline;
   text-shadow: 1px 1px 2px rgba(3, 0, 155, 0.685), 0 0 25px rgb(208, 255, 0), 0 0 5px rgb(1, 32, 172);
-
-  //text-shadow: 1px 1px 2px rgba(0, 3, 155, 0.685), 0 0 25px rgb(208, 255, 0), 0 0 5px rgb(0, 139, 97);
-
-  //text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
-  //text-shadow: 2px 2px 5px rgb(0, 81, 255);
-
-  //text-shadow: 0px 0px 6px rgba(211, 248, 0, 0.7), 2px 4px 3px rgba(139, 2, 2, 0.336);
-  //text-shadow: 1px 1px 2px rgba(9, 65, 187, 0.685), 0 0 25px rgb(255, 166, 0), 0 0 5px darkblue;
-  //text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.7), 2px 4px 3px rgba(0, 0, 0, 0.3);
 }

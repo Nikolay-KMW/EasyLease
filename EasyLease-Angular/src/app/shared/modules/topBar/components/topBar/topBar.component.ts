@@ -1,4 +1,15 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {faAsymmetrik} from '@fortawesome/free-brands-svg-icons';
+import {
+  faBars,
+  faPencilAlt,
+  faSignInAlt,
+  faSmile,
+  faUser,
+  faUserCog,
+  faUserPlus,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
@@ -17,6 +28,15 @@ export class TopBarComponent implements OnInit {
   isLoggedIn$: Observable<boolean | null>;
   isAnonymous$: Observable<boolean>;
   currentUser$: Observable<CurrentUserInterface | null>;
+
+  faUser: IconDefinition = faUser;
+  faUserPlus: IconDefinition = faUserPlus;
+  faUserCog: IconDefinition = faUserCog;
+  faSmile: IconDefinition = faSmile;
+  faBars: IconDefinition = faBars;
+  faAsymmetrik: IconDefinition = faAsymmetrik;
+  faPencilAlt: IconDefinition = faPencilAlt;
+  faSignInAlt: IconDefinition = faSignInAlt;
 
   constructor(private store: Store<AppStateInterface>) {
     this.isLoggedIn$ = this.store.pipe(select(isLoggedInSelected));

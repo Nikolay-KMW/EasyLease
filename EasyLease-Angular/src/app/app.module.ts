@@ -12,6 +12,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {AuthModule} from 'src/app/auth/auth.module';
 import {environment} from 'src/environments/environment';
 import {TopBarModule} from './shared/modules/topBar/topBar.module';
+import {ExampleOfExperimentsModule} from './shared/modules/exampleOfExperiments/exampleOfExperiments.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,6 +26,7 @@ import {TopBarModule} from './shared/modules/topBar/topBar.module';
     // FontAwesomeModule,
     AuthModule,
     TopBarModule,
+    ExampleOfExperimentsModule,
     HttpClientModule,
   ],
   providers: [],

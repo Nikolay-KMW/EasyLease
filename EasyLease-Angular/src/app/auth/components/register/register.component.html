@@ -94,18 +94,22 @@
                                 </fieldset>
                             </fieldset>
                             <div class="row justify-content-between m-1">
-                                <button class="btn btn-lg btn-info order-sm-1 order-md-2 col-12 col-md-auto"
+                                <button
+                                    class="btn btn-lg btn-info order-sm-1 order-md-2 col-12 col-md-auto px-2 px-sm-4"
                                     type="submit" matRipple [disabled]="(isSubmitting$ | async) || form.invalid">
-                                    <fa-icon [icon]="spinner" size="lg" [pulse]="true" *ngIf="(isSubmitting$ | async)">
+                                    <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="icon-shadow-small px-1"
+                                        *ngIf="(isSubmitting$ | async)">
                                     </fa-icon>
-                                    &nbsp;
-                                    <mat-icon class="md-24">person_add</mat-icon>
-                                    &nbsp; Зарегистрироваться &nbsp;
+                                    <fa-icon [icon]="faUserPlus" size="lg" class="col icon-shadow-small px-1"></fa-icon>
+                                    Зарегистрироваться
                                 </button>
-                                <button class="btn btn-lg btn-custom order-sm-2 order-md-1 col-12 col-md-auto"
+                                <button
+                                    class="btn btn-lg btn-light-blue order-sm-2 order-md-1 col-12 col-md-auto px-2 px-sm-4"
                                     [routerLink]="[ '/login' ]" matRipple>
-                                    <mat-icon class="md-24">person</mat-icon>
-                                    &nbsp; Войти
+                                    <fa-icon [icon]="faSignInAlt" size="lg" class="col icon-shadow-small px-2"
+                                        transform="grow-4">
+                                    </fa-icon>
+                                    Войти
                                 </button>
                             </div>
                         </form>

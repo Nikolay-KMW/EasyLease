@@ -1,63 +1,73 @@
-<mat-toolbar class="navbar fixed-top bg-custom" color="primary">
-    <div class="container">
-        <button matRipple class="btn btn-custom btn-lg btn-round btn-fab">
-            <mat-icon class="bar-icon">menu</mat-icon>
+<mat-toolbar class="navbar fixed-top bg-light-blue" color="primary">
+    <div class="container px-0">
+        <button matRipple class="btn btn-lb-recessed btn-lg btn-round btn-fab">
+            <fa-icon [icon]="faBars" class="icon-drop-shadow px-1" transform="grow-3">
+            </fa-icon>
         </button>
         &nbsp;&nbsp;
-        <div class="logo d-none d-sm-block">
+        <a [routerLink]="['/']">
+            <fa-icon [icon]="faAsymmetrik" class="icon-drop-shadow px-1" size="2x" style="color:aquamarine">
+            </fa-icon>
+        </a>
+        &nbsp;&nbsp;
+        <div class="logo d-none d-md-block">
             <a [routerLink]="['/']" class="brand-text logo-normal">
                 {{brandNameProps}}
             </a>
-            <mat-icon class="md-24 logo-icon">bubble_chart</mat-icon>
         </div>
         <span class="spacer"></span>
         <div class="pull-right">
-            <button matRipple class=" btn btn-custom btn-lg btn-round btn-fab">
-                <mat-icon class="md-24 bar-icon">favorite</mat-icon>
-            </button>
-            <button matRipple class="btn btn-custom btn-lg btn-round btn-fab">
-                <mat-icon class=" md-24 bar-icon">share</mat-icon>
-            </button>
-            <ng-container *ngIf="!(isLoggedIn$ | async)">
-                <button matRipple class="btn btn-custom btn-lg" [routerLink]="['/articles/new']">
-                    <mat-icon class=" md-24 bar-icon">share</mat-icon>
-                    &nbsp;Новое объявление
+            <ng-container *ngIf="isLoggedIn$ | async">
+                <button matRipple [routerLink]="['/articles/new']" class="btn btn-lb-recessed mx-0 px-4">
+                    <div class="row">
+                        <fa-icon [icon]="faPencilAlt" size="2x" class="col icon-drop-shadow px-2">
+                        </fa-icon>
+                        <div class="col d-none d-lg-block text-capitalize link-text px-1">
+                            Новое объявление
+                        </div>
+                    </div>
                 </button>
-
-                <!-- <li class="">
-                    <a [routerLink]="['/articles/new']" class="">
-                        <mat-icon class=" md-24 bar-icon">share</mat-icon>
-                        &nbsp;Новое объявление
-                    </a>
-                </li>
-                <li class="">
-                    <a [routerLink]="['/settings']" class="">
-                        <mat-icon class=" md-24 bar-icon">share</mat-icon>
-                        &nbsp;Настройки
-                    </a>
-                </li>
-                <li class="">
-                    <a [routerLink]="['/profiles', (currentUser$ | async)!.username]" class="">
-                        <img [src]="(currentUser$ | async)!.image" class="user-pic" />
-                        &nbsp;{{(currentUser$ | async)!.username}}
-                    </a>
-                </li> -->
+                <button matRipple [routerLink]="['/settings']" class="btn btn-lb-recessed mx-0 px-4">
+                    <div class="row">
+                        <fa-icon [icon]="faUserCog" size="2x" class="col icon-drop-shadow px-2">
+                        </fa-icon>
+                        <div class="col d-none d-lg-block text-capitalize link-text px-1">
+                            Настройки
+                        </div>
+                    </div>
+                </button>
+                <button matRipple [routerLink]="['/profiles', ((currentUser$ | async)!.username)]"
+                    class="btn btn-lb-recessed mx-0 px-4">
+                    <div class="row">
+                        <fa-icon [icon]="faSmile" size="2x" class="col icon-drop-shadow px-2">
+                        </fa-icon>
+                        <div class="col d-none d-md-block text-capitalize link-text px-1">
+                            <img [src]="((currentUser$ | async)!.image)" class="d-block w-100" />
+                            {{((currentUser$ | async)!.username)}}
+                        </div>
+                    </div>
+                </button>
             </ng-container>
             <ng-container *ngIf="isAnonymous$ | async">
-                <li class="nav-item">
-                    <a [routerLink]="['/login']" class="nav-link">
-                        <mat-icon class=" md-24 bar-icon">share</mat-icon>
-                        &nbsp;Войти
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a [routerLink]="['/register']" class="nav-link">
-                        <mat-icon class=" md-24 bar-icon">share</mat-icon>
-                        &nbsp;Зарегистрироваться
-                    </a>
-                </li>
+                <button matRipple [routerLink]="['/login']" class="btn btn-lb-recessed mx-0 px-4">
+                    <div class="row">
+                        <fa-icon [icon]="faSignInAlt" size="2x" class="col icon-drop-shadow px-2" transform="grow-5">
+                        </fa-icon>
+                        <div class="col d-none d-md-block text-capitalize link-text px-1">
+                            Войти
+                        </div>
+                    </div>
+                </button>
+                <button matRipple [routerLink]="['/register']" class="btn btn-lb-recessed mx-0 px-4">
+                    <div class="row">
+                        <fa-icon [icon]="faUserPlus" size="2x" class="col icon-drop-shadow px-2">
+                        </fa-icon>
+                        <div class="col d-none d-md-block text-capitalize link-text px-1">
+                            Зарегистрироваться
+                        </div>
+                    </div>
+                </button>
             </ng-container>
-
         </div>
     </div>
 </mat-toolbar>
