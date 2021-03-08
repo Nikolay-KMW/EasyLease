@@ -15,6 +15,7 @@ import {TopBarModule} from './shared/modules/topBar/topBar.module';
 import {ExampleOfExperimentsModule} from './shared/modules/exampleOfExperiments/exampleOfExperiments.module';
 import {PersistanceService} from './shared/services/persistance.service';
 import {AuthInterceptor} from './shared/services/authinterceptor.service';
+import {GlobalFeedModule} from './globalFeed/globalFeed.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +29,7 @@ import {AuthInterceptor} from './shared/services/authinterceptor.service';
     // FontAwesomeModule,
     AuthModule,
     TopBarModule,
+    GlobalFeedModule,
     ExampleOfExperimentsModule,
     HttpClientModule,
   ],
