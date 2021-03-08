@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {faSignInAlt, faSpinner, faUser, faUserPlus, IconDefinition} from '@fortawesome/free-solid-svg-icons';
+import {faSignInAlt, faSpinner, faUserPlus, IconDefinition} from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
@@ -28,7 +28,6 @@ export class LoginComponent implements OnInit {
   minPassword: number = 8;
 
   faSpinner: IconDefinition = faSpinner;
-  faUser: IconDefinition = faUser;
   faSignInAlt: IconDefinition = faSignInAlt;
   faUserPlus: IconDefinition = faUserPlus;
 

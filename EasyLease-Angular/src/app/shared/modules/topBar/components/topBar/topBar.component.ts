@@ -5,7 +5,6 @@ import {
   faPencilAlt,
   faSignInAlt,
   faSmile,
-  faUser,
   faUserCog,
   faUserPlus,
   IconDefinition,
@@ -29,7 +28,6 @@ export class TopBarComponent implements OnInit {
   isAnonymous$: Observable<boolean>;
   currentUser$: Observable<CurrentUserInterface | null>;
 
-  faUser: IconDefinition = faUser;
   faUserPlus: IconDefinition = faUserPlus;
   faUserCog: IconDefinition = faUserCog;
   faSmile: IconDefinition = faSmile;
