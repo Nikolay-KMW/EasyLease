@@ -12,7 +12,7 @@
                         <form [formGroup]="form" (ngSubmit)="onSubmit()">
                             <fieldset>
                                 <fieldset class="form-group">
-                                    <mat-form-field>
+                                    <mat-form-field [color]="username.valid && 'accent'">
                                         <mat-label>Имя</mat-label>
                                         <input type="text" matInput [formControl]="username"
                                             placeholder="Имя пользователя">
@@ -33,7 +33,7 @@
                                     </mat-form-field>
                                 </fieldset>
                                 <fieldset class="form-group">
-                                    <mat-form-field>
+                                    <mat-form-field [color]="email.valid && 'accent'">
                                         <mat-label>Электронная почта</mat-label>
                                         <input type="email" matInput [formControl]="email"
                                             placeholder="Электронная почта">
@@ -52,7 +52,7 @@
                                     </mat-form-field>
                                 </fieldset>
                                 <fieldset class="form-group">
-                                    <mat-form-field>
+                                    <mat-form-field [color]="password.valid && 'accent'">
                                         <mat-label>Пароль</mat-label>
                                         <input type="password" matInput [formControl]="password" placeholder="Пароль">
                                         <mat-error>
@@ -72,7 +72,7 @@
                                     </mat-form-field>
                                 </fieldset>
                                 <fieldset class="form-group">
-                                    <mat-form-field>
+                                    <mat-form-field [color]="confirmPassword.valid && 'accent'">
                                         <mat-label>Пароль</mat-label>
                                         <input type="password" matInput [formControl]="confirmPassword"
                                             placeholder="Пароль">
