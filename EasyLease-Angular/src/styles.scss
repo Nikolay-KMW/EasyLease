@@ -1,6 +1,3 @@
-// The styles of Template - Material Dashboard Angular - v2.5.0
-@import 'assets/scss/material-dashboard.scss';
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
@@ -21,11 +18,11 @@ $custom-typography: mat-typography-config(
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$EasyLease-Angular-primary: mat-palette($mat-light-blue);
-$EasyLease-Angular-accent: mat-palette($mat-green, A400, A100, A400);
+$EasyLease-Angular-primary: mat-palette($mat-blue);
+$EasyLease-Angular-accent: mat-palette($mat-green, A400, A200, A400);
 
 // The warn palette is optional (defaults to red).
-$EasyLease-Angular-warn: mat-palette($mat-deep-orange, A400, $text: 100);
+$EasyLease-Angular-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
@@ -46,6 +43,29 @@ $EasyLease-Angular-theme: mat-light-theme(
 
 /* You can add global styles to this file, and also import other style files */
 
+//===========================================================================
+//================= Bootstrap brand color customization =====================
+
+$theme-bg-color: white;
+$theme-fg-color: black;
+
+/*     brand Colors              */
+$brand-primary: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !default;
+$brand-secondary: $theme-bg-color !default;
+$brand-info: mat-color(mat-palette($mat-cyan, 600)) !default;
+$brand-success: mat-color(map-get($EasyLease-Angular-theme, accent), 600) !default;
+$brand-warning: mat-color(mat-palette($mat-orange, 500)) !default;
+$brand-danger: mat-color(map-get($EasyLease-Angular-theme, warn), 500) !default;
+$brand-rose: mat-color(mat-palette($mat-pink, A400)) !default;
+$brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !default;
+//$brand-inverse:              mat-color(map-get($EasyLease-Angular-theme, primary), 500) !default;
+
+// The styles of Template - Material Dashboard Angular - v2.5.0
+@import 'assets/scss/material-dashboard.scss';
+
+//===========================================================================
+//============================ My Utilities =================================
+
 // Min. width limitation. Example: mw-sm, mw-md, mw-lg, mw-xl
 // Link: https://dou.ua/lenta/articles/bootstrap-classes/
 @each $name, $width in $container-max-widths {
@@ -53,6 +73,217 @@ $EasyLease-Angular-theme: mat-light-theme(
     max-width: #{$width};
   }
 }
+
+@mixin box-shadow($shadows...) {
+  -moz-box-shadow: $shadows;
+  -webkit-box-shadow: $shadows;
+  box-shadow: $shadows;
+}
+
+@mixin text-shadow($shadows...) {
+  -moz-text-shadow: $shadows;
+  -webkit-text-shadow: $shadows;
+  text-shadow: $shadows;
+}
+
+@mixin drop-shadow-filter($shadows...) {
+  -moz-filter: drop-shadow($shadows);
+  -webkit-filter: drop-shadow($shadows);
+  filter: drop-shadow($shadows);
+}
+
+//===========================================================================
+//======================= Generate my custom Style ==========================
+
+@mixin generate-theme($theme, $bg-color, $fg-color) {
+  $primary: map-get($theme, primary);
+  $secondary: mat-palette($mat-light-blue);
+  $info: mat-palette($mat-cyan);
+  $success: mat-palette($mat-teal);
+  $accent: map-get($theme, accent);
+  $golden: mat-palette($mat-yellow);
+  $mandarin: mat-palette($mat-orange);
+  $warn: map-get($theme, warn);
+  $rose: mat-palette($mat-pink);
+
+  //-----------------------------------------------------------------
+  //*****************************************************************
+  $container-theme-colors: (
+    primary: $primary,
+    secondary: $secondary,
+    info: $info,
+    success: $success,
+    accent: $accent,
+    golden: $golden,
+    mandarin: $mandarin,
+    warn: $warn,
+    rose: $rose,
+  );
+  //.................................................................
+  @each $name, $color in $container-theme-colors {
+    .mat-button.mat-#{$name},
+    .mat-stroked-button.mat-#{$name},
+    .mat-icon-button.mat-#{$name} {
+      color: mat-color($color, 800);
+      &:hover {
+        background-color: mat-color($color, 100, 0.3);
+      }
+      &:active,
+      &:focus {
+        background-color: mat-color($color, 200, 0.4);
+        border-color: mat-color($color, 200);
+        outline: 0;
+      }
+    }
+
+    .mat-raised-button.mat-#{$name},
+    .mat-fab.mat-#{$name},
+    .mat-mini-fab.mat-#{$name} {
+      background-color: mat-color($color, 500);
+      color: mat-color($color, darker-contrast);
+      &:hover {
+        background-color: mat-color($color, 600);
+        border-color: mat-color($color, 700);
+      }
+      &:active,
+      &:focus {
+        background-color: mat-color($color, 700);
+        border-color: mat-color($color, 800);
+        outline: 0;
+
+        @include box-shadow(
+          0 14px 26px -12px mat-color($color, 500, 0.42),
+          0 4px 23px 0px rgb($fg-color, 0.12),
+          0 8px 10px -5px mat-color($color, 500, 0.2)
+        );
+      }
+      &:disabled {
+        background-color: mat-color($color, 200);
+        @include box-shadow(0 0 0 0 rgb($bg-color, 0));
+      }
+    }
+
+    .mat-flat-button.mat-#{$name} {
+      background-color: mat-color($color, 500);
+      color: mat-color($color, darker-contrast);
+      &:hover {
+        background-color: mat-color($color, 600);
+        border-color: mat-color($color, 700);
+      }
+      &:active,
+      &:focus {
+        background-color: mat-color($color, 700);
+        border-color: mat-color($color, 800);
+        outline: 0;
+      }
+    }
+  }
+
+  //-----------------------------------------------------------------
+  //*****************************************************************
+  $el-icon-shadow: 2px 3px 1px rgba($fg-color, 0.5);
+  $el-icon-shadow-small: 1px 2px 1px rgba($fg-color, 0.5);
+  //-----------------------------------------------------------------
+  $el-icon-drop-shadow-hover: 3px 4px 1px rgba($fg-color, 0.5);
+  $el-icon-btn-drop-shadow-hover: $el-icon-drop-shadow-hover;
+  $el-icon-drop-shadow-focus: 0px 0px 6px rgba($bg-color, 0.7);
+  $el-icon-btn-drop-shadow-focus: $el-icon-drop-shadow-focus;
+  //.................................................................
+
+  .ng-fa-icon {
+    @extend .el-icon-shadow-small;
+  }
+
+  .el-icon-shadow {
+    @include drop-shadow-filter($el-icon-shadow);
+  }
+
+  .el-icon-shadow-small {
+    @include drop-shadow-filter($el-icon-shadow-small);
+  }
+  //-----------------------------------------------------------------
+
+  .el-icon-drop-shadow {
+    @include drop-shadow-filter($el-icon-shadow);
+    &:hover {
+      @include drop-shadow-filter($el-icon-drop-shadow-hover);
+    }
+    &:active,
+    &:focus {
+      @include drop-shadow-filter($el-icon-drop-shadow-focus);
+    }
+  }
+
+  .el-icon-btn-drop-shadow {
+    @include drop-shadow-filter($el-icon-shadow);
+  }
+  //-----------------------------------------------------------------
+
+  .el-btn-nav {
+    font-family: inherit;
+    color: $bg-color;
+    background-color: mat-color($primary, 500);
+
+    @include text-shadow(2px 2px 1px rgba($fg-color, 0.5));
+    @include box-shadow(
+      0px 14px 26px -12px rgba(mat-color($primary, 900), 0.42),
+      0px 4px 23px 0px rgb($fg-color, 0.12),
+      0px 8px 10px -5px rgb(mat-color($primary, 900), 0.2) !important
+    );
+
+    &:hover .el-icon-btn-drop-shadow {
+      @include drop-shadow-filter($el-icon-btn-drop-shadow-hover);
+    }
+    &:hover {
+      background-color: mat-color($primary, 400) !important;
+      border-color: mat-color($primary, 600);
+
+      @include text-shadow(2px 3px 1px rgba($fg-color, 0.4));
+    }
+    &:focus .el-icon-btn-drop-shadow {
+      @include drop-shadow-filter($el-icon-btn-drop-shadow-focus);
+    }
+    &:active,
+    &:focus {
+      color: $bg-color;
+      background-color: mat-color($primary, 600);
+      border-color: mat-color($primary, 700);
+      outline: 0;
+
+      @include text-shadow(0px 0px 6px rgba($bg-color, 0.7), 1px 1px 1px rgba($fg-color, 0.3));
+      @include box-shadow(
+        0px 5px 10px 2px rgba(mat-color($primary, 900), 0.2) inset,
+        0px 7px 10px 2px rgba($bg-color, 0.2) !important
+      );
+    }
+    &:disabled {
+      background-color: mat-color($primary, 400) !important;
+    }
+  }
+
+  //-----------------------------------------------------------------
+  //*****************************************************************
+  .navbar {
+    background-color: mat-color($primary, 500) !important;
+  }
+
+  .br-0 {
+    border-radius: 0px !important;
+  }
+
+  .card-title {
+    text-shadow: 0px 0px 6px rgba($bg-color, 0.7), 2px 3px 3px rgba($fg-color, 0.3);
+  }
+  //-----------------------------------------------------------------
+
+  .el-bg-primary {
+    background-color: mat-color($primary, 500) !important;
+  }
+  //-----------------------------------------------------------------
+}
+//===========================================================================
+
+@include generate-theme($EasyLease-Angular-theme, $theme-bg-color, $theme-fg-color);
 
 html,
 body {
@@ -63,163 +294,6 @@ body {
   padding-top: 100px;
 }
 
-// mat-icon {
-//   text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.7), 2px 3px 3px rgba(0, 0, 0, 0.3);
-// }
-
-.card-title {
-  text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.7), 2px 3px 3px rgba(0, 0, 0, 0.3);
-}
-
-// !!!!!! temporary bug fix )
-// .content {
-//   margin-top: 100px;
-// }
-
-//===========================================================================
-//================== Styles for my custom button and icons ==================
-$icon-shadow: 2px 3px 1px rgba(0, 0, 0, 0.5);
-$icon-shadow-small: 1px 2px 1px rgba(0, 0, 0, 0.5);
-
-$icon-drop-shadow-hover: 3px 4px 1px rgba(0, 0, 0, 0.5);
-$icon-btn-drop-shadow-hover: $icon-drop-shadow-hover;
-$icon-drop-shadow-focus: 0px 0px 6px rgba(255, 255, 255, 0.7);
-$icon-btn-drop-shadow-focus: $icon-drop-shadow-focus;
-
-$btn-lb-recessed-color: white;
-$btn-lb-recessed-bg-color: #00b0ff;
-
-$btn-lb-recessed-text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);
-$btn-lb-recessed-box-shadow: 0px 14px 26px -12px rgba(0, 174, 255, 0.42), 0px 4px 23px 0px rgb(0, 0, 0, 0.12),
-  0px 8px 10px -5px rgb(0, 174, 255, 0.2);
-
-$btn-lb-recessed-bg-color-hover: #2fbafa;
-$btn-lb-recessed-border-color-hover: #0288d1;
-
-$btn-lb-recessed-text-shadow-hover: 2px 3px 1px rgba(0, 0, 0, 0.4);
-
-$btn-lb-recessed-color-focus: white;
-$btn-lb-recessed-bg-color-focus: #00a4f0;
-$btn-lb-recessed-border-color-focus: #0288d1;
-
-//$btn-lb-recessed-text-shadow-focus: 1px 2px 5px rgba(1, 0, 68, 0.685), 0 0 20px rgb(0, 241, 221), 1px 2px 5px rgb(0, 40, 148);
-
-$btn-lb-recessed-text-shadow-focus: 0px 0px 6px rgba(255, 255, 255, 0.7), 1px 1px 1px rgba(0, 0, 0, 0.3);
-$btn-lb-recessed-box-shadow-focus: 0px 5px 10px 2px rgba(34, 60, 80, 0.2) inset,
-  0px 7px 10px 2px rgba(255, 255, 255, 0.2);
-
-$btn-lb-recessed-bg-color-disabled: #00b0ff !important;
-
-//-----------------------------------------------------------------
-
-.icon-shadow {
-  -webkit-filter: drop-shadow($icon-shadow);
-  -moz-filter: drop-shadow($icon-shadow);
-  filter: drop-shadow($icon-shadow);
-}
-
-.icon-shadow-small {
-  -webkit-filter: drop-shadow($icon-shadow-small);
-  -moz-filter: drop-shadow($icon-shadow-small);
-  filter: drop-shadow($icon-shadow-small);
-}
-
-.icon-drop-shadow {
-  -webkit-filter: drop-shadow($icon-shadow);
-  -moz-filter: drop-shadow($icon-shadow);
-  filter: drop-shadow($icon-shadow);
-  &:hover {
-    -webkit-filter: drop-shadow($icon-drop-shadow-hover);
-    -moz-filter: drop-shadow($icon-drop-shadow-hover);
-    filter: drop-shadow($icon-drop-shadow-hover);
-  }
-  &:active,
-  &:focus {
-    -webkit-filter: drop-shadow($icon-drop-shadow-focus);
-    -moz-filter: drop-shadow($icon-drop-shadow-focus);
-    filter: drop-shadow($icon-drop-shadow-focus);
-  }
-}
-
-.icon-btn-drop-shadow {
-  -webkit-filter: drop-shadow($icon-shadow);
-  -moz-filter: drop-shadow($icon-shadow);
-  filter: drop-shadow($icon-shadow);
-}
-
-.btn-lb-recessed {
-  font-family: inherit;
-  color: $btn-lb-recessed-color;
-  background-color: $btn-lb-recessed-bg-color;
-
-  -webkit-box-text-shadow: $btn-lb-recessed-text-shadow;
-  -moz-box-text-shadow: $btn-lb-recessed-text-shadow;
-  text-shadow: $btn-lb-recessed-text-shadow;
-
-  -webkit-box-shadow: $btn-lb-recessed-box-shadow;
-  -moz-box-shadow: $btn-lb-recessed-box-shadow;
-  box-shadow: $btn-lb-recessed-box-shadow;
-
-  &:hover .icon-btn-drop-shadow {
-    -webkit-filter: drop-shadow($icon-btn-drop-shadow-hover);
-    -moz-filter: drop-shadow($icon-btn-drop-shadow-hover);
-    filter: drop-shadow($icon-btn-drop-shadow-hover);
-  }
-  &:hover {
-    background-color: $btn-lb-recessed-bg-color-hover;
-    border-color: $btn-lb-recessed-border-color-hover;
-
-    -webkit-box-text-shadow: $btn-lb-recessed-text-shadow-hover;
-    -moz-box-text-shadow: $btn-lb-recessed-text-shadow-hover;
-    text-shadow: $btn-lb-recessed-text-shadow-hover;
-  }
-  &:focus .icon-btn-drop-shadow {
-    -webkit-filter: drop-shadow($icon-btn-drop-shadow-focus);
-    -moz-filter: drop-shadow($icon-btn-drop-shadow-focus);
-    filter: drop-shadow($icon-btn-drop-shadow-focus);
-  }
-  &:active,
-  &:focus {
-    color: $btn-lb-recessed-color-focus;
-    background-color: $btn-lb-recessed-bg-color-focus;
-    border-color: $btn-lb-recessed-border-color-focus;
-
-    -webkit-box-text-shadow: $btn-lb-recessed-text-shadow-focus;
-    -moz-box-text-shadow: $btn-lb-recessed-text-shadow-focus;
-    text-shadow: $btn-lb-recessed-text-shadow-focus;
-
-    -webkit-box-shadow: $btn-lb-recessed-box-shadow-focus;
-    -moz-box-shadow: $btn-lb-recessed-box-shadow-focus;
-    box-shadow: $btn-lb-recessed-box-shadow-focus;
-  }
-  &:disabled {
-    background-color: $btn-lb-recessed-bg-color-disabled !important;
-  }
-}
-//=======================================
-.btn-light-blue {
-  background-color: #00aeff;
-}
-
-.btn-light-blue:hover,
-.btn-light-blue:visited,
-.btn-light-blue:focus,
-.btn-light-blue:active,
-.btn-light-blue:active:focus {
-  background-color: #039be5;
-  border-color: #0288d1;
-
-  -webkit-box-shadow: 0 14px 26px -12px rgba(0, 174, 255, 0.42), 0 4px 23px 0px rgb(0, 0, 0, 0.12),
-    0 8px 10px -5px rgb(0, 174, 255, 0.2);
-  -moz-box-shadow: 0 14px 26px -12px rgba(0, 174, 255, 0.42), 0 4px 23px 0px rgb(0, 0, 0, 0.12),
-    0 8px 10px -5px rgb(0, 174, 255, 0.2);
-  box-shadow: 0 14px 26px -12px rgba(0, 174, 255, 0.42), 0 4px 23px 0px rgb(0, 0, 0, 0.12),
-    0 8px 10px -5px rgb(0, 174, 255, 0.2);
-
-  &:disabled {
-    background-color: #00b0ff !important;
-  }
-}
 //===========================================================================
 //========================== Styles for Fonts ===============================
 
@@ -240,69 +314,94 @@ $btn-lb-recessed-bg-color-disabled: #00b0ff !important;
 //===========================================================================
 //==================== Styles for Material design icons ======================
 
-@font-face {
-  font-family: 'Material Icons';
-  font-style: normal;
-  font-weight: 400;
-  src: url('~material-design-icons/iconfont/MaterialIcons-Regular.eot'); /* For IE6-8 */
-  src: local('Material Icons'), local('MaterialIcons-Regular'),
-    url('~material-design-icons/iconfont/MaterialIcons-Regular.woff2') format('woff2'),
-    url('~material-design-icons/iconfont//MaterialIcons-Regular.woff') format('woff'),
-    url('~material-design-icons/iconfont/MaterialIcons-Regular.ttf') format('truetype');
-}
+// @font-face {
+//   font-family: 'Material Icons';
+//   font-style: normal;
+//   font-weight: 400;
+//   src: url('~material-design-icons/iconfont/MaterialIcons-Regular.eot'); /* For IE6-8 */
+//   src: local('Material Icons'), local('MaterialIcons-Regular'),
+//     url('~material-design-icons/iconfont/MaterialIcons-Regular.woff2') format('woff2'),
+//     url('~material-design-icons/iconfont//MaterialIcons-Regular.woff') format('woff'),
+//     url('~material-design-icons/iconfont/MaterialIcons-Regular.ttf') format('truetype');
+// }
 
-.material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
+// .material-icons {
+//   font-family: 'Material Icons';
+//   font-weight: normal;
+//   font-style: normal;
+//   font-size: 24px; /* Preferred icon size */
+//   display: inline-block;
+//   line-height: 1;
+//   text-transform: none;
+//   letter-spacing: normal;
+//   word-wrap: normal;
+//   white-space: nowrap;
+//   direction: ltr;
 
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
+//   /* Support for all WebKit browsers. */
+//   -webkit-font-smoothing: antialiased;
+//   /* Support for Safari and Chrome. */
+//   text-rendering: optimizeLegibility;
 
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
+//   /* Support for Firefox. */
+//   -moz-osx-font-smoothing: grayscale;
 
-  /* Support for IE. */
-  font-feature-settings: 'liga';
-}
+//   /* Support for IE. */
+//   font-feature-settings: 'liga';
+// }
 
-/* Rules for sizing the icon. */
-.material-icons.md-18 {
-  font-size: 18px;
-}
-.material-icons.md-24 {
-  font-size: 24px;
-}
-.material-icons.md-36 {
-  font-size: 36px;
-}
-.material-icons.md-48 {
-  font-size: 48px;
-}
+// /* Rules for sizing the icon. */
+// .material-icons.md-18 {
+//   font-size: 18px;
+// }
+// .material-icons.md-24 {
+//   font-size: 24px;
+// }
+// .material-icons.md-36 {
+//   font-size: 36px;
+// }
+// .material-icons.md-48 {
+//   font-size: 48px;
+// }
 
-/* Rules for using icons as black on a light background. */
-.material-icons.md-dark {
-  color: rgba(0, 0, 0, 0.54);
-}
-.material-icons.md-dark.md-inactive {
-  color: rgba(0, 0, 0, 0.26);
-}
+// /* Rules for using icons as black on a light background. */
+// .material-icons.md-dark {
+//   color: rgba(0, 0, 0, 0.54);
+// }
+// .material-icons.md-dark.md-inactive {
+//   color: rgba(0, 0, 0, 0.26);
+// }
 
-/* Rules for using icons as white on a dark background. */
-.material-icons.md-light {
-  color: rgba(255, 255, 255, 1);
-}
-.material-icons.md-light.md-inactive {
-  color: rgba(255, 255, 255, 0.3);
-}
-//===========================================================================
+// /* Rules for using icons as white on a dark background. */
+// .material-icons.md-light {
+//   color: rgba(255, 255, 255, 1);
+// }
+// .material-icons.md-light.md-inactive {
+//   color: rgba(255, 255, 255, 0.3);
+// }
+// //===========================================================================
+
+//-----------------------------------------------------------------
+// $el-btn-nav-color: $bg-color;
+// $el-btn-nav-bg-color: mat-color($primary, 500);
+
+// $el-btn-nav-text-shadow: 2px 2px 1px rgba($fg-color, 0.5);
+
+// $el-btn-nav-box-shadow: 0px 14px 26px -12px rgba(mat-color($primary, 900), 0.42),
+//   0px 4px 23px 0px rgb($fg-color, 0.12), 0px 8px 10px -5px rgb(mat-color($primary, 900), 0.2) !important;
+
+// $el-btn-nav-bg-color-hover: mat-color($primary, 400);
+// $el-btn-nav-border-color-hover: mat-color($primary, 600);
+
+// $el-btn-nav-text-shadow-hover: 2px 3px 1px rgba($fg-color, 0.4);
+
+// $el-btn-nav-color-focus: $bg-color;
+// $el-btn-nav-bg-color-focus: mat-color($primary, 600);
+// $el-btn-nav-border-color-focus: mat-color($primary, 700);
+
+// $el-btn-nav-text-shadow-focus: 0px 0px 6px rgba($bg-color, 0.7), 1px 1px 1px rgba($fg-color, 0.3);
+// $el-btn-nav-box-shadow-focus: 0px 5px 10px 2px rgba(mat-color($primary, 900), 0.2) inset,
+//   0px 7px 10px 2px rgba($bg-color, 0.2) !important;
+
+//$el-btn-nav-bg-color-disabled: mat-color($primary, 400); //!important;
+//-----------------------------------------------------------------

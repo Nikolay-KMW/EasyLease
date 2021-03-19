@@ -1,16 +1,25 @@
 <div class="m-5">
-    <button mat-raised-button color="$mat-deep-orange">
-        Button
+    <button mat-raised-button color="primary" class="px-4 py-1">Primary</button>
+    <button mat-raised-button color="secondary" class="px-4 py-1">Secondary</button>
+    <button mat-raised-button color="info" class="px-4 py-1">Info</button>
+    <button mat-raised-button color="success" class="px-4 py-1">Success</button>
+    <button mat-raised-button color="accent" class="px-4 py-1">Accent</button>
+    <button mat-raised-button color="golden" class="px-4 py-1">Golden</button>
+    <button mat-raised-button color="mandarin" class="px-4 py-1">Mandarin</button>
+    <button mat-raised-button color="warn" class="px-4 py-1">Warn</button>
+    <button mat-raised-button color="rose" class="px-4 py-1">Rose</button>
+    <button mat-raised-button class="px-4 py-1">Basic</button>
+    <button mat-raised-button disabled class="px-4 py-1">Disabled</button>
+    <a mat-raised-button target="_blank" class="px-4 py-1">Link</a>
+    <button mat-raised-button color="primary" class="px-4 py-1 px-sm-4">
+        <fa-icon [icon]="faUser" size="lg" class="el-icon-shadow-small px-2" transform="grow-4">
+        </fa-icon>
+        Войти
     </button>
-    <button mat-raised-button class="p-2">Basic</button>
-    <button mat-raised-button color="primary" class="px-3 py-2">Primary</button>
-    <button mat-raised-button color="accent">Accent</button>
-    <button mat-raised-button color="warn">Warn</button>
-    <button mat-raised-button disabled>Disabled</button>
-    <a mat-raised-button target="_blank">Link</a>
 </div>
 
 <div class="card-body">
+
     <button mat-raised-button="" class="btn btn-primary mat-raised-button mat-button-base"><span
             class="mat-button-wrapper">Primary</span>
         <div matripple="" class="mat-ripple mat-button-ripple"></div>
@@ -46,13 +55,159 @@
         <div matripple="" class="mat-ripple mat-button-ripple"></div>
         <div class="mat-button-focus-overlay"></div>
     </button>
-    <button mat-raised-button="" class="btn btn-default mat-raised-button mat-button-base border"><span
+    <button mat-raised-button="" class="btn btn-default mat-raised-button mat-button-base"><span
             class="mat-button-wrapper">Default</span>
         <div matripple="" class="mat-ripple mat-button-ripple"></div>
         <div class="mat-button-focus-overlay"></div>
     </button>
 </div>
 
+
+<h3>Basic Buttons</h3>
+<div class="example-button-row">
+    <button mat-button color="primary">Primary</button>
+    <button mat-button color="secondary">Secondary</button>
+    <button mat-button color="info">Info</button>
+    <button mat-button color="success">Success</button>
+    <button mat-button color="accent">Accent</button>
+    <button mat-button color="golden">Golden</button>
+    <button mat-button color="mandarin">Mandarin</button>
+    <button mat-button color="warn">Warn</button>
+    <button mat-button color="rose">Rose</button>
+    <button mat-button>Basic</button>
+    <button mat-button disabled>Disabled</button>
+    <a mat-button routerLink=".">Link</a>
+</div>
+
+<h3>Raised Buttons</h3>
+<div class="example-button-row">
+    <button mat-raised-button color="primary">Primary</button>
+    <button mat-raised-button color="secondary">Secondary</button>
+    <button mat-raised-button color="info">Info</button>
+    <button mat-raised-button color="success">Success</button>
+    <button mat-raised-button color="accent">Accent</button>
+    <button mat-raised-button color="golden">Golden</button>
+    <button mat-raised-button color="mandarin">Mandarin</button>
+    <button mat-raised-button color="warn">Warn</button>
+    <button mat-raised-button color="rose">Rose</button>
+    <button mat-raised-button>Basic</button>
+    <button mat-raised-button disabled>Disabled</button>
+    <a mat-raised-button routerLink=".">Link</a>
+</div>
+
+<h3>Stroked Buttons</h3>
+<div class="example-button-row">
+    <button mat-stroked-button color="primary">Primary</button>
+    <button mat-stroked-button color="secondary">Secondary</button>
+    <button mat-stroked-button color="info">Info</button>
+    <button mat-stroked-button color="success">Success</button>
+    <button mat-stroked-button color="accent">Accent</button>
+    <button mat-stroked-button color="golden">Golden</button>
+    <button mat-stroked-button color="mandarin">Mandarin</button>
+    <button mat-stroked-button color="warn">Warn</button>
+    <button mat-stroked-button color="rose">Rose</button>
+    <button mat-stroked-button>Basic</button>
+    <button mat-stroked-button disabled>Disabled</button>
+    <a mat-stroked-button routerLink=".">Link</a>
+</div>
+
+<h3>Flat Buttons</h3>
+<div class="example-button-row">
+    <button mat-flat-button color="primary">Primary</button>
+    <button mat-flat-button color="secondary">Secondary</button>
+    <button mat-flat-button color="info">Info</button>
+    <button mat-flat-button color="success">Success</button>
+    <button mat-flat-button color="accent">Accent</button>
+    <button mat-flat-button color="golden">Golden</button>
+    <button mat-flat-button color="mandarin">Mandarin</button>
+    <button mat-flat-button color="warn">Warn</button>
+    <button mat-flat-button color="rose">Rose</button>
+    <button mat-flat-button>Basic</button>
+    <button mat-flat-button disabled>Disabled</button>
+    <a mat-flat-button routerLink=".">Link</a>
+</div>
+
+<h3>Icon Buttons</h3>
+<div class="example-button-row">
+    <button mat-icon-button color="primary" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button color="secondary" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button color="info" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button color="success" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button color="accent" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button color="golden" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button color="mandarin" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button color="warn" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button color="rose" aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button disabled aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <a mat-icon-button routerLink="." aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </a>
+</div>
+
+<h3>Fab Buttons</h3>
+<div class="example-button-row">
+    <button mat-fab color="primary">Primary</button>
+    <button mat-fab color="secondary">Secondary</button>
+    <button mat-fab color="info">Info</button>
+    <button mat-fab color="success">Success</button>
+    <button mat-fab color="accent">Accent</button>
+    <button mat-fab color="golden">Golden</button>
+    <button mat-fab color="mandarin">Mandarin</button>
+    <button mat-fab color="warn">Warn</button>
+    <button mat-fab color="rose" disabled>Rose</button>
+    <button mat-fab>Basic</button>
+    <button mat-fab disabled>Disabled</button>
+    <button mat-fab aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="2x" class="el-icon-shadow"></fa-icon>
+    </button>
+    <a mat-fab-button routerLink=".">Link</a>
+</div>
+
+<h3>Mini Fab Buttons</h3>
+<div class="example-button-row">
+    <button mat-mini-fab color="primary">Primary</button>
+    <button mat-mini-fab color="secondary">Secondary</button>
+    <button mat-mini-fab color="info">Info</button>
+    <button mat-mini-fab color="success">Success</button>
+    <button mat-mini-fab color="accent">Accent</button>
+    <button mat-mini-fab color="golden">Golden</button>
+    <button mat-mini-fab color="mandarin">Mandarin</button>
+    <button mat-mini-fab color="warn">Warn</button>
+    <button mat-mini-fab color="rose">Rose</button>
+    <button mat-mini-fab>Basic</button>
+    <button mat-mini-fab disabled>Disabled</button>
+    <button mat-mini-fab aria-label="Example icon-button with a heart icon">
+        <fa-icon [icon]="faUser" size="lg"></fa-icon>
+    </button>
+    <a mat-mini-fab-button routerLink=" .">Link</a>
+</div>
+
+==============================================================================
+==============================================================================
+==============================================================================
 
 <div class="conteiner bg-custom">
 
@@ -244,39 +399,18 @@
     <button type="button" matRipple class="btn btn-round btn-lb-recessed">6</button>
 </div>
 
-<button matRipple class="btn btn-lb-recessed">
-    <div class="row">
-        <fa-icon [icon]="faMagic" size="2x" class="col align-self-center dropShadowB" transform="grow-4">
-        </fa-icon>
-        <div class="col d-none d-md-block text-capitalize link-text">
-            Пользователь
-        </div>
-    </div>
+<button mat-raised-button class="custom-button-primary px-4 py-1">
+    Button
 </button>
 
-<button matRipple class="btn btn-link">
-    <div class="row">
-        <fa-icon [icon]="faMagic" size="2x" class="col align-self-center ShadowC" transform="grow-4">
-        </fa-icon>
-        <div class="col d-none d-md-block text-capitalize link-text">
-            Пользователь
-        </div>
-    </div>
-</button>
-
-<button matRipple class="btn btn-lb-recessed">
-    <fa-icon [icon]="faMagic" size="2x" class="dropShadowB" transform="grow-4">
-    </fa-icon>
-    <div class="d-none d-md-block text-capitalize link-text">
-        Пользователь
-    </div>
-</button>
-
-<button matRipple type="button" matRipple class="btn btn btn-info">3
-    <fa-icon [icon]="faMagic" size="2x" class="dropShadowB" transform="grow-4">
-    </fa-icon>
-    <span class="d-none d-md-block text-capitalize link-text">Пользователь</span>
-</button>
+<div class="btn-group">
+    <button mat-raised-button color="primary" class="br-0">1</button>
+    <button mat-raised-button color="primary" class="br-0">2</button>
+    <button mat-raised-button color="primary" class="br-0">3</button>
+    <button mat-raised-button color="primary" class="br-0">4</button>
+    <button mat-raised-button color="primary" class="br-0">5</button>
+    <button mat-raised-button color="primary" class="br-0">6</button>
+</div>
 
 
 =======================================================================================

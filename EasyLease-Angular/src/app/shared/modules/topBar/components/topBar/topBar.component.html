@@ -1,12 +1,12 @@
-<mat-toolbar class="navbar fixed-top bg-light-blue" color="primary">
+<mat-toolbar class="navbar fixed-top" color="primary">
     <div class="container px-0">
-        <button matRipple class="btn btn-lb-recessed btn-lg btn-round btn-fab">
-            <fa-icon [icon]="faBars" class="icon-btn-drop-shadow px-1" transform="grow-3">
+        <button mat-fab color="primary" class="el-btn-nav btn-lg">
+            <fa-icon [icon]="faBars" class="el-icon-btn-drop-shadow" size="lg" transform="grow-2">
             </fa-icon>
         </button>
         &nbsp;&nbsp;
         <a [routerLink]="['/']">
-            <fa-icon [icon]="faAsymmetrik" class="icon-drop-shadow px-1" size="2x" style="color:aquamarine">
+            <fa-icon [icon]="faAsymmetrik" class="el-icon-drop-shadow px-1" size="2x" style="color:aquamarine">
             </fa-icon>
         </a>
         &nbsp;&nbsp;
@@ -18,30 +18,32 @@
         <span class="spacer"></span>
         <div class="pull-right">
             <ng-container *ngIf="isLoggedIn$ | async">
-                <button matRipple [routerLink]="['/articles/new']" class="btn btn-lb-recessed mx-1 px-4">
+                <button mat-raised-button [routerLink]="['/articles/new']" class="el-btn-nav mx-1 px-4 py-2">
                     <div class="row">
-                        <fa-icon [icon]="faPencilAlt" size="2x" class="col icon-btn-drop-shadow px-2">
+                        <fa-icon [icon]="faPencilAlt" size="lg" class="col el-icon-btn-drop-shadow px-2"
+                            transform="grow-6">
                         </fa-icon>
-                        <div class="col d-none d-lg-block text-capitalize link-text px-1">
+                        <div class="col d-none d-lg-block link-text px-1">
                             Новое объявление
                         </div>
                     </div>
                 </button>
-                <button matRipple [routerLink]="['/settings']" class="btn btn-lb-recessed mx-1 px-4">
+                <button mat-raised-button [routerLink]="['/settings']" class="el-btn-nav mx-1 px-4 py-2">
                     <div class="row">
-                        <fa-icon [icon]="faUserCog" size="2x" class="col icon-btn-drop-shadow px-2">
+                        <fa-icon [icon]="faUserCog" size="lg" class="col el-icon-btn-drop-shadow px-2"
+                            transform="grow-6">
                         </fa-icon>
-                        <div class="col d-none d-lg-block text-capitalize link-text px-1">
+                        <div class="col d-none d-lg-block link-text px-1">
                             Настройки
                         </div>
                     </div>
                 </button>
-                <button matRipple [routerLink]="['/profiles', ((currentUser$ | async)!.username)]"
-                    class="btn btn-lb-recessed mx-1 px-4">
+                <button mat-raised-button [routerLink]="['/profiles', ((currentUser$ | async)!.username)]"
+                    class="el-btn-nav mx-1 px-4 py-2">
                     <div class="row">
-                        <fa-icon [icon]="faSmile" size="2x" class="col icon-btn-drop-shadow px-2">
+                        <fa-icon [icon]="faSmile" size="lg" class="col el-icon-btn-drop-shadow px-2" transform="grow-6">
                         </fa-icon>
-                        <div class="col d-none d-md-block text-capitalize link-text px-1">
+                        <div class="col d-none d-md-block link-text px-1">
                             <img [src]="((currentUser$ | async)!.image)" class="d-block w-100" />
                             {{((currentUser$ | async)!.username)}}
                         </div>
@@ -49,21 +51,22 @@
                 </button>
             </ng-container>
             <ng-container *ngIf="isAnonymous$ | async">
-                <button matRipple [routerLink]="['/login']" class="btn btn-lb-recessed mx-1 px-4">
+                <button mat-raised-button [routerLink]="['/login']" class="el-btn-nav mx-1 px-4 py-2">
                     <div class="row">
-                        <fa-icon [icon]="faSignInAlt" size="2x" class="col icon-btn-drop-shadow px-2"
-                            transform="grow-5">
+                        <fa-icon [icon]="faSignInAlt" size="lg" class="col el-icon-btn-drop-shadow px-2"
+                            transform="grow-12">
                         </fa-icon>
-                        <div class="col d-none d-md-block text-capitalize link-text px-1">
+                        <div class="col d-none d-md-block link-text px-2">
                             Войти
                         </div>
                     </div>
                 </button>
-                <button matRipple [routerLink]="['/register']" class="btn btn-lb-recessed mx-1 px-4">
+                <button mat-raised-button [routerLink]="['/register']" class="el-btn-nav mx-1 px-4 py-2">
                     <div class="row">
-                        <fa-icon [icon]="faUserPlus" size="2x" class="col icon-btn-drop-shadow px-2">
+                        <fa-icon [icon]="faUserPlus" size="lg" class="col el-icon-btn-drop-shadow px-2"
+                            transform="grow-6">
                         </fa-icon>
-                        <div class="col d-none d-md-block text-capitalize link-text px-1">
+                        <div class="col d-none d-md-block link-text px-1">
                             Зарегистрироваться
                         </div>
                     </div>

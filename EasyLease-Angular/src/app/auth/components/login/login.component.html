@@ -54,10 +54,10 @@
                                 <button
                                     class="btn btn-lg btn-light-blue order-sm-1 order-md-2 col-12 col-md-auto px-2 px-sm-4"
                                     type="submit" matRipple [disabled]="(isSubmitting$ | async) || form.invalid">
-                                    <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="icon-shadow-small px-1"
-                                        *ngIf="(isSubmitting$ | async)">
+                                    <fa-icon [icon]="faSpinner" size="lg" [pulse]="true"
+                                        class="el-icon-shadow-small px-1" *ngIf="(isSubmitting$ | async)">
                                     </fa-icon>
-                                    <fa-icon [icon]="faSignInAlt" size="lg" class="col icon-shadow-small px-2"
+                                    <fa-icon [icon]="faSignInAlt" size="lg" class="col el-icon-shadow-small px-2"
                                         transform="grow-4">
                                     </fa-icon>
                                     Войти
@@ -65,7 +65,7 @@
                                 <button
                                     class="btn btn-lg btn-info order-sm-2 order-md-1 col-12 col-md-auto px-2 px-sm-4"
                                     [routerLink]="[ '/register' ]" matRipple>
-                                    <fa-icon [icon]="faUserPlus" size="lg" class="col icon-shadow-small px-1">
+                                    <fa-icon [icon]="faUserPlus" size="lg" class="col el-icon-shadow-small px-1">
                                     </fa-icon>
                                     Зарегистрироваться
                                 </button>

@@ -42,7 +42,7 @@ $btn-primary-bg:                 $brand-primary !default;
 $btn-primary-border-color:             $btn-primary-bg !default;
 //
 $btn-secondary-color:            $gray-dark !default;
-$btn-secondary-bg:               $body-bg !default; // #fff
+$btn-secondary-bg:               $brand-secondary !default; // #fff
 $btn-secondary-border-color:           #ccc !default;
 //
 $btn-info-color:                 #fff !default;
@@ -66,7 +66,7 @@ $btn-rose-bg:                    $brand-rose !default;
 $btn-rose-border-color:              $btn-rose-bg !default;
 
 $btn-default-color:                 #fff !default;
-$btn-default-bg:                    $gray-color !default;
+$btn-default-bg:                    $brand-default!default;
 $btn-default-border-color:              $btn-default-bg !default;
 //
 $btn-link-disabled-color:        $gray-light !default;
