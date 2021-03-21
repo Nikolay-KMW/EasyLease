@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header card-header-info">
+                    <div class="card-header card-header-primary">
                         <h1 class="card-title text-center register-title">Войти</h1>
                     </div>
                     <div class="card-body">
@@ -51,21 +51,19 @@
                                 </fieldset>
                             </fieldset>
                             <div class="row justify-content-between m-1">
-                                <button
-                                    class="btn btn-lg btn-light-blue order-sm-1 order-md-2 col-12 col-md-auto px-2 px-sm-4"
-                                    type="submit" matRipple [disabled]="(isSubmitting$ | async) || form.invalid">
-                                    <fa-icon [icon]="faSpinner" size="lg" [pulse]="true"
-                                        class="el-icon-shadow-small px-1" *ngIf="(isSubmitting$ | async)">
+                                <button class="btn-text order-sm-1 order-md-2 col-12 col-md-auto my-1 px-2 px-sm-4 py-2"
+                                    color="primary" type="submit" mat-raised-button
+                                    [disabled]="(isSubmitting$ | async) || form.invalid">
+                                    <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="px-1"
+                                        *ngIf="(isSubmitting$ | async)">
                                     </fa-icon>
-                                    <fa-icon [icon]="faSignInAlt" size="lg" class="col el-icon-shadow-small px-2"
-                                        transform="grow-4">
+                                    <fa-icon [icon]="faSignInAlt" size="lg" class="px-2" transform="grow-4">
                                     </fa-icon>
                                     Войти
                                 </button>
-                                <button
-                                    class="btn btn-lg btn-info order-sm-2 order-md-1 col-12 col-md-auto px-2 px-sm-4"
-                                    [routerLink]="[ '/register' ]" matRipple>
-                                    <fa-icon [icon]="faUserPlus" size="lg" class="col el-icon-shadow-small px-1">
+                                <button class="btn-text order-sm-2 order-md-1 col-12 col-md-auto my-1 px-2 px-sm-4 py-2"
+                                    color="info" [routerLink]="[ '/register' ]" mat-raised-button>
+                                    <fa-icon [icon]="faUserPlus" size="lg" class="px-1">
                                     </fa-icon>
                                     Зарегистрироваться
                                 </button>

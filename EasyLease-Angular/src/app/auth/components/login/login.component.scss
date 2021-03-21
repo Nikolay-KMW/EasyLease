@@ -2,15 +2,6 @@
   font-size: xx-large;
 }
 
-.card-header-info {
-  @extend .gradient-info-custom;
-  //background: #00b0ff !important;
-}
-
-.gradient-info-custom {
-  background: linear-gradient(90deg, #00bcd4, #00b0ff) !important;
-}
-
-.gradient-info-custom1 {
-  background: linear-gradient(90deg, #01f1fe, #00b0ff) !important;
+.btn-text {
+  font-size: 16px;
 }

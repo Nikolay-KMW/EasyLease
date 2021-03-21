@@ -45,57 +45,7 @@ $EasyLease-Angular-theme: mat-light-theme(
 
 //===========================================================================
 //================= Bootstrap brand color customization =====================
-
-$theme-bg-color: white;
-$theme-fg-color: black;
-
-/*     brand Colors              */
-$brand-primary: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !default;
-$brand-secondary: $theme-bg-color !default;
-$brand-info: mat-color(mat-palette($mat-cyan, 600)) !default;
-$brand-success: mat-color(map-get($EasyLease-Angular-theme, accent), 600) !default;
-$brand-warning: mat-color(mat-palette($mat-orange, 500)) !default;
-$brand-danger: mat-color(map-get($EasyLease-Angular-theme, warn), 500) !default;
-$brand-rose: mat-color(mat-palette($mat-pink, A400)) !default;
-$brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !default;
-//$brand-inverse:              mat-color(map-get($EasyLease-Angular-theme, primary), 500) !default;
-
-// The styles of Template - Material Dashboard Angular - v2.5.0
-@import 'assets/scss/material-dashboard.scss';
-
-//===========================================================================
-//============================ My Utilities =================================
-
-// Min. width limitation. Example: mw-sm, mw-md, mw-lg, mw-xl
-// Link: https://dou.ua/lenta/articles/bootstrap-classes/
-@each $name, $width in $container-max-widths {
-  .mw-#{$name} {
-    max-width: #{$width};
-  }
-}
-
-@mixin box-shadow($shadows...) {
-  -moz-box-shadow: $shadows;
-  -webkit-box-shadow: $shadows;
-  box-shadow: $shadows;
-}
-
-@mixin text-shadow($shadows...) {
-  -moz-text-shadow: $shadows;
-  -webkit-text-shadow: $shadows;
-  text-shadow: $shadows;
-}
-
-@mixin drop-shadow-filter($shadows...) {
-  -moz-filter: drop-shadow($shadows);
-  -webkit-filter: drop-shadow($shadows);
-  filter: drop-shadow($shadows);
-}
-
-//===========================================================================
-//======================= Generate my custom Style ==========================
-
-@mixin generate-theme($theme, $bg-color, $fg-color) {
+@function get-el-theme-colors($theme) {
   $primary: map-get($theme, primary);
   $secondary: mat-palette($mat-light-blue);
   $info: mat-palette($mat-cyan);
@@ -106,9 +56,7 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
   $warn: map-get($theme, warn);
   $rose: mat-palette($mat-pink);
 
-  //-----------------------------------------------------------------
-  //*****************************************************************
-  $container-theme-colors: (
+  @return (
     primary: $primary,
     secondary: $secondary,
     info: $info,
@@ -117,8 +65,70 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
     golden: $golden,
     mandarin: $mandarin,
     warn: $warn,
-    rose: $rose,
+    rose: $rose
   );
+}
+
+$theme-bg-color: white;
+$theme-fg-color: black;
+
+$el-theme-colors: get-el-theme-colors($EasyLease-Angular-theme);
+
+/*     brand Colors              */
+$brand-primary: mat-color(map-get($el-theme-colors, primary)) !default;
+$brand-secondary: mat-color(map-get($el-theme-colors, secondary)) !default;
+$brand-info: mat-color(map-get($el-theme-colors, info)) !default;
+$brand-success: mat-color(map-get($el-theme-colors, success)) !default;
+$brand-warning: mat-color(map-get($el-theme-colors, mandarin)) !default;
+$brand-danger: mat-color(map-get($el-theme-colors, warn)) !default;
+$brand-rose: mat-color(map-get($el-theme-colors, rose)) !default;
+$brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
+//$brand-inverse:              mat-color(map-get($EasyLease-Angular-theme, primary), 500) !default;
+
+// The styles of Template - Material Dashboard Angular - v2.5.0
+@import 'assets/scss/material-dashboard.scss';
+
+//===========================================================================
+//============================ My Utilities =================================
+// Min. width limitation. Example: mw-sm, mw-md, mw-lg, mw-xl
+// Link: https://dou.ua/lenta/articles/bootstrap-classes/
+@each $name, $width in $container-max-widths {
+  .mw-#{$name} {
+    max-width: #{$width};
+  }
+}
+
+@mixin el-box-shadow($shadows...) {
+  -moz-box-shadow: $shadows;
+  -webkit-box-shadow: $shadows;
+  box-shadow: $shadows;
+}
+
+@mixin el-text-shadow($shadows...) {
+  -moz-text-shadow: $shadows;
+  -webkit-text-shadow: $shadows;
+  text-shadow: $shadows;
+}
+
+@mixin el-drop-shadow-filter($shadows...) {
+  -moz-filter: drop-shadow($shadows);
+  -webkit-filter: drop-shadow($shadows);
+  filter: drop-shadow($shadows);
+}
+
+@mixin el-linear-gradient($gradient...) {
+  background: -webkit-linear-gradient($gradient) !important;
+  background: -moz-linear-gradient($gradient) !important;
+  background: linear-gradient($gradient) !important;
+}
+
+//===========================================================================
+//======================= Generate my custom Style ==========================
+@mixin generate-theme($theme, $bg-color, $fg-color) {
+  //-----------------------------------------------------------------
+  //*****************************************************************
+  $container-theme-colors: get-el-theme-colors($theme);
+  $primary: map-get($container-theme-colors, primary);
   //.................................................................
   @each $name, $color in $container-theme-colors {
     .mat-button.mat-#{$name},
@@ -132,7 +142,9 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
       &:focus {
         background-color: mat-color($color, 200, 0.4);
         border-color: mat-color($color, 200);
-        outline: 0;
+      }
+      &:disabled {
+        background-color: $bg-color;
       }
     }
 
@@ -149,9 +161,8 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
       &:focus {
         background-color: mat-color($color, 700);
         border-color: mat-color($color, 800);
-        outline: 0;
 
-        @include box-shadow(
+        @include el-box-shadow(
           0 14px 26px -12px mat-color($color, 500, 0.42),
           0 4px 23px 0px rgb($fg-color, 0.12),
           0 8px 10px -5px mat-color($color, 500, 0.2)
@@ -159,7 +170,8 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
       }
       &:disabled {
         background-color: mat-color($color, 200);
-        @include box-shadow(0 0 0 0 rgb($bg-color, 0));
+        @include el-box-shadow(0 0 0 0 rgb($bg-color, 0));
+        color: mat-color($color, darker-contrast);
       }
     }
 
@@ -174,8 +186,17 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
       &:focus {
         background-color: mat-color($color, 700);
         border-color: mat-color($color, 800);
-        outline: 0;
       }
+    }
+  }
+  //-----------------------------------------------------------------
+  @each $name, $color in $container-theme-colors {
+    .card-header-#{$name} {
+      @include el-linear-gradient(60deg, mat-color($color, 300), mat-color($color, 600));
+      @include el-box-shadow(
+        0 4px 20px 0px rgba($bg-color, 0.14),
+        0 7px 10px -5px rgba(mat-color($color, 800), 0.6) !important
+      );
     }
   }
 
@@ -195,27 +216,27 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
   }
 
   .el-icon-shadow {
-    @include drop-shadow-filter($el-icon-shadow);
+    @include el-drop-shadow-filter($el-icon-shadow);
   }
 
   .el-icon-shadow-small {
-    @include drop-shadow-filter($el-icon-shadow-small);
+    @include el-drop-shadow-filter($el-icon-shadow-small);
   }
   //-----------------------------------------------------------------
 
   .el-icon-drop-shadow {
-    @include drop-shadow-filter($el-icon-shadow);
+    @include el-drop-shadow-filter($el-icon-shadow);
     &:hover {
-      @include drop-shadow-filter($el-icon-drop-shadow-hover);
+      @include el-drop-shadow-filter($el-icon-drop-shadow-hover);
     }
     &:active,
     &:focus {
-      @include drop-shadow-filter($el-icon-drop-shadow-focus);
+      @include el-drop-shadow-filter($el-icon-drop-shadow-focus);
     }
   }
 
   .el-icon-btn-drop-shadow {
-    @include drop-shadow-filter($el-icon-shadow);
+    @include el-drop-shadow-filter($el-icon-shadow);
   }
   //-----------------------------------------------------------------
 
@@ -224,34 +245,33 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
     color: $bg-color;
     background-color: mat-color($primary, 500);
 
-    @include text-shadow(2px 2px 1px rgba($fg-color, 0.5));
-    @include box-shadow(
+    @include el-text-shadow(2px 2px 1px rgba($fg-color, 0.5));
+    @include el-box-shadow(
       0px 14px 26px -12px rgba(mat-color($primary, 900), 0.42),
       0px 4px 23px 0px rgb($fg-color, 0.12),
       0px 8px 10px -5px rgb(mat-color($primary, 900), 0.2) !important
     );
 
     &:hover .el-icon-btn-drop-shadow {
-      @include drop-shadow-filter($el-icon-btn-drop-shadow-hover);
+      @include el-drop-shadow-filter($el-icon-btn-drop-shadow-hover);
     }
     &:hover {
-      background-color: mat-color($primary, 400) !important;
+      background-color: mat-color($primary, 400);
       border-color: mat-color($primary, 600);
 
-      @include text-shadow(2px 3px 1px rgba($fg-color, 0.4));
+      @include el-text-shadow(2px 3px 1px rgba($fg-color, 0.4));
     }
     &:focus .el-icon-btn-drop-shadow {
-      @include drop-shadow-filter($el-icon-btn-drop-shadow-focus);
+      @include el-drop-shadow-filter($el-icon-btn-drop-shadow-focus);
     }
     &:active,
     &:focus {
       color: $bg-color;
       background-color: mat-color($primary, 600);
       border-color: mat-color($primary, 700);
-      outline: 0;
 
-      @include text-shadow(0px 0px 6px rgba($bg-color, 0.7), 1px 1px 1px rgba($fg-color, 0.3));
-      @include box-shadow(
+      @include el-text-shadow(0px 0px 6px rgba($bg-color, 0.7), 1px 1px 1px rgba($fg-color, 0.3));
+      @include el-box-shadow(
         0px 5px 10px 2px rgba(mat-color($primary, 900), 0.2) inset,
         0px 7px 10px 2px rgba($bg-color, 0.2) !important
       );
@@ -264,7 +284,8 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
   //-----------------------------------------------------------------
   //*****************************************************************
   .navbar {
-    background-color: mat-color($primary, 500) !important;
+    //background-color: mat-color($primary, 500) !important;
+    @include el-linear-gradient(180deg, mat-color($primary, 500), mat-color($primary, 600));
   }
 
   .br-0 {
@@ -274,10 +295,9 @@ $brand-default: mat-color(map-get($EasyLease-Angular-theme, primary), 500) !defa
   .card-title {
     text-shadow: 0px 0px 6px rgba($bg-color, 0.7), 2px 3px 3px rgba($fg-color, 0.3);
   }
-  //-----------------------------------------------------------------
 
-  .el-bg-primary {
-    background-color: mat-color($primary, 500) !important;
+  .text-contrast {
+    color: $fg-color !important;
   }
   //-----------------------------------------------------------------
 }
@@ -293,10 +313,15 @@ body {
   margin: 0px;
   padding-top: 100px;
 }
+button {
+  &:active,
+  &:focus {
+    outline: 0;
+  }
+}
 
 //===========================================================================
 //========================== Styles for Fonts ===============================
-
 @font-face {
   font-family: 'Roboto';
   font-style: normal;

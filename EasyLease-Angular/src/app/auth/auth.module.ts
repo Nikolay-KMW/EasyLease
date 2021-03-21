@@ -3,11 +3,10 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
 import {StoreModule} from '@ngrx/store';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {EffectsModule} from '@ngrx/effects';
-import {MatRippleModule} from '@angular/material/core';
+import {MatButtonModule} from '@angular/material/button';
 
 //import {RegisterComponent} from './components/register/register.component';
 import {RegisterComponent} from 'src/app/auth/components/register/register.component';
@@ -33,7 +32,7 @@ const routes: Routes = [
     EffectsModule.forFeature([RegisterEffect, LoginEffect, GetCurrentUserEffect]),
     ReactiveFormsModule,
     MatInputModule,
-    MatRippleModule,
+    MatButtonModule,
     FontAwesomeModule,
     BackendErrorMessageModule,
   ],
