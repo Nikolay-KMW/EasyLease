@@ -1,0 +1,16 @@
+<mat-sidenav-container>
+    <mat-sidenav #drawer fixedInViewport fixedTopGap=65 class=""
+        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
+        [opened]="(isOpenedSidenav$ | async)" (closed)="closeSidenav()">
+        <mat-nav-list>
+            <a mat-list-item class="el-btn-nav" (click)="closeSidenav()">button</a>
+            <a mat-list-item class="el-btn-nav" (click)="closeSidenav()">button</a>
+            <a mat-list-item class="el-btn-nav" (click)="closeSidenav()">button</a>
+            <a mat-list-item class="el-btn-nav" (click)="closeSidenav()">button</a>
+            <a mat-list-item class="el-btn-nav" (click)="closeSidenav()">button</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>
