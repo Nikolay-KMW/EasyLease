@@ -7,6 +7,7 @@ import {select, Store} from '@ngrx/store';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {isOpenedSidenavSelector} from '../../../topBar/store/selectors';
 import {closeSidenavAction} from '../../../topBar/store/actions/toggle.action';
+import {faEdit, faStar, IconDefinition} from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'el-shell',
@@ -16,6 +17,9 @@ import {closeSidenavAction} from '../../../topBar/store/actions/toggle.action';
 export class ShellComponent implements OnInit {
   isHandset$: Observable<boolean>;
   isOpenedSidenav$: Observable<boolean>;
+
+  faEdit: IconDefinition = faEdit;
+  faStar: IconDefinition = faStar;
 
   constructor(private breakpointObserver: BreakpointObserver, private store: Store<AppStateInterface>) {
     this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset]).pipe(

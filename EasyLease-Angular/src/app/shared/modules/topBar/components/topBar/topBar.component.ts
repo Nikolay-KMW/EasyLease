@@ -1,7 +1,20 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {MatMenuTrigger} from '@angular/material/menu';
 import {faAsymmetrik} from '@fortawesome/free-brands-svg-icons';
 import {
   faBars,
+  faEllipsisV,
   faPencilAlt,
   faSignInAlt,
   faSmile,
@@ -23,8 +36,11 @@ import {isOpenedSidenavSelector} from '../../store/selectors';
   templateUrl: './topBar.component.html',
   styleUrls: ['./topBar.component.scss'],
 })
-export class TopBarComponent implements OnInit, OnDestroy {
+export class TopBarComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input('brandName') brandNameProps: string = 'Brand';
+
+  @ViewChild('menu') element?: ElementRef<HTMLElement>;
+  @ViewChild(MatMenuTrigger) trigger?: MatMenuTrigger;
 
   isLoggedIn$: Observable<boolean | null>;
   isAnonymous$: Observable<boolean>;
@@ -34,6 +50,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
   subscribeToIsOpenedSidenav$: Subscription;
 
   isOpened: boolean = false;
+  isOpenedMenu: boolean = false;
 
   faUserPlus: IconDefinition = faUserPlus;
   faUserCog: IconDefinition = faUserCog;
@@ -42,8 +59,14 @@ export class TopBarComponent implements OnInit, OnDestroy {
   faAsymmetrik: IconDefinition = faAsymmetrik;
   faPencilAlt: IconDefinition = faPencilAlt;
   faSignInAlt: IconDefinition = faSignInAlt;
+  faEllipsisV: IconDefinition = faEllipsisV;
 
-  constructor(private store: Store<AppStateInterface>) {
+  constructor(
+    private store: Store<AppStateInterface>,
+    private focusMonitor: FocusMonitor,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
+  ) {
     this.isLoggedIn$ = this.store.pipe(select(isLoggedInSelected));
     this.isAnonymous$ = this.store.pipe(select(isAnonymousSelected));
     this.currentUser$ = this.store.pipe(select(currentUserSelected));
@@ -53,6 +76,29 @@ export class TopBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    // const topBar = this.element.nativeElement;
+    // console.log(topBar);
+    // this.focusMonitor.stopMonitoring(topBar.getElementById('menuTrigger'));
+    // if (this.element) {
+    //   this.focusMonitor.stopMonitoring(this.element);
+    // }
+  }
+
+  openMenu(): void {
+    if (this.isOpenedMenu) {
+      //this.trigger?.toggleMenu();
+      this.isOpenedMenu = false;
+    } else {
+      //this.trigger?.focus();
+      this.isOpenedMenu = true;
+    }
+    //this.trigger?.focus();
+  }
+  closeMenu(): void {
+    this.trigger?.toggleMenu();
+  }
 
   toggleSidenav(): void {
     if (this.isOpened) {

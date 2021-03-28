@@ -1,10 +1,10 @@
 <mat-toolbar class="navbar fixed-top" color="primary">
     <div class="container px-0">
         <button mat-fab class="el-btn-menu btn-lg" color="" type="button" aria-label="Toggle sidenav"
-            (click)="toggleSidenav()" [class.focus]="(isOpenedSidenav$ | async)"
+            (click)="toggleSidenav()" [class.active]="(isOpenedSidenav$ | async)"
             [class.default]="!(isOpenedSidenav$ | async)">
             <fa-icon [icon]="faBars" class="el-icon-btn-drop-shadow faBars-icon"
-                [class.focus]="(isOpenedSidenav$ | async)" size="lg" transform="grow-2"
+                [class.active]="(isOpenedSidenav$ | async)" size="lg" transform="grow-2"
                 aria-label="Side nav toggle icon">
             </fa-icon>
         </button>
@@ -53,6 +53,28 @@
                         </div>
                     </div>
                 </button>
+                <button mat-raised-button [matMenuTriggerFor]="menu" id="menuTrigger" class="el-btn-menu mx-1 py-2"
+                    aria-label="icon-button with a menu" (click)="openMenu()" [class.active]="isOpenedMenu"
+                    [class.default]="!isOpenedMenu">
+                    <fa-icon [icon]="faEllipsisV" [class.active]="isOpenedMenu" size="lg"
+                        class="el-icon-btn-drop-shadow px-2" transform="grow-6">
+                    </fa-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                    <button mat-menu-item [routerLink]="['/settings']">
+                        <fa-icon [icon]="faUserCog" size="lg" class="el-icon-btn-drop-shadow px-2" transform="grow-6">
+                        </fa-icon>
+                        <span class="nav-link-text px-2">Настройки</span>
+                    </button>
+                    <button mat-menu-item disabled>
+                        <!-- <mat-icon>voicemail</mat-icon> -->
+                        <span class="nav-link-text px-2">Check voice mail</span>
+                    </button>
+                    <button mat-menu-item>
+                        <!-- <mat-icon>notifications_off</mat-icon> -->
+                        <span class="nav-link-text px-2">Disable alerts</span>
+                    </button>
+                </mat-menu>
             </ng-container>
             <ng-container *ngIf="isAnonymous$ | async">
                 <button mat-raised-button [routerLink]="['/login']" class="el-btn-nav mx-1 px-4 py-2">

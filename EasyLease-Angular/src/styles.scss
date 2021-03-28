@@ -50,7 +50,7 @@ $EasyLease-Angular-theme: mat-light-theme(
   $secondary: mat-palette($mat-light-blue);
   $info: mat-palette($mat-cyan);
   $success: mat-palette($mat-teal);
-  $accent: map-get($theme, accent);
+  $accent: mat-palette($mat-green, A400);
   $golden: mat-palette($mat-yellow);
   $mandarin: mat-palette($mat-orange);
   $warn: map-get($theme, warn);
@@ -130,6 +130,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
   //*****************************************************************
   $container-theme-colors: get-el-theme-colors($theme);
   $primary: map-get($container-theme-colors, primary);
+  $golden: map-get($container-theme-colors, golden);
   //.................................................................
   @each $name, $color in $container-theme-colors {
     .mat-button.mat-#{$name},
@@ -238,7 +239,6 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
 
   .el-icon-btn-drop-shadow {
     @include el-drop-shadow-filter($el-icon-shadow);
-
     &.active,
     &:active,
     &.focus,
@@ -250,6 +250,18 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
       @include el-drop-shadow-filter($el-icon-shadow);
     }
   }
+
+  .el-icon-side-nav {
+    color: mat-color($golden, 600, 0.5);
+    &.active,
+    &:active,
+    &.focus,
+    &:focus {
+      @include el-drop-shadow-filter($el-icon-btn-drop-shadow-focus);
+      color: mat-color($golden, A200);
+    }
+  }
+
   //-----------------------------------------------------------------
 
   .el-btn-nav {
@@ -322,7 +334,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
       0px 8px 10px -5px rgb(mat-color($primary, 900), 0.2) !important
     );
 
-    &:not(.focus):hover .el-icon-btn-drop-shadow {
+    &:not(.active):hover .el-icon-btn-drop-shadow {
       @include el-drop-shadow-filter($el-icon-btn-drop-shadow-hover);
     }
     &:hover {
@@ -367,7 +379,52 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
       background-color: mat-color($primary, 400) !important;
     }
   }
+  //-----------------------------------------------------------------
 
+  .el-btn-side-nav {
+    font-family: inherit;
+    color: mat-color($primary, 100) !important;
+    background-color: rgba($bg-color, 0);
+    border: none;
+
+    @include el-text-shadow(2px 2px 1px rgba($fg-color, 0.5));
+
+    &:hover {
+      color: $bg-color !important;
+      background-color: mat-color($primary, 600, 0.4) !important;
+    }
+
+    &:hover .el-icon-side-nav {
+      color: mat-color($golden, A400);
+    }
+
+    &:focus .el-icon-side-nav {
+      @include el-drop-shadow-filter($el-icon-btn-drop-shadow-focus);
+      color: mat-color($golden, A200);
+    }
+
+    &.active,
+    &:active,
+    &.focus,
+    &:focus {
+      color: $bg-color !important;
+      background-color: mat-color($primary, 900, 0.5) !important;
+
+      @include el-text-shadow(0px 0px 6px rgba($bg-color, 0.7), 1px 1px 1px rgba($fg-color, 0.3));
+    }
+    &.default,
+    &:default {
+      font-family: inherit;
+      color: mat-color($primary, 100) !important;
+      background-color: mat-color($primary, 700, 0.5);
+      border: none;
+
+      @include el-text-shadow(2px 2px 1px rgba($fg-color, 0.5));
+    }
+    &:disabled {
+      background-color: mat-color($primary, 400, 0.5) !important;
+    }
+  }
   //-----------------------------------------------------------------
   //*****************************************************************
   .navbar {
@@ -405,7 +462,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
   }
 
   .mat-sidenav {
-    @include el-linear-gradient(60deg, mat-color($primary, 300), mat-color($primary, 600));
+    @include el-linear-gradient(270deg, mat-color($primary, 600), mat-color($primary, 900));
     @include el-box-shadow(0 4px 20px 8px rgba($fg-color, 0.4), 0 7px 10px -5px rgba(mat-color($primary, 500), 0.7));
   }
   //-----------------------------------------------------------------

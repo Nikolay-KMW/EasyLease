@@ -5,7 +5,9 @@ import {TopBarComponent} from './components/topBar/topBar.component';
 import {RouterModule} from '@angular/router';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MatButtonModule} from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
 import {StoreModule} from '@ngrx/store';
+
 import {reducers} from './store/reducers';
 
 @NgModule({
@@ -16,6 +18,7 @@ import {reducers} from './store/reducers';
     RouterModule,
     FontAwesomeModule,
     MatButtonModule,
+    MatMenuModule,
     StoreModule.forFeature('topBar', reducers),
   ],
   exports: [TopBarComponent],
