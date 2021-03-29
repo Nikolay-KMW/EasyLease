@@ -9,6 +9,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {StoreModule} from '@ngrx/store';
 
 import {reducers} from './store/reducers';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   declarations: [TopBarComponent],
@@ -19,6 +20,7 @@ import {reducers} from './store/reducers';
     FontAwesomeModule,
     MatButtonModule,
     MatMenuModule,
+    MatDividerModule,
     StoreModule.forFeature('topBar', reducers),
   ],
   exports: [TopBarComponent],

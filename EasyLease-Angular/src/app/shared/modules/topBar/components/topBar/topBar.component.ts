@@ -1,22 +1,13 @@
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {faAsymmetrik} from '@fortawesome/free-brands-svg-icons';
 import {
   faBars,
   faEllipsisV,
+  faList,
   faPencilAlt,
   faSignInAlt,
+  faSignOutAlt,
   faSmile,
   faUserCog,
   faUserPlus,
@@ -36,11 +27,10 @@ import {isOpenedSidenavSelector} from '../../store/selectors';
   templateUrl: './topBar.component.html',
   styleUrls: ['./topBar.component.scss'],
 })
-export class TopBarComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TopBarComponent implements OnInit, OnDestroy {
   @Input('brandName') brandNameProps: string = 'Brand';
 
-  @ViewChild('menu') element?: ElementRef<HTMLElement>;
-  @ViewChild(MatMenuTrigger) trigger?: MatMenuTrigger;
+  @ViewChild(MatMenuTrigger) MatMenuTrigger?: MatMenuTrigger;
 
   isLoggedIn$: Observable<boolean | null>;
   isAnonymous$: Observable<boolean>;
@@ -49,7 +39,7 @@ export class TopBarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   subscribeToIsOpenedSidenav$: Subscription;
 
-  isOpened: boolean = false;
+  isOpenedNav: boolean = false;
   isOpenedMenu: boolean = false;
 
   faUserPlus: IconDefinition = faUserPlus;
@@ -60,48 +50,36 @@ export class TopBarComponent implements OnInit, OnDestroy, AfterViewInit {
   faPencilAlt: IconDefinition = faPencilAlt;
   faSignInAlt: IconDefinition = faSignInAlt;
   faEllipsisV: IconDefinition = faEllipsisV;
+  faSignOutAlt: IconDefinition = faSignOutAlt;
+  faList: IconDefinition = faList;
 
-  constructor(
-    private store: Store<AppStateInterface>,
-    private focusMonitor: FocusMonitor,
-    private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
-  ) {
+  constructor(private store: Store<AppStateInterface>) {
     this.isLoggedIn$ = this.store.pipe(select(isLoggedInSelected));
     this.isAnonymous$ = this.store.pipe(select(isAnonymousSelected));
     this.currentUser$ = this.store.pipe(select(currentUserSelected));
     this.isOpenedSidenav$ = this.store.pipe(select(isOpenedSidenavSelector));
 
-    this.subscribeToIsOpenedSidenav$ = this.isOpenedSidenav$.subscribe((isOpen) => (this.isOpened = isOpen));
+    this.subscribeToIsOpenedSidenav$ = this.isOpenedSidenav$.subscribe((isOpen) => (this.isOpenedNav = isOpen));
   }
 
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {
-    // const topBar = this.element.nativeElement;
-    // console.log(topBar);
-    // this.focusMonitor.stopMonitoring(topBar.getElementById('menuTrigger'));
-    // if (this.element) {
-    //   this.focusMonitor.stopMonitoring(this.element);
-    // }
-  }
-
-  openMenu(): void {
-    if (this.isOpenedMenu) {
-      //this.trigger?.toggleMenu();
-      this.isOpenedMenu = false;
-    } else {
-      //this.trigger?.focus();
+  toggleMenu(): void {
+    if (this.MatMenuTrigger?.menuOpen) {
+      this.MatMenuTrigger?.openMenu();
       this.isOpenedMenu = true;
+    } else {
+      this.MatMenuTrigger?.closeMenu();
+      this.isOpenedMenu = false;
     }
-    //this.trigger?.focus();
   }
-  closeMenu(): void {
-    this.trigger?.toggleMenu();
+  menuClosed(): void {
+    this.MatMenuTrigger?.closeMenu();
+    this.isOpenedMenu = false;
   }
 
   toggleSidenav(): void {
-    if (this.isOpened) {
+    if (this.isOpenedNav) {
       this.store.dispatch(closeSidenavAction());
     } else {
       this.store.dispatch(openSidenavAction());
