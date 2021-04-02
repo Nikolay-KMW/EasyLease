@@ -55,6 +55,7 @@ $EasyLease-Angular-theme: mat-light-theme(
   $mandarin: mat-palette($mat-orange);
   $warn: map-get($theme, warn);
   $rose: mat-palette($mat-pink);
+  $elegant: mat-palette($mat-blue-grey);
 
   @return (
     primary: $primary,
@@ -65,7 +66,8 @@ $EasyLease-Angular-theme: mat-light-theme(
     golden: $golden,
     mandarin: $mandarin,
     warn: $warn,
-    rose: $rose
+    rose: $rose,
+    elegant: $elegant
   );
 }
 
@@ -131,6 +133,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
   $container-theme-colors: get-el-theme-colors($theme);
   $primary: map-get($container-theme-colors, primary);
   $golden: map-get($container-theme-colors, golden);
+  $elegant: map-get($container-theme-colors, elegant);
   //.................................................................
   @each $name, $color in $container-theme-colors {
     .mat-button.mat-#{$name},
@@ -337,7 +340,8 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
     &:not(.active):hover .el-icon-btn-drop-shadow {
       @include el-drop-shadow-filter($el-icon-btn-drop-shadow-hover);
     }
-    &:hover {
+    &:hover,
+    &.default:hover {
       background-color: mat-color($primary, 400);
       border-color: mat-color($primary, 600);
 
@@ -383,7 +387,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
 
   .el-btn-side-nav {
     font-family: inherit;
-    color: mat-color($primary, 100) !important;
+    color: mat-color($elegant, 100) !important;
     background-color: rgba($bg-color, 0);
     border: none;
 
@@ -391,7 +395,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
 
     &:hover {
       color: $bg-color !important;
-      background-color: mat-color($primary, 600, 0.4) !important;
+      background-color: mat-color($elegant, 600, 0.4) !important;
     }
 
     &:hover .el-icon-side-nav {
@@ -408,21 +412,21 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
     &.focus,
     &:focus {
       color: $bg-color !important;
-      background-color: mat-color($primary, 900, 0.5) !important;
+      background-color: mat-color($elegant, 900, 0.5) !important;
 
       @include el-text-shadow(0px 0px 6px rgba($bg-color, 0.7), 1px 1px 1px rgba($fg-color, 0.3));
     }
     &.default,
     &:default {
       font-family: inherit;
-      color: mat-color($primary, 100) !important;
-      background-color: mat-color($primary, 700, 0.5);
+      color: mat-color($elegant, 100) !important;
+      background-color: mat-color($elegant, 700, 0.5);
       border: none;
 
       @include el-text-shadow(2px 2px 1px rgba($fg-color, 0.5));
     }
     &:disabled {
-      background-color: mat-color($primary, 400, 0.5) !important;
+      background-color: mat-color($elegant, 400, 0.5) !important;
     }
   }
   //-----------------------------------------------------------------
@@ -445,7 +449,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
   }
 
   .mat-drawer-container {
-    //display: flex;
+    //display: flex;y
     //flex-direction: column;
     //position: absolute;
     background-color: $body-bg-color;
@@ -462,12 +466,12 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
   }
 
   .mat-sidenav {
-    @include el-linear-gradient(270deg, mat-color($primary, 600), mat-color($primary, 900));
+    @include el-linear-gradient(270deg, mat-color($elegant, 600), mat-color($elegant, 800));
     @include el-box-shadow(0 4px 20px 8px rgba($fg-color, 0.4), 0 7px 10px -5px rgba(mat-color($primary, 500), 0.7));
   }
 
   .mat-menu {
-    background-color: mat-color($primary, 700) !important;
+    background-color: mat-color($elegant, 500) !important;
     //@include el-linear-gradient(45deg, mat-color($primary, 600), mat-color($primary, 800));
   }
   //-----------------------------------------------------------------

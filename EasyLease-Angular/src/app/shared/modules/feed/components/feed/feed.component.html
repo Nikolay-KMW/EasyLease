@@ -1,1 +1,63 @@
-Feed
+<div *ngIf="isLoading$ | async">Loading...</div>
+<div *ngIf="error$ | async">Some error happened...</div>
+
+<div *ngIf="feed$ | async">
+    <div class="card" *ngFor="let article of (feed$ | async)?.articles">
+        <div class="card-body container-fluid">
+            <div class="row justify-content-center content">
+                <div class="col-lg-4 col-md-12">
+                    <a [routerLink]="[ '/profiles', article.author.username ]">
+                        <img [src]="article.author.image" class="card-img img-raised" />
+                    </a>
+                </div>
+                <div class="col-lg-6 col-md-9 d-flex flex-column justify-content-between">
+                    <a [routerLink]="[ '/articles', article.slug ]" class="my-2">
+                        <h4 class="card-title">{{article.title}}</h4>
+                        <p class="card-description overflow-hidden">{{article.description}} Lorem ipsum dolor sit
+                            amet
+                            consectetur
+                            adipisicing elit. Facilis praesentium laborum laboriosam! Maxime molestiae omnis praesentium
+                            laborum necessitatibus pariatur tempora sint iusto assumenda accusantium ex molestias ad,
+                            fuga, repellat magnam!</p>
+                    </a>
+                    <div class="my-2">
+                        <div class="card-link">
+                            <a [routerLink]="[ '/profiles', article.author.username ]">
+                                <img [src]="article.author.username" />
+                            </a>
+                            <span class="">, {{article.createdAt}}</span>
+                        </div>
+                        <mat-divider class="my-2"></mat-divider>
+                        <div class="">
+                            HERE IS LIST OF TAGS
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 d-flex flex-md-column justify-content-between">
+                    <div class="ml-md-auto my-2">
+                        <div>ADD TO FAVORITES</div>
+                    </div>
+                    <div class="ml-auto">
+                        <button mat-raised-button color="primary" class="overflow-hidden">
+                            от: 1000гр.
+                        </button>
+                    </div>
+
+                    <!-- <div class="row justify-content-end my-2">
+                        <div class="col-auto w-50">
+                            <div> ADD TO FAVORITES</div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <button mat-button-raised color="primary" class="overflow-hidden w-100 mx-auto">
+                                от: 1000гр.
+                            </button>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    PAGINATION
+</div>
