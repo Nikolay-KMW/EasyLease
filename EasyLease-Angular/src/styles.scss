@@ -440,7 +440,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
     border-radius: 0px !important;
   }
 
-  .card-title {
+  .el-title {
     text-shadow: 0px 0px 6px rgba($bg-color, 0.7), 2px 3px 3px rgba($fg-color, 0.3);
   }
 
@@ -453,7 +453,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
     //flex-direction: column;
     //position: absolute;
     background-color: $body-bg-color;
-    padding-top: 30px;
+    padding-top: 0px;
     height: 100%;
     // top: 0;
     // bottom: 0;
@@ -474,6 +474,11 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
     background-color: mat-color($elegant, 500) !important;
     //@include el-linear-gradient(45deg, mat-color($primary, 600), mat-color($primary, 800));
   }
+
+  .banner {
+    //background-color: mat-color($primary, 700);
+    @include el-linear-gradient(180deg, mat-color($primary, 700), mat-color($primary, 800));
+  }
   //-----------------------------------------------------------------
 }
 //===========================================================================
@@ -486,7 +491,7 @@ body {
 }
 body {
   margin: 0px;
-  padding-top: 60px;
+  padding-top: 65px;
 }
 button {
   &:active,
@@ -580,28 +585,3 @@ button {
 //   color: rgba(255, 255, 255, 0.3);
 // }
 // //===========================================================================
-
-//-----------------------------------------------------------------
-// $el-btn-nav-color: $bg-color;
-// $el-btn-nav-bg-color: mat-color($primary, 500);
-
-// $el-btn-nav-text-shadow: 2px 2px 1px rgba($fg-color, 0.5);
-
-// $el-btn-nav-box-shadow: 0px 14px 26px -12px rgba(mat-color($primary, 900), 0.42),
-//   0px 4px 23px 0px rgb($fg-color, 0.12), 0px 8px 10px -5px rgb(mat-color($primary, 900), 0.2) !important;
-
-// $el-btn-nav-bg-color-hover: mat-color($primary, 400);
-// $el-btn-nav-border-color-hover: mat-color($primary, 600);
-
-// $el-btn-nav-text-shadow-hover: 2px 3px 1px rgba($fg-color, 0.4);
-
-// $el-btn-nav-color-focus: $bg-color;
-// $el-btn-nav-bg-color-focus: mat-color($primary, 600);
-// $el-btn-nav-border-color-focus: mat-color($primary, 700);
-
-// $el-btn-nav-text-shadow-focus: 0px 0px 6px rgba($bg-color, 0.7), 1px 1px 1px rgba($fg-color, 0.3);
-// $el-btn-nav-box-shadow-focus: 0px 5px 10px 2px rgba(mat-color($primary, 900), 0.2) inset,
-//   0px 7px 10px 2px rgba($bg-color, 0.2) !important;
-
-//$el-btn-nav-bg-color-disabled: mat-color($primary, 400); //!important;
-//-----------------------------------------------------------------

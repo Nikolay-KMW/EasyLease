@@ -1,12 +1,13 @@
 <div class="main-content">
-    BANNER
+    <el-banner title="Список объявлений" description="Вы можете разместить здесь свое объявление бесплатно!">
+    </el-banner>
     <div class="container">
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-12 col-xl-10">
                 FEED TOGGLER
                 <el-feed [apiUrl]="apiUrl"></el-feed>
             </div>
-            <div class="col-md-2">
+            <div class="col-1 col-xl-2 d-none d-xl-block">
                 POPULAR TAGS
             </div>
         </div>

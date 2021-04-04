@@ -3,7 +3,7 @@
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="(isOpenedSidenav$ | async)" (closed)="closeSidenav()">
         <mat-nav-list>
-            <mat-divider class="my-2"></mat-divider>
+            <mat-divider class="m-2"></mat-divider>
             <button mat-list-item class="el-btn-side-nav" (click)="closeSidenav()">
                 <fa-icon [icon]="faEdit" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true" transform="grow-2">
                 </fa-icon> <span class="nav-link-text px-2">Создать объявление</span>
@@ -24,7 +24,7 @@
                 <fa-icon [icon]="faEdit" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true" transform="grow-2">
                 </fa-icon> <span class="nav-link-text px-2">Создать объявление</span>
             </button>
-            <mat-divider class="my-2"></mat-divider>
+            <mat-divider class="m-2"></mat-divider>
             <button mat-list-item class="el-btn-side-nav">
                 <fa-icon [icon]="faStar" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true" transform="grow-2">
                 </fa-icon> <span class="nav-link-text px-2">О нас</span>

@@ -10,6 +10,8 @@ import {GetFeedEffect} from './store/effects/getFeed.effect';
 import {reducers} from './store/reducers';
 import {FeedService} from './services/feed.service';
 import {MatButtonModule} from '@angular/material/button';
+import {ErrorMessageModule} from '../errorMessage/errorMessage.module';
+import {LoadingModule} from '../loading/loading.module';
 
 @NgModule({
   declarations: [FeedComponent],
@@ -18,6 +20,8 @@ import {MatButtonModule} from '@angular/material/button';
     RouterModule,
     MatDividerModule,
     MatButtonModule,
+    ErrorMessageModule,
+    LoadingModule,
     EffectsModule.forFeature([GetFeedEffect]),
     StoreModule.forFeature('feed', reducers),
   ],
