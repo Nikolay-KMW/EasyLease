@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <ul class="btn-group pagination">
+                <button mat-raised-button *ngFor="let page of pages" class="br-0" color="primary"
+                    [class.active]="currentPageProps === page">
+                    <div [routerLink]="urlProps" [queryParams]="{page: page}" class="">{{page}}</div>
+                </button>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="btn-group">
+    <button mat-raised-button color="primary" class="br-0">1</button>
+    <button mat-raised-button color="primary" class="br-0">2</button>
+    <button mat-raised-button color="primary" class="br-0">3</button>
+    <button mat-raised-button color="primary" class="br-0">4</button>
+    <button mat-raised-button color="primary" class="br-0">5</button>
+    <button mat-raised-button color="primary" class="br-0">6</button>
+</div> -->
