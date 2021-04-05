@@ -143,6 +143,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
       &:hover {
         background-color: mat-color($color, 100, 0.3);
       }
+      &.active,
       &:active,
       &:focus {
         background-color: mat-color($color, 200, 0.4);
@@ -162,6 +163,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
         background-color: mat-color($color, 600);
         border-color: mat-color($color, 700);
       }
+      &.active,
       &:active,
       &:focus {
         background-color: mat-color($color, 700);
@@ -187,6 +189,7 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
         background-color: mat-color($color, 600);
         border-color: mat-color($color, 700);
       }
+      &.active,
       &:active,
       &:focus {
         background-color: mat-color($color, 700);
@@ -438,6 +441,24 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
 
   .br-0 {
     border-radius: 0px !important;
+  }
+
+  .br-20-left {
+    border-top-left-radius: 20px !important;
+    border-bottom-left-radius: 20px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+  }
+
+  .br-20-right {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-right-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+  }
+
+  .br-20 {
+    border-radius: 20px !important;
   }
 
   .el-title {

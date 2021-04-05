@@ -9,10 +9,10 @@ import {UtilsService} from 'src/app/shared/services/utils.service';
 export class PaginationComponent implements OnInit {
   @Input('total') totalProps?: number;
   @Input('limit') limitProps?: number;
-  @Input('currentPage') currentPageProps?: number;
+  @Input('currentPage') currentPageProps: number = 1;
   @Input('url') urlProps?: string;
 
-  pagesCount?: number;
+  pagesCount: number = 0;
   pages?: number[];
 
   constructor(private utilsService: UtilsService) {}

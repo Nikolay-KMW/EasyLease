@@ -1,21 +1,27 @@
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <ul class="btn-group pagination">
-                <button mat-raised-button *ngFor="let page of pages" class="br-0" color="primary"
-                    [class.active]="currentPageProps === page">
-                    <div [routerLink]="urlProps" [queryParams]="{page: page}" class="">{{page}}</div>
+<div class="container pl-1">
+    <div class="row justify-content-center w-100">
+        <ul class="btn-group">
+            <ng-container *ngFor="let page of pages">
+                <button mat-raised-button class="br-20-left" color="primary" *ngIf="(page === 1)"
+                    [class.active]="currentPageProps === page" [class.br-20]="pagesCount === 1" [routerLink]="urlProps"
+                    [queryParams]="{page: page}">
+                    <span class="h5">{{page}}</span>
                 </button>
-            </ul>
-        </div>
+                <div *ngIf="(currentPageProps > 3) && (currentPageProps-3 === page) && (pagesCount > 5)"
+                    class="h4 px-2 font-weight-bolder text-nowrap d-none d-sm-block">. . .</div>
+                <button mat-raised-button class="br-0" color="primary"
+                    *ngIf="(page != 1) && (page != pagesCount) && ((currentPageProps-1 === page) || (currentPageProps === page) || (currentPageProps+1 === page) || ((currentPageProps === 1) && ((page === 3) || (page === 4))) || ((currentPageProps === 2) && ((page === 3) || (page === 4))) || ((currentPageProps === pagesCount) && ((page === pagesCount-3) || (page === pagesCount-2))) || ((currentPageProps === pagesCount-1) && ((page === pagesCount-3) || (page === pagesCount-2))))"
+                    [class.active]="currentPageProps === page" [routerLink]="urlProps" [queryParams]="{page: page}">
+                    <span class="h5">{{page}}</span>
+                </button>
+                <div *ngIf="(pagesCount > 5) && (currentPageProps+3 === page)"
+                    class="h4 px-2 font-weight-bolder text-nowrap d-none d-sm-block">. . .</div>
+                <button mat-raised-button class="br-20-right" color="primary"
+                    *ngIf="(pagesCount > 1) && (pagesCount === page)" [class.active]="currentPageProps === page"
+                    [routerLink]="urlProps" [queryParams]="{page: page}">
+                    <span class="h5">{{page}}</span>
+                </button>
+            </ng-container>
+        </ul>
     </div>
 </div>
-
-<!-- <div class="btn-group">
-    <button mat-raised-button color="primary" class="br-0">1</button>
-    <button mat-raised-button color="primary" class="br-0">2</button>
-    <button mat-raised-button color="primary" class="br-0">3</button>
-    <button mat-raised-button color="primary" class="br-0">4</button>
-    <button mat-raised-button color="primary" class="br-0">5</button>
-    <button mat-raised-button color="primary" class="br-0">6</button>
-</div> -->
