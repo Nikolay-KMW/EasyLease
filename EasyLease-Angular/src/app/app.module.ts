@@ -17,6 +17,7 @@ import {PersistanceService} from './shared/services/persistance.service';
 import {AuthInterceptor} from './shared/services/authInterceptor.service';
 import {GlobalFeedModule} from './globalFeed/globalFeed.module';
 import {ShellModule} from './shared/modules/shell/shell.module';
+import {routerReducer, StoreRouterConnectingModule} from '@ngrx/router-store';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,9 +25,10 @@ import {ShellModule} from './shared/modules/shell/shell.module';
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
-    StoreModule.forRoot({}),
+    StoreModule.forRoot({router: routerReducer}),
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     EffectsModule.forRoot([]),
+    StoreRouterConnectingModule.forRoot(),
     // FontAwesomeModule,
     AuthModule,
     TopBarModule,

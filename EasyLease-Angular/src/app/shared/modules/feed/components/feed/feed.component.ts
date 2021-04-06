@@ -1,6 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
+import {parseUrl, stringify} from 'query-string';
 import {Observable, Subscription} from 'rxjs';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
@@ -35,12 +36,19 @@ export class FeedComponent implements OnInit, OnDestroy {
     this.baseUrl = router.url.split('?')[0];
     this.queryParamsSubscription = this.route.queryParams.subscribe((params: Params) => {
       this.currentPage = Number(params.page || '1');
+      this.ngOnInit();
     });
   }
 
   ngOnInit(): void {
+    const offset = this.currentPage * this.limit - this.limit;
+
     if (this.apiUrlProps) {
-      this.store.dispatch(getFeedAction({url: this.apiUrlProps}));
+      const parsedUrl = parseUrl(this.apiUrlProps);
+      const stringifiedParams = stringify({limit: this.limit, offset, ...parsedUrl.query});
+      const apiUrlWithParams = `${parsedUrl.url}?${stringifiedParams}`;
+
+      this.store.dispatch(getFeedAction({url: apiUrlWithParams}));
     }
   }
 

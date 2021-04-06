@@ -1,4 +1,4 @@
-import {act} from '@ngrx/effects';
+import {routerNavigatedAction} from '@ngrx/router-store';
 import {Action, createReducer, on} from '@ngrx/store';
 
 import {FeedStateInterface} from '../types/feedState.interface';
@@ -32,6 +32,14 @@ export const feedReducer = createReducer(
     (state): FeedStateInterface => ({
       ...state,
       isLoading: false,
+    })
+  ),
+  on(
+    routerNavigatedAction,
+    (state): FeedStateInterface => ({
+      ...state,
+      error: null,
+      date: null,
     })
   )
 );
