@@ -28,8 +28,8 @@
                             <span class="">, {{article.createdAt}}</span>
                         </div>
                         <mat-divider class="my-2"></mat-divider>
-                        <div class="">
-                            HERE IS LIST OF TAGS
+                        <div class="tag-list overflow-hidden">
+                            <el-tag-list [tags]="article.tagList"></el-tag-list>
                         </div>
                     </div>
                 </div>
