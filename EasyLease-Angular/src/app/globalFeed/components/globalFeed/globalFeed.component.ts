@@ -6,7 +6,8 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./globalFeed.component.scss'],
 })
 export class GlobalFeedComponent implements OnInit {
-  apiUrl = '/articles';
+  apiUrlArticles = '/articles';
+  apiUrlTags = '/tags';
 
   constructor() {}
 

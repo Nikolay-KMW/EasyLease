@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {PopularTagType} from 'src/app/shared/types/popularTag.type';
+import {TagType} from 'src/app/shared/types/Tag.type';
 
 @Component({
   selector: 'el-tag-list',
@@ -7,7 +7,7 @@ import {PopularTagType} from 'src/app/shared/types/popularTag.type';
   styleUrls: ['./tagList.component.scss'],
 })
 export class TagListComponent implements OnInit {
-  @Input('tags') tagsProps?: PopularTagType[];
+  @Input('tags') tagsProps?: TagType[];
 
   constructor() {}
 
