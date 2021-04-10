@@ -1,4 +1,3 @@
-import {routerNavigatedAction} from '@ngrx/router-store';
 import {Action, createReducer, on} from '@ngrx/store';
 
 import {TagsStateInterface} from '../types/tagsState.interface';

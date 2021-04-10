@@ -7,13 +7,15 @@
         <div class="row justify-content-center content">
             <div class="col">
                 <div class="card">
-                    <div class="card-header card-header-primary">
-                        <h1 class="card-title el-title text-center register-title">Теги</h1>
+                    <div class="card-header card-header-info">
+                        <h1 class="card-title el-title text-center tags-title">Теги</h1>
                     </div>
                     <div class="card-body">
                         <mat-chip-list ariaOrientation="horizontal" aria-label="Tags">
-                            <mat-chip *ngFor="let tag of (tags$ | async)?.tags" [routerLink]="[ '/tags', tag ]"
-                                class="mx-2">{{tag}}</mat-chip>
+                            <mat-chip *ngFor="let tag of tags$ | async" [routerLink]="[ apiUrlProps, tag ]"
+                                class="mx-2">
+                                {{tag}}
+                            </mat-chip>
                         </mat-chip-list>
                     </div>
                 </div>

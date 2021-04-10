@@ -1,15 +1,18 @@
 <div class="main-content">
     <el-banner title="Список объявлений" description="Вы можете разместить здесь свое объявление бесплатно!">
     </el-banner>
+    <div class="tags position-fixed d-none d-xl-block">
+        <el-tags [apiUrl]="apiUrlTags"></el-tags>
+    </div>
     <div class="container">
         <div class="row">
-            <div class="col-12 col-xl-10">
+            <div class="col-12">
                 FEED TOGGLER
                 <el-feed [apiUrl]="apiUrlArticles"></el-feed>
             </div>
-            <div class="col-1 col-xl-2 d-none d-xl-block">
+            <!-- <div class="col-2 col-xl-3 d-none d-xl-block">
                 <el-tags [apiUrl]="apiUrlTags"></el-tags>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

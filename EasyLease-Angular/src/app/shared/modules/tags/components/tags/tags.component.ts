@@ -3,9 +3,9 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
+import {TagType} from 'src/app/shared/types/Tag.type';
 import {getTagsAction} from '../../store/actions/getTags.action';
 import {errorSelector, isLoadingSelector, tagsSelector} from '../../store/selectors';
-import {GetTagsResponseInterface} from '../../types/getTagsResponse.interface';
 
 @Component({
   selector: 'el-tags',
@@ -17,7 +17,7 @@ export class TagsComponent implements OnInit {
 
   isLoading$: Observable<boolean>;
   error$: Observable<string | null>;
-  tags$: Observable<GetTagsResponseInterface | null>;
+  tags$: Observable<TagType[] | null>;
 
   constructor(private store: Store<AppStateInterface>) {
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));

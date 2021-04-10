@@ -4,8 +4,8 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 
 import {TagsService} from '../../services/tags.service';
-import {GetTagsResponseInterface} from '../../types/getTagsResponse.interface';
 import {getTagsAction, getTagsFailureAction, getTagsSuccessAction} from '../actions/getTags.action';
+import {TagType} from 'src/app/shared/types/Tag.type';
 
 @Injectable()
 export class GetTagsEffect {
@@ -16,7 +16,7 @@ export class GetTagsEffect {
       ofType(getTagsAction),
       switchMap(({url}) => {
         return this.tagsService.getTags(url).pipe(
-          map((tags: GetTagsResponseInterface) => {
+          map((tags: TagType[]) => {
             return getTagsSuccessAction({tags});
           }),
           catchError(() => {
