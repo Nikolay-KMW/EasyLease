@@ -1,3 +1,3 @@
-<mat-chip-list *ngFor="let tag of tagsProps" class="d-inline-block" ariaOrientation="horizontal" aria-label="Tags list">
-    <mat-chip class="mx-2">{{tag}}</mat-chip>
+<mat-chip-list ariaOrientation="horizontal" aria-label="Tags list">
+    <mat-chip *ngFor="let tag of tagsProps" class="mx-1">{{tag}}</mat-chip>
 </mat-chip-list>

@@ -1,4 +1,9 @@
-<div class="my-3">
-    <strong>Загрузка... </strong>
+<div *ngIf="loadingModeProps === 'bar'" class="my-3">
+    <strong>Загрузка {{nameModuleProps}}... </strong>
     <mat-progress-bar mode="query"></mat-progress-bar>
+</div>
+
+<div *ngIf="loadingModeProps === 'spinner'" class="my-3">
+    <mat-spinner diameter=22 class="d-inline-block align-bottom"></mat-spinner>&nbsp;
+    <strong class="align-middle">Загрузка {{nameModuleProps}}... </strong>
 </div>
