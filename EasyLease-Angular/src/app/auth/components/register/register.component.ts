@@ -8,7 +8,7 @@ import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
 import {AuthService} from '../../services/auth.service';
 import {registerAction} from '../../store/actions/register.action';
-import {isSubmittingSelector, validationErrorsSelected} from '../../store/selectors';
+import {isSubmittingSelector, validationErrorsSelector} from '../../store/selectors';
 import {RegisterRequestInterface} from '../../types/registerRequest.interface';
 
 @Component({
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
     this.confirmPassword = this.form.controls['confirmPassword'] as FormControl;
 
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
-    this.backendErrors$ = this.store.pipe(select(validationErrorsSelected));
+    this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
   }
 
   ngOnInit(): void {

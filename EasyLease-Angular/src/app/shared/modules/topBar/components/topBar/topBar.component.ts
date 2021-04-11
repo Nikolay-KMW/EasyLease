@@ -16,7 +16,7 @@ import {
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 
-import {currentUserSelected, isAnonymousSelected, isLoggedInSelected} from 'src/app/auth/store/selectors';
+import {currentUserSelector, isAnonymousSelector, isLoggedInSelector} from 'src/app/auth/store/selectors';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {closeSidenavAction, openSidenavAction} from '../../store/actions/toggle.action';
@@ -54,9 +54,9 @@ export class TopBarComponent implements OnInit, OnDestroy {
   faList: IconDefinition = faList;
 
   constructor(private store: Store<AppStateInterface>) {
-    this.isLoggedIn$ = this.store.pipe(select(isLoggedInSelected));
-    this.isAnonymous$ = this.store.pipe(select(isAnonymousSelected));
-    this.currentUser$ = this.store.pipe(select(currentUserSelected));
+    this.isLoggedIn$ = this.store.pipe(select(isLoggedInSelector));
+    this.isAnonymous$ = this.store.pipe(select(isAnonymousSelector));
+    this.currentUser$ = this.store.pipe(select(currentUserSelector));
     this.isOpenedSidenav$ = this.store.pipe(select(isOpenedSidenavSelector));
 
     this.subscribeToIsOpenedSidenav$ = this.isOpenedSidenav$.subscribe((isOpen) => (this.isOpenedNav = isOpen));

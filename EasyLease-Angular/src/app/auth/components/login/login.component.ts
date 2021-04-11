@@ -8,7 +8,7 @@ import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
 import {AuthService} from '../../services/auth.service';
 import {loginAction} from '../../store/actions/login.action';
-import {isSubmittingSelector, validationErrorsSelected} from '../../store/selectors';
+import {isSubmittingSelector, validationErrorsSelector} from '../../store/selectors';
 import {LoginRequestInterface} from '../../types/loginRequest.interface';
 
 @Component({
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
     this.password = this.form.controls['password'] as FormControl;
 
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
-    this.backendErrors$ = this.store.pipe(select(validationErrorsSelected));
+    this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
   }
 
   ngOnInit(): void {
