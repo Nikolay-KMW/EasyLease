@@ -18,6 +18,9 @@ import {AuthInterceptor} from './shared/services/authInterceptor.service';
 import {GlobalFeedModule} from './globalFeed/globalFeed.module';
 import {ShellModule} from './shared/modules/shell/shell.module';
 import {routerReducer, StoreRouterConnectingModule} from '@ngrx/router-store';
+import {YourFeedModule} from './yourFeed/yourFeed.module';
+import {FeedTogglerModule} from './shared/modules/feedToggler/feedToggler.module';
+import {BannerModule} from './shared/modules/banner/banner.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +37,9 @@ import {routerReducer, StoreRouterConnectingModule} from '@ngrx/router-store';
     TopBarModule,
     ShellModule,
     GlobalFeedModule,
+    YourFeedModule,
+    BannerModule,
+    FeedTogglerModule,
     ExampleOfExperimentsModule,
     HttpClientModule,
   ],

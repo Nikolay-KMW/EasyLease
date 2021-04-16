@@ -1,6 +1,8 @@
 <el-top-bar [brandName]="brandName"></el-top-bar>
-
 <el-shell>
+  <el-banner title="Список объявлений" description="Вы можете разместить здесь свое объявление бесплатно!">
+  </el-banner>
+  <el-feed-toggler [tagName]="'test'"></el-feed-toggler>
   <!-- <example-experiment></example-experiment> -->
   <router-outlet></router-outlet>
 </el-shell>
