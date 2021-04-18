@@ -2,16 +2,16 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 
-import {GlobalFeedComponent} from './components/globalFeed/globalFeed.component';
+import {FilterFeedComponent} from './components/filterFeed/filterFeed.component';
 import {FeedModule} from '../shared/modules/feed/feed.module';
 import {TagsModule} from '../shared/modules/tags/tags.module';
 
-const routes = [{path: '', component: GlobalFeedComponent}];
+const routes = [{path: 'tags/:slug', component: FilterFeedComponent}];
 
 @NgModule({
-  declarations: [GlobalFeedComponent],
+  declarations: [FilterFeedComponent],
   imports: [CommonModule, RouterModule.forChild(routes), FeedModule, TagsModule],
   exports: [],
   providers: [],
 })
-export class GlobalFeedModule {}
+export class FilterFeedModule {}

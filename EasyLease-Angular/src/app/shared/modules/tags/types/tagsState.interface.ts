@@ -4,4 +4,5 @@ export interface TagsStateInterface {
   isLoading: boolean;
   error: string | null;
   date: TagType[] | null;
+  selectedTag: TagType | null;
 }

@@ -13,3 +13,8 @@ export const isLoadingSelector = createSelector(
 export const errorSelector = createSelector(tagsFeatureSelector, (tagsState: TagsStateInterface) => tagsState.error);
 
 export const tagsSelector = createSelector(tagsFeatureSelector, (tagsState: TagsStateInterface) => tagsState.date);
+
+export const selectedTagSelector = createSelector(
+  tagsFeatureSelector,
+  (tagsState: TagsStateInterface) => tagsState.selectedTag
+);

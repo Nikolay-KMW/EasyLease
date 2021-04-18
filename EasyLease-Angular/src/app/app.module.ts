@@ -1,7 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-//import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {StoreModule} from '@ngrx/store';
@@ -21,6 +20,7 @@ import {routerReducer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {YourFeedModule} from './yourFeed/yourFeed.module';
 import {FeedTogglerModule} from './shared/modules/feedToggler/feedToggler.module';
 import {BannerModule} from './shared/modules/banner/banner.module';
+import {FilterFeedModule} from './filterFeed/filterFeed.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,12 +32,12 @@ import {BannerModule} from './shared/modules/banner/banner.module';
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     EffectsModule.forRoot([]),
     StoreRouterConnectingModule.forRoot(),
-    // FontAwesomeModule,
     AuthModule,
     TopBarModule,
     ShellModule,
     GlobalFeedModule,
     YourFeedModule,
+    FilterFeedModule,
     BannerModule,
     FeedTogglerModule,
     ExampleOfExperimentsModule,

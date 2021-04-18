@@ -1,9 +1,14 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
+
 import {isLoggedInSelector} from 'src/app/auth/store/selectors';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
+import {TabLink} from 'src/app/shared/modules/feedToggler/types/tabLink.type';
+import {TagType} from 'src/app/shared/types/Tag.type';
+import {selectedTagSelector} from '../../../tags/store/selectors';
+import {parseUrl} from 'query-string';
 
 @Component({
   selector: 'el-feed-toggler',
@@ -11,38 +16,30 @@ import {AppStateInterface} from 'src/app/shared/types/appState.interface';
   styleUrls: ['./feedToggler.component.scss'],
 })
 export class FeedTogglerComponent implements OnInit, OnDestroy {
-  @Input('tagName') tagNameProps?: string | null;
-  //@Input('visibleByUrl') visibleByUrlProps?: string[] | null;
+  tagName: TagType | null = null;
+  tabs!: TabLink[];
 
-  //visibleByUrlProps: string[] = ['/feed', '/', '/tag'];
-
-  tabItems: TabItem[];
-
+  tagNameSubscription: Subscription;
+  isLoggedInSubscription: Subscription;
   navigationEndSubscription: Subscription;
 
-  //isLoggedIn$: Observable<boolean | null>;
-
-  isLoggedInSubscription$: Subscription;
   isLoggedIn: boolean = false;
-  activeLink: string = '';
+  activeLink!: string;
   isVisible: boolean = false;
 
   constructor(private store: Store<AppStateInterface>, private router: Router) {
-    this.isLoggedInSubscription$ = this.store
-      .pipe(select(isLoggedInSelector))
-      .subscribe((isLoggedIn) => (isLoggedIn == null ? (this.isLoggedIn = false) : (this.isLoggedIn = isLoggedIn)));
+    // this.tabs = [new TabLink('Все объявления', '/', true)];
+    // this.activeLink = this.tabs[0].link;
 
-    // if (this.visibleByUrlProps) {
-    //   this.activeLink = this.visibleByUrlProps[0];
-    // }
+    this.tagNameSubscription = store.pipe(select(selectedTagSelector)).subscribe((selectedTag) => {
+      this.tagName = selectedTag;
+      this.ngOnInit();
+    });
 
-    this.tabItems = [
-      new TabItem('Отслеживаемые', '/feed', this.isLoggedIn),
-      new TabItem('Все объявления', '/', true),
-      new TabItem('Фильтр по тегу:', '/tag', this.tagNameProps == null ? false : true),
-    ];
-
-    this.activeLink = this.tabItems[1].nameItem;
+    this.isLoggedInSubscription = this.store.pipe(select(isLoggedInSelector)).subscribe((isLoggedIn) => {
+      isLoggedIn == null ? (this.isLoggedIn = false) : (this.isLoggedIn = isLoggedIn);
+      this.ngOnInit();
+    });
 
     this.navigationEndSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -52,23 +49,31 @@ export class FeedTogglerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.tabs = [
+      new TabLink('Отслеживаемые', '/feed', this.isLoggedIn),
+      new TabLink('Все объявления', '/', true),
+      new TabLink(`Фильтр по тегу: #${this.tagName}`, '/tags', this.tagName == null ? false : true),
+    ];
+
+    this.activeLink = this.tabs[1].link;
     this.isVisible = false;
 
-    let navUrl = this.router.url.split('/')[1];
+    const parsedUrl = parseUrl(this.router.url);
+
+    let navUrl = parsedUrl.url.split('/')[1];
     navUrl = `/${navUrl}`;
 
-    // this.visibleByUrlProps?.forEach((url) => {
-    //   if (navUrl === url) {
-    //     this.isVisible = true;
-    //     this.activeLink = url;
-    //   }
-    // });
-
-    //console.log(`visible:${this.isVisible}, visibleByUrl:${this.visibleByUrlProps}, url:${this.router.url}`);
+    for (const tab of this.tabs) {
+      if (navUrl === tab.link) {
+        this.isVisible = true;
+        this.activeLink = tab.link;
+      }
+    }
   }
 
   ngOnDestroy(): void {
     this.navigationEndSubscription.unsubscribe();
-    this.isLoggedInSubscription$.unsubscribe();
+    this.isLoggedInSubscription.unsubscribe();
+    this.tagNameSubscription.unsubscribe();
   }
 }

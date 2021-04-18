@@ -2,11 +2,13 @@ import {Action, createReducer, on} from '@ngrx/store';
 
 import {TagsStateInterface} from '../types/tagsState.interface';
 import {getTagsAction, getTagsFailureAction, getTagsSuccessAction} from './actions/getTags.action';
+import {setSelectedTagAction} from './actions/setSelectedTag.action';
 
 const initialState: TagsStateInterface = {
   isLoading: false,
   error: null,
   date: null,
+  selectedTag: null,
 };
 
 export const tagsReducer = createReducer(
@@ -16,6 +18,7 @@ export const tagsReducer = createReducer(
     (state): TagsStateInterface => ({
       ...state,
       isLoading: true,
+      date: null,
     })
   ),
   on(
@@ -31,6 +34,13 @@ export const tagsReducer = createReducer(
     (state): TagsStateInterface => ({
       ...state,
       isLoading: false,
+    })
+  ),
+  on(
+    setSelectedTagAction,
+    (state, action): TagsStateInterface => ({
+      ...state,
+      selectedTag: action.selectedTag,
     })
   )
 );
