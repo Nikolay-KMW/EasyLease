@@ -52,19 +52,15 @@ export class FeedTogglerComponent implements OnInit, OnDestroy {
     this.tabs = [
       new TabLink('Отслеживаемые', '/feed', this.isLoggedIn),
       new TabLink('Все объявления', '/', true),
-      new TabLink(`Фильтр по тегу: #${this.tagName}`, '/tags', this.tagName == null ? false : true),
+      new TabLink(`Фильтр по тегу: #${this.tagName}`, `/tags/${this.tagName}`, this.tagName == null ? false : true),
     ];
 
-    this.activeLink = this.tabs[1].link;
     this.isVisible = false;
 
     const parsedUrl = parseUrl(this.router.url);
 
-    let navUrl = parsedUrl.url.split('/')[1];
-    navUrl = `/${navUrl}`;
-
     for (const tab of this.tabs) {
-      if (navUrl === tab.link) {
+      if (parsedUrl.url === tab.link) {
         this.isVisible = true;
         this.activeLink = tab.link;
       }

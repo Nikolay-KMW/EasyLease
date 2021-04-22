@@ -1,24 +1,26 @@
 <div class="container" *ngIf="isVisible">
-    <!-- <nav mat-tab-nav-bar>
-        <a mat-tab-link [routerLink]="[visibleByUrlProps[0]]" *ngIf="isLoggedIn$ | async"
-            (click)="activeLink = visibleByUrlProps[0]" [active]="activeLink == visibleByUrlProps[0]">
-            Отслеживаемые
-        </a>
-        <a mat-tab-link [routerLink]="[visibleByUrlProps[1]]" (click)="activeLink = visibleByUrlProps[1]"
-            [active]="activeLink == visibleByUrlProps[1]">
-            Все объявления
-        </a>
-        <a mat-tab-link [routerLink]="[visibleByUrlProps[2], tagNameProps]" *ngIf="tagNameProps"
-            (click)="activeLink = visibleByUrlProps[2]" [active]="activeLink == visibleByUrlProps[2]">
-            Фильтр по тегу: {{tagNameProps}}
-        </a>
-    </nav> -->
-    <nav mat-tab-nav-bar>
+
+    <!-- <nav mat-tab-nav-bar class="tab-nav-bar">
         <ng-container *ngFor="let tab of tabs">
             <a mat-tab-link [routerLink]="tab.link" *ngIf="tab.isVisible" (click)="activeLink = tab.link"
                 [active]="activeLink == tab.link">
                 {{tab.nameTab}}
             </a>
         </ng-container>
+    </nav> -->
+
+    <nav mat-tab-nav-bar class="tab-nav-bar">
+        <a mat-tab-link [routerLink]="tabs[0].link" *ngIf="tabs[0].isVisible" (click)="activeLink = tabs[0].link"
+            [active]="activeLink == tabs[0].link">
+            {{tabs[0].nameTab}}
+        </a>
+        <a mat-tab-link [routerLink]="tabs[1].link" *ngIf="tabs[1].isVisible" (click)="activeLink = tabs[1].link"
+            [active]="activeLink == tabs[1].link">
+            {{tabs[1].nameTab}}
+        </a>
+        <a mat-tab-link [routerLink]="tabs[2].link" *ngIf="tabs[2].isVisible" (click)="activeLink = tabs[2].link"
+            [active]="activeLink == tabs[2].link">
+            {{tabs[2].nameTab}}
+        </a>
     </nav>
 </div>

@@ -23,7 +23,7 @@ export class FeedComponent implements OnInit, OnChanges, OnDestroy {
   feed$: Observable<GetFeedResponseInterface | null>;
 
   limit: number;
-  baseUrl: string;
+  baseUrl!: string;
   queryParamsSubscription: Subscription;
   currentPage: number = 1;
 
@@ -33,7 +33,7 @@ export class FeedComponent implements OnInit, OnChanges, OnDestroy {
     this.feed$ = this.store.pipe(select(feedSelector));
 
     this.limit = environment.limit;
-    this.baseUrl = router.url.split('?')[0];
+    //this.baseUrl = router.url.split('?')[0];
     this.queryParamsSubscription = this.route.queryParams.subscribe((params: Params) => {
       this.currentPage = Number(params.page || '1');
       this.ngOnInit();
@@ -50,6 +50,8 @@ export class FeedComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.baseUrl = this.router.url.split('?')[0];
+
     const offset = this.currentPage * this.limit - this.limit;
 
     if (this.apiUrlProps) {
