@@ -500,6 +500,15 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
     //background-color: mat-color($primary, 700);
     @include el-linear-gradient(180deg, mat-color($primary, 700), mat-color($primary, 800));
   }
+
+  .carousel-indicators {
+    //transform: translateX(-110%) !important;
+    margin: 0 !important;
+  }
+
+  .carousel-slide {
+    background-size: contain !important;
+  }
   //-----------------------------------------------------------------
 }
 //===========================================================================

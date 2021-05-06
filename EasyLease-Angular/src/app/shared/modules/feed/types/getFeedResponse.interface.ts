@@ -1,6 +1,6 @@
-import {ArticleInterface} from 'src/app/shared/types/article.interface';
+import {AdvertInterface} from 'src/app/shared/types/advert.interface';
 
 export interface GetFeedResponseInterface {
-  articles: ArticleInterface[];
+  articles: AdvertInterface[];
   articlesCount: number;
 }

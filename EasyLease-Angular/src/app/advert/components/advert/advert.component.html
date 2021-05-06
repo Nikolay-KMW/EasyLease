@@ -1,0 +1,100 @@
+<div class="container">
+    <el-loading *ngIf="isLoading$ | async"></el-loading>
+    <el-error-message *ngIf="error$ | async"></el-error-message>
+    <div class="row" *ngIf="advert">
+        <div class="col-12 px-2">
+            <div class="card my-2">
+                <div class="card-body px-0 px-sm-3">
+                    <div>
+                        <mat-carousel timings="250ms ease-in" [autoplay]="true" [interval]=5000 color="primary"
+                            maxWidth="auto" [maintainAspectRatio]="true" [proportion]=60 [slides]="slides.length"
+                            [loop]="true" [hideArrows]="true" [hideIndicators]="false" [useKeyboard]="true"
+                            [useMouseWheel]="true" orientation="ltr">
+                            <mat-carousel-slide #matCarouselSlide *ngFor="let slide of slides; let i = index"
+                                [image]="slide.image" overlayColor="#f2f9c820" [hideOverlay]="true"
+                                class="card-img img-raised">
+                            </mat-carousel-slide>
+                        </mat-carousel>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-8 pr-md-1">
+                    <div class="card my-2">
+                        <div class=" card-body">
+                            <div class="card-title display-4">
+                                {{advert.title}}
+                            </div>
+                            <mat-divider class="my-2"></mat-divider>
+                            <div class="h4">
+                                Адрес: Киевская обл., г.Киев, ул.Хмельницкого, дом. №10 кв. №21
+                            </div>
+                            <mat-divider class="my-2"></mat-divider>
+                            <div class="h4">
+                                Описание:
+                            </div>
+                            <div class="card-text">
+                                {{advert.description}}
+                                Комната - прекрасно
+                                убранная. Там стоит бюро красного дерева, два
+                                дивана, обитые шелковою материею, красивые ширмы с вышитыми небывалыми в природе
+                                птицами и
+                                плодами. Имеются там шелковые занавесы, ковры, несколько картин, бронза, фарфор и
+                                множество
+                                красивых мелочей
+                            </div>
+                            <mat-divider class="my-2"></mat-divider>
+                            <div>
+                                <div class="h4">
+                                    Удобства:
+                                </div>
+                                <el-tag-list [tags]="advert.tagList"></el-tag-list>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 pl-md-1">
+                    <div class="card my-2" *ngIf="isAuthor$ | async">
+                        <div class="card-body">
+                            <div class="row px-3">
+                                <button mat-raised-button color="success" class="col-12 col-lg-6 my-1"
+                                    [routerLink]="[ '/articles', advert.slug, 'edit' ]">
+                                    Редактировать
+                                </button>
+                                <button mat-raised-button color="warn" class="col-12 col-lg-6 my-1"
+                                    (click)="deleteAdvert()">
+                                    Удалить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card my-2">
+                        <div class="card-body">
+                            <div class="font-italic"> Объявление размещено: 01.01.2021г.</div>
+                            <mat-divider class="my-2"></mat-divider>
+                            <div class="h5">
+                                Текущая цена: 1000гр.
+                            </div>
+                            <button mat-raised-button color="primary" class="w-100">
+                                Предложить свою цену
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card my-2">
+                        <div class="card-body">
+                            <div class="card-link">
+                                <a [routerLink]="[ '/profiles', advert.author.username ]">
+                                    <img [src]="advert.author.image" class="card-img user-icon" />
+                                </a>
+                                <span class="h3 mx-2 align-bottom"> {{advert.author.username}}</span>
+                                <mat-divider class="my-2"></mat-divider>
+                                <span> Зарегистрирован на сайте: 05.05.2020г.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

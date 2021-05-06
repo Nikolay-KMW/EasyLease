@@ -1,6 +1,6 @@
 import {ProfileInterface} from './profile.Interface';
 
-export interface ArticleInterface {
+export interface AdvertInterface {
   author: ProfileInterface;
   body: string;
   createdAt: string;

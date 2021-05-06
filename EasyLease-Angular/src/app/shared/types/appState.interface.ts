@@ -1,3 +1,4 @@
+import {AdvertStateInterface} from 'src/app/advert/types/advertState.interface';
 import {AuthStateInterface} from 'src/app/auth/types/authState.interface';
 import {FeedStateInterface} from '../modules/feed/types/feedState.interface';
 import {TagsStateInterface} from '../modules/tags/types/tagsState.interface';
@@ -8,4 +9,5 @@ export interface AppStateInterface {
   topBar: TopBarStateInterface;
   feed: FeedStateInterface;
   tags: TagsStateInterface;
+  advert: AdvertStateInterface;
 }

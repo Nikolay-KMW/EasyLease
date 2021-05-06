@@ -21,6 +21,7 @@ import {YourFeedModule} from './yourFeed/yourFeed.module';
 import {FeedTogglerModule} from './shared/modules/feedToggler/feedToggler.module';
 import {BannerModule} from './shared/modules/banner/banner.module';
 import {FilterFeedModule} from './filterFeed/filterFeed.module';
+import {AdvertModule} from './advert/advert.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +29,7 @@ import {FilterFeedModule} from './filterFeed/filterFeed.module';
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     StoreModule.forRoot({router: routerReducer}),
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     EffectsModule.forRoot([]),
@@ -40,8 +42,8 @@ import {FilterFeedModule} from './filterFeed/filterFeed.module';
     FilterFeedModule,
     BannerModule,
     FeedTogglerModule,
+    AdvertModule,
     ExampleOfExperimentsModule,
-    HttpClientModule,
   ],
   providers: [
     PersistanceService,
