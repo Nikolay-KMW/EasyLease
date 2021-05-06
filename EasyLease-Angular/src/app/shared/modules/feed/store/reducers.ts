@@ -34,14 +34,7 @@ export const feedReducer = createReducer(
       isLoading: false,
     })
   ),
-  on(
-    routerNavigatedAction,
-    (state): FeedStateInterface => ({
-      ...state,
-      error: null,
-      date: null,
-    })
-  )
+  on(routerNavigatedAction, (): FeedStateInterface => initialState)
 );
 
 export function reducers(state: FeedStateInterface, action: Action) {

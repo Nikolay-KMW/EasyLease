@@ -1,9 +1,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PaginationComponent} from './components/pagination.component';
-import {UtilsService} from '../../services/utils.service';
 import {RouterModule} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
+
+import {UtilsService} from '../../services/utils.service';
+import {PaginationComponent} from './components/pagination/pagination.component';
 
 @NgModule({
   declarations: [PaginationComponent],

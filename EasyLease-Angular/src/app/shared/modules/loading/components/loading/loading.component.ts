@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {LoadingMode} from '../types/loadingMode.type';
+
+import {LoadingMode} from '../../types/loadingMode.type';
 
 @Component({
   selector: 'el-loading',
