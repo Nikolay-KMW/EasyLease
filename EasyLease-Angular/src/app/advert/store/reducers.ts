@@ -2,7 +2,6 @@ import {routerNavigatedAction} from '@ngrx/router-store';
 import {Action, createReducer, on} from '@ngrx/store';
 
 import {AdvertStateInterface} from '../types/advertState.interface';
-import {deleteAdvertFailureAction} from './actions/deleteAdvert.action';
 import {getAdvertAction, getAdvertFailureAction, getAdvertSuccessAction} from './actions/getAdvert.action';
 
 const initialState: AdvertStateInterface = {
@@ -35,7 +34,14 @@ export const advertReducer = createReducer(
       isLoading: false,
     })
   ),
-  on(routerNavigatedAction, (): AdvertStateInterface => initialState)
+  on(
+    routerNavigatedAction,
+    (state): AdvertStateInterface => ({
+      ...state,
+      error: null,
+      date: null,
+    })
+  )
 );
 
 export function reducers(state: AdvertStateInterface, action: Action) {

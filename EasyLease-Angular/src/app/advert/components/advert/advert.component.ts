@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {MatCarouselSlide, MatCarouselSlideComponent} from 'ng-mat-carousel';
 //import {hammerjs as hammerJS} from 'hammerjs.js';
 //import * as Hammer from 'hammerjs';
@@ -15,6 +16,7 @@ import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {getAdvertAction} from '../../store/actions/getAdvert.action';
 import {advertSelector, errorSelector, isLoadingSelector} from '../../store/selectors';
 import {deleteAdvertAction} from '../../store/actions/deleteAdvert.action';
+import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'el-advert',
@@ -30,6 +32,9 @@ export class AdvertComponent implements OnInit, OnDestroy {
   error$: Observable<string | null>;
   isAuthor$: Observable<boolean>;
 
+  faTrash: IconDefinition = faTrash;
+  faEdit: IconDefinition = faEdit;
+
   slides = [
     {image: 'assets/img/city-profile.jpg'},
     {image: 'assets/img/bg2.jpg'},
@@ -42,6 +47,7 @@ export class AdvertComponent implements OnInit, OnDestroy {
     // Initialize values
     this.slug = this.route.snapshot.paramMap.get('slug');
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
+    // TODO: implements errors
     this.error$ = this.store.pipe(select(errorSelector));
     this.isAuthor$ = combineLatest([
       this.store.pipe(select(advertSelector)),

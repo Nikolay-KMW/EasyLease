@@ -58,12 +58,16 @@
                     <div class="card my-2" *ngIf="isAuthor$ | async">
                         <div class="card-body">
                             <div class="row px-3">
-                                <button mat-raised-button color="success" class="col-12 col-lg-6 my-1"
-                                    [routerLink]="[ '/articles', advert.slug, 'edit' ]">
+                                <button mat-raised-button color="success" class="col-12 col-lg-7 my-1 py-1 px-md-1"
+                                    [routerLink]="[ '/advert', advert.slug, 'edit' ]">
+                                    <fa-icon [icon]="faEdit" size="lg" class="pr-1">
+                                    </fa-icon>
                                     Редактировать
                                 </button>
-                                <button mat-raised-button color="warn" class="col-12 col-lg-6 my-1"
+                                <button mat-raised-button color="warn" class="col-12 col-lg-5 my-1 py-1 px-md-1"
                                     (click)="deleteAdvert()">
+                                    <fa-icon [icon]="faTrash" size="lg" class="pr-1">
+                                    </fa-icon>
                                     Удалить
                                 </button>
                             </div>
@@ -76,8 +80,8 @@
                             <div class="h5">
                                 Текущая цена: 1000гр.
                             </div>
-                            <button mat-raised-button color="primary" class="w-100">
-                                Предложить свою цену
+                            <button mat-raised-button color="primary" class="w-100 my-1 py-1">
+                                Предложить цену
                             </button>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ import {StoreModule} from '@ngrx/store';
 import {RouterModule} from '@angular/router';
 import {MatDividerModule} from '@angular/material/divider';
 import {HammerModule} from '@angular/platform-browser';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 import {GetAdvertEffect} from './store/effects/getAdvert.effect';
 import {reducers} from './store/reducers';
@@ -30,6 +31,7 @@ const routes = [{path: 'articles/:slug', component: AdvertComponent}];
     ErrorMessageModule,
     LoadingModule,
     TagListModule,
+    FontAwesomeModule,
     HammerModule,
     MatCarouselModule.forRoot(),
     EffectsModule.forFeature([GetAdvertEffect, DeleteAdvertEffect]),
