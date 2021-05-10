@@ -36,6 +36,7 @@ export class RegisterComponent implements OnInit {
   faUserPlus: IconDefinition = faUserPlus;
 
   constructor(private fb: FormBuilder, private store: Store<AppStateInterface>, private authService: AuthService) {
+    // Initialize form
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
       email: ['', [Validators.required, Validators.email]],
@@ -43,6 +44,7 @@ export class RegisterComponent implements OnInit {
       confirmPassword: ['', [Validators.required, (control: AbstractControl) => this.confirm(control, 'password')]],
     });
 
+    // Initialize values
     this.username = this.form.controls['username'] as FormControl;
     this.email = this.form.controls['email'] as FormControl;
     this.password = this.form.controls['password'] as FormControl;
@@ -52,14 +54,9 @@ export class RegisterComponent implements OnInit {
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
   }
 
-  ngOnInit(): void {
-    // this.initializeForm();
-    // this.initializeValues();
-  }
+  ngOnInit(): void {}
 
   onSubmit(): void {
-    //console.log(this.form?.value);
-
     const request: RegisterRequestInterface = {
       user: this.form.value,
     };

@@ -7,8 +7,8 @@ import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {AuthService} from '../../services/auth.service';
 import {PersistanceService} from 'src/app/shared/services/persistance.service';
 import {
-  getCurrentFailureUserAction,
-  getCurrentSuccessUserAction,
+  getCurrentUserFailureAction,
+  getCurrentUserSuccessAction,
   getCurrentUserAction,
 } from '../actions/getCurrentUser.action';
 
@@ -26,14 +26,14 @@ export class GetCurrentUserEffect {
       switchMap(() => {
         const token = this.persistanceService.get('accessToken');
         if (!token) {
-          return of(getCurrentFailureUserAction());
+          return of(getCurrentUserFailureAction());
         }
         return this.authService.getCurrentUser().pipe(
           map((currentUser: CurrentUserInterface) => {
-            return getCurrentSuccessUserAction({currentUser});
+            return getCurrentUserSuccessAction({currentUser});
           }),
           catchError(() => {
-            return of(getCurrentFailureUserAction());
+            return of(getCurrentUserFailureAction());
           })
         );
       })

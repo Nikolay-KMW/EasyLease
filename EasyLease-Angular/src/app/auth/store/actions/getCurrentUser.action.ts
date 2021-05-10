@@ -5,9 +5,9 @@ import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 
 export const getCurrentUserAction = createAction(ActionTypes.GET_CURRENT_USER);
 
-export const getCurrentSuccessUserAction = createAction(
+export const getCurrentUserSuccessAction = createAction(
   ActionTypes.GET_CURRENT_USER_SUCCESS,
   props<{currentUser: CurrentUserInterface}>()
 );
 
-export const getCurrentFailureUserAction = createAction(ActionTypes.GET_CURRENT_USER_FAILURE);
+export const getCurrentUserFailureAction = createAction(ActionTypes.GET_CURRENT_USER_FAILURE);

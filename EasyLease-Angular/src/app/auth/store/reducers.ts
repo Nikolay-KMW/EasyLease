@@ -1,9 +1,8 @@
-import {act} from '@ngrx/effects';
 import {Action, createReducer, on} from '@ngrx/store';
 import {AuthStateInterface} from '../types/authState.interface';
 import {
-  getCurrentFailureUserAction,
-  getCurrentSuccessUserAction,
+  getCurrentUserFailureAction,
+  getCurrentUserSuccessAction,
   getCurrentUserAction,
 } from './actions/getCurrentUser.action';
 import {loginAction, loginFailureAction, loginSuccessAction} from './actions/login.action';
@@ -77,7 +76,7 @@ const authReducer = createReducer(
     })
   ),
   on(
-    getCurrentSuccessUserAction,
+    getCurrentUserSuccessAction,
     (state, action): AuthStateInterface => ({
       ...state,
       isLoading: false,
@@ -86,7 +85,7 @@ const authReducer = createReducer(
     })
   ),
   on(
-    getCurrentFailureUserAction,
+    getCurrentUserFailureAction,
     (state): AuthStateInterface => ({
       ...state,
       isLoading: false,
@@ -96,6 +95,6 @@ const authReducer = createReducer(
   )
 );
 
-export function reducers(state: AuthStateInterface, action: Action): AuthStateInterface {
+export function reducers(state: AuthStateInterface, action: Action) {
   return authReducer(state, action);
 }
