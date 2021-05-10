@@ -1,0 +1,3 @@
+<el-advert-form [initialValues]="initialValues" [isSubmitting]="(isSubmitting$ | async)!"
+    [errors]="backendErrors$ | async" (advertSubmit)="onSubmit($event)">
+</el-advert-form>

@@ -22,6 +22,8 @@ import {FeedTogglerModule} from './shared/modules/feedToggler/feedToggler.module
 import {BannerModule} from './shared/modules/banner/banner.module';
 import {FilterFeedModule} from './filterFeed/filterFeed.module';
 import {AdvertModule} from './advert/advert.module';
+import {CreateAdvertModule} from './createAdvert/createAdvert.module';
+import {EditAdvertModule} from './editAdvert/editAdvert.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,7 +44,9 @@ import {AdvertModule} from './advert/advert.module';
     FilterFeedModule,
     BannerModule,
     FeedTogglerModule,
+    CreateAdvertModule,
     AdvertModule,
+    EditAdvertModule,
     ExampleOfExperimentsModule,
   ],
   providers: [

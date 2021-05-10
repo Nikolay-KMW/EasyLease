@@ -1,0 +1,186 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header card-header-secondary">
+                    <h1 class="card-title el-title text-center">Создание объявления</h1>
+                </div>
+                <div class="card-body">
+                    <mat-vertical-stepper [linear]="false" #stepper>
+                        <mat-step [stepControl]="descriptionForm" state="titleStep">
+                            <form [formGroup]="descriptionForm">
+                                <ng-template matStepLabel>Описание объявления</ng-template>
+                                <fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="title.valid && 'accent'" appearance="fill">
+                                            <mat-label>Оглавление объявления</mat-label>
+                                            <input type="text" matInput [formControl]="title"
+                                                placeholder="Введите оглавление" required>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="title"
+                                                    [formControlForBackendError]="title">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!title.hasError('maxTitle') && !title.hasError('required') && !title.hasError('backendErrorMessage')">
+                                                Оглавление должно быть не более {{maxTitle}} символов
+                                            </mat-error>
+                                            <mat-error *ngIf="title.hasError('required')">
+                                                Оглавление <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="description.valid && 'accent'" appearance="fill">
+                                            <mat-label>Краткое описание</mat-label>
+                                            <textarea rows="4" matInput [formControl]="description"
+                                                placeholder="Введите краткое описание" required></textarea>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="description"
+                                                    [formControlForBackendError]="description">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!description.hasError('maxDescription') && !description.hasError('required') && !description.hasError('backendErrorMessage')">
+                                                Краткое описание должно быть не более {{maxDescription}} символов
+                                            </mat-error>
+                                            <mat-error *ngIf="description.hasError('required')">
+                                                Краткое описание <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
+                                        color="secondary" matStepperNext>
+                                        Далее
+                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                        </fa-icon>
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="bodyForm" state="bodyStep">
+                            <form [formGroup]="bodyForm">
+                                <ng-template matStepLabel>Текст объявления</ng-template>
+                                <fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="body.valid && 'accent'" appearance="fill">
+                                            <mat-label>Текст объявления</mat-label>
+                                            <textarea rows="10" matInput [formControl]="body"
+                                                placeholder="Введите текст объявления" required></textarea>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="body"
+                                                    [formControlForBackendError]="body">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error *ngIf="body.hasError('required')">
+                                                Текст объявления <strong>обязательный</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 col-sm-auto" mat-raised-button color="elegant"
+                                        matStepperPrevious>
+                                        <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Назад
+                                    </button>
+                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
+                                        color="secondary" matStepperNext>
+                                        Далее
+                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                        </fa-icon>
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="tagListForm" state="tagStep">
+                            <form [formGroup]="tagListForm">
+                                <ng-template matStepLabel>Список тегов</ng-template>
+                                <fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="tagList.valid && 'accent'" appearance="fill">
+                                            <mat-label>Теги</mat-label>
+                                            <mat-chip-list #chipList aria-label="Tags selection">
+                                                <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                                                    [removable]="removable" (removed)="remove(tag)">
+                                                    {{tag}}
+                                                    <fa-icon [icon]="faTimes" matChipRemove *ngIf="removable" size="lg"
+                                                        class="">
+                                                    </fa-icon>
+                                                </mat-chip>
+                                                <input placeholder="Введите теги..." [matChipInputFor]="chipList"
+                                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                                    [matChipInputAddOnBlur]="addOnBlur" [formControl]="tagList"
+                                                    (matChipInputTokenEnd)="add($event)">
+                                                <mat-error>
+                                                    <el-backend-error-message *ngIf="errorsProps"
+                                                        [backendErrors]="errorsProps" namePropertyBackendError="tagList"
+                                                        [formControlForBackendError]="tagList">
+                                                    </el-backend-error-message>
+                                                </mat-error>
+                                            </mat-chip-list>
+                                        </mat-form-field>
+                                    </fieldset>
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 mr-md-1 col-md-auto" mat-raised-button color="elegant"
+                                        matStepperPrevious>
+                                        <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Назад
+                                    </button>
+                                    <button class="my-1 py-1 col-md-auto" mat-raised-button color="warn"
+                                        (click)="stepper.reset()">
+                                        <fa-icon [icon]="faTimesCircle" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Сбросить все
+                                    </button>
+                                    <button class="my-1 py-1 col-md-auto float-right" type="submit" mat-raised-button
+                                        (click)="onSubmit()"
+                                        [disabled]="isSubmittingProps || descriptionForm.invalid || bodyForm.invalid "
+                                        color="success">
+                                        <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
+                                            *ngIf="isSubmittingProps">
+                                        </fa-icon>
+                                        <fa-icon [icon]="faFlagCheckered" size="lg" class="pr-2" transform="grow-2">
+                                        </fa-icon>
+                                        Опубликовать
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <!-- Icon overrides. -->
+                        <ng-template matStepperIcon="edit">
+                            <fa-icon [icon]="faPenAlt" size="lg" class="pl-1" transform="grow-2"></fa-icon>
+                        </ng-template>
+                        <ng-template matStepperIcon="done">
+                            <fa-icon [icon]="faCheck" size="lg" class="" transform="grow-2"></fa-icon>
+                        </ng-template>
+                        <ng-template matStepperIcon="error">
+                            <fa-icon [icon]="faExclamationTriangle" size="2x" class=""></fa-icon>
+                        </ng-template>
+
+                        <ng-template matStepperIcon="titleStep">
+                            <fa-icon [icon]="faTradeMark" size="lg" class="" transform="grow-2"></fa-icon>
+                        </ng-template>
+                        <ng-template matStepperIcon="bodyStep">
+                            <fa-icon [icon]="faFileAlt" size="lg" class="" transform="grow-2"></fa-icon>
+                        </ng-template>
+                        <ng-template matStepperIcon="tagStep">
+                            <fa-icon [icon]="faHashTag" size="lg" class="" transform="grow-2"></fa-icon>
+                        </ng-template>
+                    </mat-vertical-stepper>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
