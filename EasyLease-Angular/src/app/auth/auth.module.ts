@@ -18,6 +18,7 @@ import {PersistanceService} from '../shared/services/persistance.service';
 import {LoginEffect} from './store/effects/login.effect';
 import {LoginComponent} from './components/login/login.component';
 import {GetCurrentUserEffect} from './store/effects/getCurrentUser.effect';
+import {UpdateCurrentUserEffect} from './store/effects/updateCurrentUser.effect';
 
 const routes: Routes = [
   {path: 'register', component: RegisterComponent},
@@ -29,7 +30,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('auth', reducers),
-    EffectsModule.forFeature([RegisterEffect, LoginEffect, GetCurrentUserEffect]),
+    EffectsModule.forFeature([RegisterEffect, LoginEffect, GetCurrentUserEffect, UpdateCurrentUserEffect]),
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,

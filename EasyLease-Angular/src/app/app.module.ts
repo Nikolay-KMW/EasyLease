@@ -24,6 +24,7 @@ import {FilterFeedModule} from './filterFeed/filterFeed.module';
 import {AdvertModule} from './advert/advert.module';
 import {CreateAdvertModule} from './createAdvert/createAdvert.module';
 import {EditAdvertModule} from './editAdvert/editAdvert.module';
+import {SettingsModule} from './settings/settings.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -47,6 +48,7 @@ import {EditAdvertModule} from './editAdvert/editAdvert.module';
     CreateAdvertModule,
     AdvertModule,
     EditAdvertModule,
+    SettingsModule,
     ExampleOfExperimentsModule,
   ],
   providers: [
