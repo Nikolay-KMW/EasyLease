@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
+import {environment} from 'src/environments/environment';
 import {AuthService} from '../../services/auth.service';
 import {loginAction} from '../../store/actions/login.action';
 import {isSubmittingSelector, validationErrorsSelector} from '../../store/selectors';
@@ -25,7 +26,7 @@ export class LoginComponent implements OnInit {
   email: FormControl;
   password: FormControl;
 
-  minPassword: number = 8;
+  minPassword: number = environment.minUserPassword;
 
   faSpinner: IconDefinition = faSpinner;
   faSignInAlt: IconDefinition = faSignInAlt;
@@ -44,14 +45,9 @@ export class LoginComponent implements OnInit {
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
   }
 
-  ngOnInit(): void {
-    // this.initializeForm();
-    // this.initializeValues();
-  }
+  ngOnInit(): void {}
 
   onSubmit(): void {
-    //console.log(this.form?.value);
-
     const request: LoginRequestInterface = {
       user: this.form.value,
     };

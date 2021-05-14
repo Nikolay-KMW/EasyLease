@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
+import {environment} from 'src/environments/environment';
 import {AuthService} from '../../services/auth.service';
 import {registerAction} from '../../store/actions/register.action';
 import {isSubmittingSelector, validationErrorsSelector} from '../../store/selectors';
@@ -27,9 +28,9 @@ export class RegisterComponent implements OnInit {
   password: FormControl;
   confirmPassword: FormControl;
 
-  minName: number = 2;
-  maxName: number = 20;
-  minPassword: number = 8;
+  minName: number = environment.minUserName;
+  maxName: number = environment.maxUserName;
+  minPassword: number = environment.minUserPassword;
 
   faSpinner: IconDefinition = faSpinner;
   faSignInAlt: IconDefinition = faSignInAlt;

@@ -19,6 +19,7 @@ import {LoginEffect} from './store/effects/login.effect';
 import {LoginComponent} from './components/login/login.component';
 import {GetCurrentUserEffect} from './store/effects/getCurrentUser.effect';
 import {UpdateCurrentUserEffect} from './store/effects/updateCurrentUser.effect';
+import {LogoutEffects} from './store/effects/logout.effect';
 
 const routes: Routes = [
   {path: 'register', component: RegisterComponent},
@@ -30,7 +31,13 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('auth', reducers),
-    EffectsModule.forFeature([RegisterEffect, LoginEffect, GetCurrentUserEffect, UpdateCurrentUserEffect]),
+    EffectsModule.forFeature([
+      RegisterEffect,
+      LoginEffect,
+      GetCurrentUserEffect,
+      UpdateCurrentUserEffect,
+      LogoutEffects,
+    ]),
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,

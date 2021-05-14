@@ -1,1 +1,112 @@
-<div class="h4">Settings</div>
+<div class="container">
+    <div class="row justify-content-center" *ngIf="currentUser">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card">
+                <div class="card-header card-header-info">
+                    <h1 class="card-title el-title text-center">Ваш профиль</h1>
+                    <p class="category text-center">Настройки</p>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="form">
+                        <fieldset>
+                            <fieldset class="form-group">
+                                <mat-form-field>
+                                    <mat-label>Фото профиля</mat-label>
+                                    <input type="text" matInput [formControl]="image"
+                                        placeholder="URL картинки профиля">
+                                    <mat-error *ngIf="(backendErrors$ | async)!">
+                                        <el-backend-error-message [backendErrors]="(backendErrors$ | async)!"
+                                            namePropertyBackendError="image" [formControlForBackendError]="image">
+                                        </el-backend-error-message>
+                                    </mat-error>
+                                </mat-form-field>
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <mat-form-field [color]="username.valid && 'accent'">
+                                    <mat-label>Имя</mat-label>
+                                    <input type="text" matInput [formControl]="username" placeholder="Имя пользователя">
+                                    <mat-error *ngIf="(backendErrors$ | async)!">
+                                        <el-backend-error-message [backendErrors]="(backendErrors$ | async)!"
+                                            namePropertyBackendError="username" [formControlForBackendError]="username">
+                                        </el-backend-error-message>
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="!username.hasError('minLength', 'maxLength') && !username.hasError('required') && !username.hasError('backendErrorMessage')">
+                                        Имя должно быть от {{minName}} до {{maxName}} символов
+                                    </mat-error>
+                                    <mat-error *ngIf="username.hasError('required')">
+                                        Имя <strong>обязательное</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <mat-form-field [color]="bio.valid && 'accent'">
+                                    <mat-label>Краткое описание о Вас</mat-label>
+                                    <textarea rows="4" matInput [formControl]="bio"
+                                        placeholder="Введите краткое описание" required></textarea>
+                                    <mat-error *ngIf="(backendErrors$ | async)!">
+                                        <el-backend-error-message [backendErrors]="(backendErrors$ | async)!"
+                                            namePropertyBackendError="bio" [formControlForBackendError]="bio">
+                                        </el-backend-error-message>
+                                    </mat-error>
+                                    <mat-error *ngIf="!bio.hasError('minLength', 'maxLength')">
+                                        Краткое описание должно быть не более {{maxBio}} символов
+                                    </mat-error>
+                                </mat-form-field>
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <mat-form-field [color]="email.valid && 'accent'">
+                                    <mat-label>Электронная почта</mat-label>
+                                    <input type="email" matInput [formControl]="email" placeholder="Электронная почта">
+                                    <mat-error *ngIf="(backendErrors$ | async)!">
+                                        <el-backend-error-message [backendErrors]="(backendErrors$ | async)!"
+                                            namePropertyBackendError="email" [formControlForBackendError]="email">
+                                        </el-backend-error-message>
+                                    </mat-error>
+                                    <mat-error *ngIf="email.hasError('email')">
+                                        Пожалуйста введите корректный Email адрес
+                                    </mat-error>
+                                    <mat-error *ngIf="email.hasError('required')">
+                                        Email <strong>обязательный</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <mat-form-field [color]="password.valid && 'accent'">
+                                    <mat-label>Пароль</mat-label>
+                                    <input type="password" matInput [formControl]="password" placeholder="Пароль">
+                                    <mat-error *ngIf="(backendErrors$ | async)!">
+                                        <el-backend-error-message [backendErrors]="(backendErrors$ | async)!"
+                                            namePropertyBackendError="password" [formControlForBackendError]="password">
+                                        </el-backend-error-message>
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="!password.hasError('minLength') && !password.hasError('backendErrorMessage')">
+                                        Пароль должен быть не меньше {{minPassword}} символов
+                                    </mat-error>
+                                </mat-form-field>
+                            </fieldset>
+                        </fieldset>
+                        <div>
+                            <button class="my-1 py-1 col-md-auto" mat-raised-button color="warn" (click)="logout()">
+                                <fa-icon [icon]="faSignOutAlt" size="lg" class="pr-2" transform="grow-1">
+                                </fa-icon>
+                                Выйти
+                            </button>
+                            <button class="my-1 py-1 col-md-auto float-right" type="submit" mat-raised-button
+                                (click)="onSubmit()" color="success"
+                                [disabled]="(isSubmitting$ | async) || form.invalid">
+                                <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
+                                    *ngIf="(isSubmitting$ | async)">
+                                </fa-icon>
+                                <fa-icon [icon]="faUserEdit" size="lg" class="pr-2" transform="grow-2">
+                                </fa-icon>
+                                Обновить настройки
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

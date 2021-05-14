@@ -20,6 +20,7 @@ const settingsReducer = createReducer(
     (state): SettingsStateInterface => ({
       ...state,
       isSubmitting: true,
+      validationErrors: null,
     })
   ),
   on(
