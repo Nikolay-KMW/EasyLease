@@ -14,20 +14,22 @@ import {ErrorMessageModule} from '../errorMessage/errorMessage.module';
 import {LoadingModule} from '../loading/loading.module';
 import {PaginationModule} from '../pagination/pagination.module';
 import {TagListModule} from '../tagList/tagList.module';
+import {AddToFavoritesModule} from '../addToFavorites/addToFavorites.module';
 
 @NgModule({
   declarations: [FeedComponent],
   imports: [
     CommonModule,
     RouterModule,
+    EffectsModule.forFeature([GetFeedEffect]),
+    StoreModule.forFeature('feed', reducers),
     MatDividerModule,
     MatButtonModule,
     ErrorMessageModule,
     LoadingModule,
     PaginationModule,
     TagListModule,
-    EffectsModule.forFeature([GetFeedEffect]),
-    StoreModule.forFeature('feed', reducers),
+    AddToFavoritesModule,
   ],
   exports: [FeedComponent],
   providers: [FeedService],
