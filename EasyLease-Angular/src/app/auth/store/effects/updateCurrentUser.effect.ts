@@ -37,7 +37,7 @@ export class UpdateCurrentUserEffect {
     () =>
       this.actions$.pipe(
         ofType(updateCurrentUserSuccessAction),
-        tap(({currentUser}) => this.router.navigate(['/profile', currentUser.username]))
+        tap(({currentUser}) => this.router.navigate(['/profiles', currentUser.username]))
       ),
     {dispatch: false}
   );

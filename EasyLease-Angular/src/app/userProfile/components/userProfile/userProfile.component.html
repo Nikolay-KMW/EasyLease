@@ -1,0 +1,42 @@
+<div class="main-content">
+    <div class="container mt-5 mb-1">
+        <el-loading *ngIf="isLoading$ | async"></el-loading>
+        <el-error-message *ngIf="error$ | async"></el-error-message>
+        <div class="row justify-content-center" *ngIf="userProfile">
+            <div class="col-12 col-md-10">
+                <div class="card card-profile">
+                    <div class="card-avatar">
+                        <a href="">
+                            <img src="user-image" [src]="userProfile.image" class="img">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-category text-gray">Artist</h3>
+                        <h2 class="card-title">{{userProfile?.username}}</h2>
+                        <p class="card-description"> {{userProfile?.bio}} Don't be scared of the truth because we need
+                            to
+                            restart the human
+                            foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but
+                            the back is...
+                        </p>
+                        <button class="my-1 py-1 col-md-auto" mat-raised-button color="warn"
+                            *ngIf="isCurrentUserProfile$ | async" [routerLink]="[ '/settings']">
+                            <fa-icon [icon]="faUserCog" size="lg" class="pr-2" transform="grow-1">
+                            </fa-icon>
+                            Редактировать профиль
+                        </button>
+                        <a href="" class="btn btn-rose btn-round">Follow</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <mat-tab-group dynamicHeight *ngIf="userProfile">
+            <mat-tab label="Объявления пользователя">
+                <el-feed [apiUrl]="apiUrl"></el-feed>
+            </mat-tab>
+            <mat-tab label="Отзови">
+                <h2 class="m-3">No comments</h2>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
