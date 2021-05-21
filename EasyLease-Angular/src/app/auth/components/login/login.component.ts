@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {faSignInAlt, faSpinner, faUserPlus, IconDefinition} from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
@@ -45,7 +46,18 @@ export class LoginComponent implements OnInit {
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setValueBannerModule();
+  }
+
+  setValueBannerModule(): void {
+    this.store.dispatch(setTitleAction({title: 'Вход'}));
+    this.store.dispatch(
+      setDescriptionAction({
+        description: 'Введите данные для входа в систему',
+      })
+    );
+  }
 
   onSubmit(): void {
     const request: LoginRequestInterface = {

@@ -17,6 +17,7 @@ import {getAdvertAction} from '../../store/actions/getAdvert.action';
 import {advertSelector, errorSelector, isLoadingSelector} from '../../store/selectors';
 import {deleteAdvertAction} from '../../store/actions/deleteAdvert.action';
 import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
 
 @Component({
   selector: 'el-advert',
@@ -72,7 +73,18 @@ export class AdvertComponent implements OnInit, OnDestroy {
       .subscribe((advert: AdvertInterface | null) => (this.advert = advert));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setValueBannerModule();
+  }
+
+  setValueBannerModule(): void {
+    this.store.dispatch(setTitleAction({title: 'Объявление'}));
+    this.store.dispatch(
+      setDescriptionAction({
+        description: 'Здесь Ви можете сделать ставку',
+      })
+    );
+  }
 
   deleteAdvert(): void {
     if (this.slug) {

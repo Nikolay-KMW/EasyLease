@@ -10,6 +10,7 @@ import {logoutAction} from 'src/app/auth/store/actions/sync.action';
 import {updateCurrentUserAction} from 'src/app/auth/store/actions/updateCurrentUser.action';
 
 import {currentUserSelector} from 'src/app/auth/store/selectors';
+import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
@@ -71,7 +72,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.currentUserSubscription = this.store
       .pipe(
         select(currentUserSelector),
-        filter((x): x is CurrentUserInterface => !!x)
+        filter((currentUser): currentUser is CurrentUserInterface => Boolean(currentUser)) //(!!currentUser) or (currentUser !== null && currentUser !== undefined)
       )
       .subscribe((currentUser: CurrentUserInterface) => {
         this.currentUser = currentUser;
@@ -83,7 +84,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setValueBannerModule();
+  }
+
+  setValueBannerModule(): void {
+    this.store.dispatch(setTitleAction({title: 'Настройки'}));
+    this.store.dispatch(setDescriptionAction({description: 'Вы можете здесь изменять настройки Вашего профиля!'}));
+  }
 
   onSubmit(): void {
     const currentUserInput: CurrentUserInputInterface = {

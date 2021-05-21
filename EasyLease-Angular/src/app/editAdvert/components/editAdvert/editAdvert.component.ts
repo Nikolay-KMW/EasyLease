@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
 
 import {AdvertInputInterface} from 'src/app/shared/types/advertInput.interface';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
@@ -37,7 +38,14 @@ export class EditAdvertComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setValueBannerModule();
+  }
+
+  setValueBannerModule(): void {
+    this.store.dispatch(setTitleAction({title: 'Редактор объявления'}));
+    this.store.dispatch(setDescriptionAction({description: 'Вы можете здесь редактировать свое объявление'}));
+  }
 
   onSubmit(advertInput: AdvertInputInterface): void {
     //console.log('onSubmit in parent', advertInput);

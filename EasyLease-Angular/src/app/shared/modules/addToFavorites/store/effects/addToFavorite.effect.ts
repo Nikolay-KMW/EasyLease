@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
+import {Router} from '@angular/router';
 
 import {AddToFavoritesService} from '../../services/addToFavorites.service';
 import {
@@ -13,7 +14,11 @@ import {AdvertInterface} from 'src/app/shared/types/advert.interface';
 
 @Injectable()
 export class AddToFavoritesEffect {
-  constructor(private actions$: Actions, private addToFavoritesService: AddToFavoritesService) {}
+  constructor(
+    private actions$: Actions,
+    private addToFavoritesService: AddToFavoritesService,
+    private router: Router
+  ) {}
 
   addToFavorites$ = createEffect(() =>
     this.actions$.pipe(
@@ -33,5 +38,14 @@ export class AddToFavoritesEffect {
         );
       })
     )
+  );
+
+  redirectIfNotAuthorized$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(addToFavoritesFailureAction),
+        tap(() => this.router.navigate(['login']))
+      ),
+    {dispatch: false}
   );
 }

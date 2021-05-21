@@ -1,4 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {select, Store} from '@ngrx/store';
+import {Observable, Subscription} from 'rxjs';
+import {AppStateInterface} from 'src/app/shared/types/appState.interface';
+import {descriptionSelector, titleSelector} from '../../store/selectors';
 
 @Component({
   selector: 'el-banner',
@@ -6,10 +11,13 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./banner.component.scss'],
 })
 export class BannerComponent implements OnInit {
-  @Input('title') titleProps: string = '';
-  @Input('description') descriptionProps: string = '';
+  title$: Observable<string | null>;
+  description$: Observable<string | null>;
 
-  constructor() {}
+  constructor(private store: Store<AppStateInterface>) {
+    this.title$ = this.store.pipe(select(titleSelector));
+    this.description$ = this.store.pipe(select(descriptionSelector));
+  }
 
   ngOnInit(): void {}
 }

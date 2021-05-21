@@ -3,6 +3,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, 
 import {faSignInAlt, faSpinner, faUserPlus, IconDefinition} from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
@@ -55,7 +56,18 @@ export class RegisterComponent implements OnInit {
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setValueBannerModule();
+  }
+
+  setValueBannerModule(): void {
+    this.store.dispatch(setTitleAction({title: 'Регистрация'}));
+    this.store.dispatch(
+      setDescriptionAction({
+        description: 'Укажите свои данные для регистрации на сайте',
+      })
+    );
+  }
 
   onSubmit(): void {
     const request: RegisterRequestInterface = {

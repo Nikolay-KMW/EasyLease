@@ -1,42 +1,46 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {faHeart} from '@fortawesome/free-solid-svg-icons';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
+import {Subscription} from 'rxjs';
+import {isLoggedInSelector} from 'src/app/auth/store/selectors';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
-import {addToFavoritesAction} from '../../store/actions/addToFavorites.action';
+import {addToFavoritesAction, addToFavoritesFailureAction} from '../../store/actions/addToFavorites.action';
 
 @Component({
   selector: 'el-add-to-favorites',
   templateUrl: './addToFavorites.component.html',
   styleUrls: ['./addToFavorites.component.scss'],
 })
-export class AddToFavoritesComponent implements OnInit {
+export class AddToFavoritesComponent implements OnInit, OnDestroy {
   @Input('isFavorited') isFavoritedProps: boolean = false;
-  @Input('favoritesCount') favoritesCountProps: number = 0;
   @Input('advertSlug') advertSlugProps: string | null = null;
 
-  favoritesCount: number = 0;
+  isLoggedInSubscription: Subscription;
+  isLoggedIn: boolean = false;
   isFavorited: boolean = false;
 
   faHeart: IconDefinition = faHeart;
-  constructor(private store: Store<AppStateInterface>) {}
+  constructor(private store: Store<AppStateInterface>) {
+    this.isLoggedInSubscription = this.store.pipe(select(isLoggedInSelector)).subscribe((isLoggedIn) => {
+      isLoggedIn == null ? (this.isLoggedIn = false) : (this.isLoggedIn = isLoggedIn);
+    });
+  }
 
   ngOnInit(): void {
-    this.favoritesCount = this.favoritesCountProps;
     this.isFavorited = this.isFavoritedProps;
   }
 
   handleLike(): void {
-    if (this.advertSlugProps) {
+    if (this.advertSlugProps && this.isLoggedIn) {
       this.store.dispatch(addToFavoritesAction({isFavorited: this.isFavorited, slug: this.advertSlugProps}));
-    }
-
-    if (this.isFavorited) {
-      this.favoritesCount = this.favoritesCount - 1;
+      this.isFavorited = !this.isFavorited;
     } else {
-      this.favoritesCount = this.favoritesCount + 1;
+      this.store.dispatch(addToFavoritesFailureAction());
     }
+  }
 
-    this.isFavorited = !this.isFavorited;
+  ngOnDestroy(): void {
+    this.isLoggedInSubscription.unsubscribe();
   }
 }

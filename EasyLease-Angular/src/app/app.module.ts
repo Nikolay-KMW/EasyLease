@@ -17,7 +17,7 @@ import {AuthInterceptor} from './shared/services/authInterceptor.service';
 import {GlobalFeedModule} from './globalFeed/globalFeed.module';
 import {ShellModule} from './shared/modules/shell/shell.module';
 import {routerReducer, StoreRouterConnectingModule} from '@ngrx/router-store';
-import {YourFeedModule} from './yourFeed/yourFeed.module';
+//import {YourFeedModule} from './yourFeed/yourFeed.module';
 import {FeedTogglerModule} from './shared/modules/feedToggler/feedToggler.module';
 import {BannerModule} from './shared/modules/banner/banner.module';
 import {FilterFeedModule} from './filterFeed/filterFeed.module';
@@ -25,6 +25,10 @@ import {AdvertModule} from './advert/advert.module';
 import {CreateAdvertModule} from './createAdvert/createAdvert.module';
 import {EditAdvertModule} from './editAdvert/editAdvert.module';
 import {SettingsModule} from './settings/settings.module';
+import {UserFeedModule} from './userFeed/userFeed.module';
+import {FavoritedFeedModule} from './favoritedFeed/favoritedFeed.module';
+import {UserProfileModule} from './userProfile/userProfile.module';
+import {FooterModule} from './shared/modules/footer/footer.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,14 +45,17 @@ import {SettingsModule} from './settings/settings.module';
     TopBarModule,
     ShellModule,
     GlobalFeedModule,
-    YourFeedModule,
+    FavoritedFeedModule,
     FilterFeedModule,
+    UserFeedModule,
     BannerModule,
     FeedTogglerModule,
     CreateAdvertModule,
     AdvertModule,
     EditAdvertModule,
     SettingsModule,
+    UserProfileModule,
+    FooterModule,
     ExampleOfExperimentsModule,
   ],
   providers: [
