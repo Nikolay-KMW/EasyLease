@@ -3,7 +3,7 @@ import {NavigationEnd, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 
-import {isLoggedInSelector} from 'src/app/auth/store/selectors';
+import {currentUserSelector, isLoggedInSelector} from 'src/app/auth/store/selectors';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {TabLink} from 'src/app/shared/modules/feedToggler/types/tabLink.type';
 import {TagType} from 'src/app/shared/types/Tag.type';
@@ -16,20 +16,29 @@ import {parseUrl} from 'query-string';
   styleUrls: ['./feedToggler.component.scss'],
 })
 export class FeedTogglerComponent implements OnInit, OnDestroy {
-  tagName: TagType | null = null;
-  tabs!: TabLink[];
-
+  currentUserSubscription: Subscription;
   tagNameSubscription: Subscription;
   isLoggedInSubscription: Subscription;
   navigationEndSubscription: Subscription;
 
+  tagName: TagType | null = null;
+  tabs!: TabLink[];
+
+  userName: string | null = null;
   isLoggedIn: boolean = false;
-  activeLink!: string;
+  activeLink: string = '/';
   isVisible: boolean = false;
 
   constructor(private store: Store<AppStateInterface>, private router: Router) {
     // this.tabs = [new TabLink('Все объявления', '/', true)];
     // this.activeLink = this.tabs[0].link;
+
+    this.currentUserSubscription = store.pipe(select(currentUserSelector)).subscribe((currentUser) => {
+      if (currentUser) {
+        this.userName = currentUser.username;
+        this.ngOnInit();
+      }
+    });
 
     this.tagNameSubscription = store.pipe(select(selectedTagSelector)).subscribe((selectedTag) => {
       this.tagName = selectedTag;
@@ -50,7 +59,8 @@ export class FeedTogglerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.tabs = [
-      new TabLink('Отслеживаемые', '/feed', this.isLoggedIn),
+      new TabLink('Мои объявления', `/profile/${this.userName}`, this.isLoggedIn),
+      new TabLink('Избранные', `/profile/${this.userName}/favorites`, this.isLoggedIn),
       new TabLink('Все объявления', '/', true),
       new TabLink(`Фильтр по тегу: #${this.tagName}`, `/tags/${this.tagName}`, this.tagName == null ? false : true),
     ];
@@ -68,6 +78,7 @@ export class FeedTogglerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.currentUserSubscription.unsubscribe();
     this.navigationEndSubscription.unsubscribe();
     this.isLoggedInSubscription.unsubscribe();
     this.tagNameSubscription.unsubscribe();

@@ -15,6 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
+import {logoutAction} from 'src/app/auth/store/actions/sync.action';
 
 import {currentUserSelector, isAnonymousSelector, isLoggedInSelector} from 'src/app/auth/store/selectors';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
@@ -84,6 +85,10 @@ export class TopBarComponent implements OnInit, OnDestroy {
     } else {
       this.store.dispatch(openSidenavAction());
     }
+  }
+
+  logout(): void {
+    this.store.dispatch(logoutAction());
   }
 
   ngOnDestroy(): void {

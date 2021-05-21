@@ -22,5 +22,9 @@
             [active]="activeLink == tabs[2].link">
             {{tabs[2].nameTab}}
         </a>
+        <a mat-tab-link [routerLink]="tabs[3].link" *ngIf="tabs[3].isVisible" (click)="activeLink = tabs[3].link"
+            [active]="activeLink == tabs[3].link">
+            {{tabs[3].nameTab}}
+        </a>
     </nav>
 </div>

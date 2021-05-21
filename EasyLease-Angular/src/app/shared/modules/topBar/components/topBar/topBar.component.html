@@ -54,10 +54,17 @@
                 </button>
                 <mat-menu #menu="matMenu" xPosition="before" overlapTrigger="false" class="mat-menu">
                     <mat-divider class="m-2"></mat-divider>
-                    <button mat-menu-item class="el-btn-side-nav">
+                    <button mat-menu-item class="el-btn-side-nav"
+                        [routerLink]="['/profile', ((currentUser$ | async)!.username)]">
                         <fa-icon [icon]="faList" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true"
                             transform="grow-2">
                         </fa-icon> <span class="px-2">Мои объявления</span>
+                    </button>
+                    <button mat-menu-item class="el-btn-side-nav"
+                        [routerLink]="['/profile', ((currentUser$ | async)!.username), 'favorites']">
+                        <fa-icon [icon]="faList" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true"
+                            transform="grow-2">
+                        </fa-icon> <span class="px-2">Избранные</span>
                     </button>
                     <button mat-menu-item class="el-btn-side-nav" [routerLink]="['/settings']">
                         <fa-icon [icon]="faUserCog" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true"
@@ -65,7 +72,7 @@
                         </fa-icon> <span class="px-2">Настройки</span>
                     </button>
                     <mat-divider class="m-2"></mat-divider>
-                    <button mat-menu-item class=" el-btn-side-nav" [routerLink]="['/']">
+                    <button mat-menu-item class=" el-btn-side-nav" [routerLink]="['/']" (click)="logout()">
                         <fa-icon [icon]="faSignOutAlt" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true"
                             transform="grow-4">
                         </fa-icon> <span class="px-2">Выйти</span>
