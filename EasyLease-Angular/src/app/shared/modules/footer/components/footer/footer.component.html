@@ -1,29 +1,44 @@
-<footer class="text-center text-white mt-2 el-footer" style="font-size: 16px; z-index: 1;">
-
-    <div class="container p-4 pb-0">
-
-        <section class="">
-            <p class="d-flex justify-content-center align-items-center">
-                <span class="me-3">Register for free</span>
-                <button type="button" class="btn btn-outline-light btn-rose btn-round ml-1">
-                    Sign up!
-                </button>
-            </p>
+<footer class="el-footer text-center text-white mt-2">
+    <div class="container p-2 pb-0">
+        <section>
+            <div class="flex-column justify-content-center">
+                <div class="pt-2 mt-2 pb-1 d-inline-block d-sm-inline">
+                    <span class="my-3">Предложение или замечание по работе сайта: </span>
+                </div>
+                <div class="py-1 d-inline-block d-sm-inline">
+                    <!-- <button class="btn-text br-20 mx-2 my-1 py-1" [routerLink]="['/']" mat-raised-button
+                        color="success">
+                        <fa-icon [icon]="faCommentDots" size="lg" class="pr-1">
+                        </fa-icon>
+                        Отправить
+                    </button> -->
+                    <button mat-raised-button [routerLink]="['/']" class="br-20 el-btn-nav mx-2 px-4 py-2">
+                        <div class="row">
+                            <fa-icon [icon]="faCommentDots" size="lg" class="col el-icon-btn-drop-shadow px-2"
+                                [fixedWidth]="true" transform="grow-6">
+                            </fa-icon>
+                            <div class="col d-none d-md-block link-text px-2">
+                                Отправить
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <mat-divider class="m-2"></mat-divider>
             <p class="d-flex justify-content-center align-items-center">
                 <fa-icon [icon]="faEnvelope" size="lg" class="el-icon-btn-drop-shadow p-2" [fixedWidth]="true"
                     transform="grow-6">
                 </fa-icon>
-                <a href="/" style="color: #ffffff; font-size: 15px;" class="">Nikolay-K.M.W@gmail.com</a>
+                <a href="/" class="email text-white">Nikolay-K.M.W@gmail.com</a>
             </p>
         </section>
     </div>
 </footer>
 <footer>
     <!-- Copyright -->
-    <div class="el-copyright text-center p-3" style="color: #ffffff; font-size: 16px; z-index: 10;">
+    <div class="el-copyright text-center p-3 text-white">
         © 2021 Copyright:
-        <a class="text-white">K.M.W.</a>
+        <a>K.M.W.</a>
     </div>
     <!-- Copyright -->
-
 </footer>

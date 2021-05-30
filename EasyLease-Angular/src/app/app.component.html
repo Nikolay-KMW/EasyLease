@@ -1,8 +1,12 @@
 <el-top-bar [brandName]="brandName"></el-top-bar>
 <el-shell>
-  <el-banner></el-banner>
-  <el-feed-toggler></el-feed-toggler>
-  <!-- <example-experiment></example-experiment> -->
-  <router-outlet></router-outlet>
-  <el-footer></el-footer>
+  <div class="page">
+    <el-banner></el-banner>
+    <el-feed-toggler></el-feed-toggler>
+    <!-- <example-experiment></example-experiment> -->
+    <router-outlet></router-outlet>
+    <div class="footer-page">
+      <el-footer></el-footer>
+    </div>
+  </div>
 </el-shell>
