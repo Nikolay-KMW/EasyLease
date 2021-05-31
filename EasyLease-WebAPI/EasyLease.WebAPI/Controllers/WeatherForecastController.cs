@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EasyLease_WebAPI.Controllers
+namespace EasyLease.WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

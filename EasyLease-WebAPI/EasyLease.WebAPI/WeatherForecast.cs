@@ -1,6 +1,6 @@
 using System;
 
-namespace EasyLease_WebAPI
+namespace EasyLease.WebAPI
 {
     public class WeatherForecast
     {

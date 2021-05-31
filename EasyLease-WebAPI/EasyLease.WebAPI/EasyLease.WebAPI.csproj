@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>EasyLease_WebAPI</RootNamespace>
+    <RootNamespace>EasyLease.WebAPI</RootNamespace>
   </PropertyGroup>
 
 
