@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31313.79
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyLease.WebAPI", "EasyLease-WebAPI\EasyLease.WebAPI.csproj", "{BB353CE4-096F-4B03-B33A-DAA5955BB0F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyLease.WebAPI", "EasyLease.WebAPI\EasyLease.WebAPI.csproj", "{BB353CE4-096F-4B03-B33A-DAA5955BB0F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyLease.Contracts", "EasyLease.Contracts\EasyLease.Contracts.csproj", "{66F6C956-CE24-46D5-B2C0-876D0CEFE451}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyLease.LoggerService", "EasyLease.LoggerService\EasyLease.LoggerService.csproj", "{3982DA85-D86C-478A-AD9D-061A0192E9A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{BB353CE4-096F-4B03-B33A-DAA5955BB0F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB353CE4-096F-4B03-B33A-DAA5955BB0F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB353CE4-096F-4B03-B33A-DAA5955BB0F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66F6C956-CE24-46D5-B2C0-876D0CEFE451}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66F6C956-CE24-46D5-B2C0-876D0CEFE451}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66F6C956-CE24-46D5-B2C0-876D0CEFE451}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66F6C956-CE24-46D5-B2C0-876D0CEFE451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3982DA85-D86C-478A-AD9D-061A0192E9A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3982DA85-D86C-478A-AD9D-061A0192E9A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3982DA85-D86C-478A-AD9D-061A0192E9A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3982DA85-D86C-478A-AD9D-061A0192E9A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
