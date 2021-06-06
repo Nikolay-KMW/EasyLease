@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyLease.Contracts", "Easy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyLease.LoggerService", "EasyLease.LoggerService\EasyLease.LoggerService.csproj", "{3982DA85-D86C-478A-AD9D-061A0192E9A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyLease.Entities", "EasyLease.Entities\EasyLease.Entities.csproj", "{4DDB0DF3-C7F1-4CEF-B997-40CCFEE5717F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3982DA85-D86C-478A-AD9D-061A0192E9A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3982DA85-D86C-478A-AD9D-061A0192E9A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3982DA85-D86C-478A-AD9D-061A0192E9A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DDB0DF3-C7F1-4CEF-B997-40CCFEE5717F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DDB0DF3-C7F1-4CEF-B997-40CCFEE5717F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DDB0DF3-C7F1-4CEF-B997-40CCFEE5717F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DDB0DF3-C7F1-4CEF-B997-40CCFEE5717F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

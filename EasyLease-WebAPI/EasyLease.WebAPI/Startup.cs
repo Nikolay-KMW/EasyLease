@@ -30,6 +30,8 @@ namespace EasyLease.WebAPI {
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
 
+            services.ConfigureSqlContext(Configuration);
+
             services.AddControllers();
         }
 
