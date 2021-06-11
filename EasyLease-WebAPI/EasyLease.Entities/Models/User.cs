@@ -19,8 +19,8 @@ namespace EasyLease.Entities.Models {
         public string Bio { get; set; }
         public string Image { get; set; }
         public DateTime CreatedUser { get; set; }
-        public DateTime UpdatedUser { get; set; }
-        public ICollection<Advert> Favorites { get; set; }
+        public DateTime? UpdatedUser { get; set; }
+        //public ICollection<Advert> Favorites { get; set; }
         public ICollection<Advert> Adverts { get; set; }
     }
 }

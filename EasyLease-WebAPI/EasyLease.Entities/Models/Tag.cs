@@ -9,5 +9,9 @@ namespace EasyLease.Entities.Models {
 
         [MaxLength(30, ErrorMessage = "Maximum length for the name of tag is 30 characters.")]
         public string TagName { get; set; }
+
+        [ForeignKey(nameof(Advert))]
+        public Guid AdvertId { get; set; }
+        public Advert Advert { get; set; }
     }
 }

@@ -7,11 +7,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EasyLease.LoggerService\EasyLease.LoggerService.csproj" />
-    <ProjectReference Include="..\EasyLease.Entities\EasyLease.Entities.csproj" />
+    <ProjectReference Include="..\EasyLease.Repository\EasyLease.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.15">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.15">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
