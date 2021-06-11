@@ -3,6 +3,7 @@
     "EnableAnalyzersSupport": true
   },
   "FormattingOptions": {
+    "OrganizeImports": true,
     "newLine": "\n",
     "useTabs": false,
     "tabSize": 4,
