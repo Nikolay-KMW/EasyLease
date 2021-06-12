@@ -14,7 +14,8 @@ namespace EasyLease.Entities.Configuration {
                     CreatedAd = DateTime.Now,
                     UpdatedAd = null,
                     Slug = "Сдам-2-х-комнатную-квартиру-о1",
-                    UserId = new Guid("c1d4c053-49b6-410c-bc78-2d54a9991870"),
+                    FavoriteUserId = new Guid("c1d4c053-49b6-410c-bc78-2d54a9991870"),
+                    AuthorUserId = new Guid("c1d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                  new Advert {
                      Id = new Guid("a2d4c053-49b6-410c-bc78-2d54a9991870"),
@@ -23,7 +24,8 @@ namespace EasyLease.Entities.Configuration {
                      CreatedAd = DateTime.Now,
                      UpdatedAd = null,
                      Slug = "Сдам-дом-о2",
-                     UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
+                     FavoriteUserId = null,
+                     AuthorUserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                  },
                  new Advert {
                      Id = new Guid("a3d4c053-49b6-410c-bc78-2d54a9991870"),
@@ -32,7 +34,8 @@ namespace EasyLease.Entities.Configuration {
                      CreatedAd = DateTime.Now,
                      UpdatedAd = null,
                      Slug = "Сдам-1-комнатную-квартиру-о3",
-                     UserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
+                     FavoriteUserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
+                     AuthorUserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
                  },
                 new Advert {
                     Id = new Guid("a4d4c053-49b6-410c-bc78-2d54a9991870"),
@@ -41,7 +44,8 @@ namespace EasyLease.Entities.Configuration {
                     CreatedAd = DateTime.Now,
                     UpdatedAd = null,
                     Slug = "Сдам-5-х-комнатную-квартиру-о4",
-                    UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
+                    FavoriteUserId = null,
+                    AuthorUserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                 new Advert {
                     Id = new Guid("a5d4c053-49b6-410c-bc78-2d54a9991870"),
@@ -50,7 +54,8 @@ namespace EasyLease.Entities.Configuration {
                     CreatedAd = DateTime.Now,
                     UpdatedAd = null,
                     Slug = "Сдам-комнату-в-общежитие-о5",
-                    UserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
+                    FavoriteUserId = null,
+                    AuthorUserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                 new Advert {
                     Id = new Guid("a6d4c053-49b6-410c-bc78-2d54a9991870"),
@@ -59,7 +64,8 @@ namespace EasyLease.Entities.Configuration {
                     CreatedAd = DateTime.Now,
                     UpdatedAd = null,
                     Slug = "Сдам-3-х-комнатную-квартиру-о6",
-                    UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
+                    FavoriteUserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
+                    AuthorUserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                 }
             );
         }

@@ -19,10 +19,15 @@ namespace EasyLease.Entities.Models {
         public DateTime CreatedAd { get; set; }
         public DateTime? UpdatedAd { get; set; }
         public string Slug { get; set; }
-        public ICollection<Tag> Tags { get; set; }
+        public ICollection<AdvertTag> AdvertTags { get; set; }
+        //public ICollection<Tag> Tags { get; set; }
 
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public Guid? FavoriteUserId { get; set; }
+        public User Favorite { get; set; }
+
+        [ForeignKey(nameof(User))]
+        public Guid AuthorUserId { get; set; }
         public User Author { get; set; }
     }
 }
