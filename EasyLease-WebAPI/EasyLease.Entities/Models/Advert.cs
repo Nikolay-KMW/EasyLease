@@ -52,7 +52,7 @@ namespace EasyLease.Entities.Models {
 
         [MaxLength(50, ErrorMessage = "Maximum length of house number is 50 characters.")]
         public string HouseNumber { get; set; }
-        public int ApartmentNumber { get; set; }
+        public int? ApartmentNumber { get; set; }
         // ======================================
 
         public string Images { get; set; }
@@ -62,7 +62,7 @@ namespace EasyLease.Entities.Models {
         [ForeignKey(nameof(PriceType))]
         public int PriceTypeId { get; set; }
 
-        [Column(TypeName = "nvarchar(24)")]
+        [Column(TypeName = "varchar(24)")]
         public PriceType PriceType { get; set; }
         public DateTime StartOfLease { get; set; }
         public DateTime? EndOfLease { get; set; }

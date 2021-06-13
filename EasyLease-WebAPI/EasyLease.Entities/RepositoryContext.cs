@@ -25,6 +25,10 @@ namespace EasyLease.Entities {
             modelBuilder.ApplyConfiguration(new AdvertConfiguration());
             modelBuilder.ApplyConfiguration(new TagConfiguration());
             modelBuilder.ApplyConfiguration(new AdvertTagConfiguration());
+            modelBuilder.ApplyConfiguration(new RegionConfiguration());
+            modelBuilder.ApplyConfiguration(new DistrictConfiguration());
+            modelBuilder.ApplyConfiguration(new SettlementTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new StreetTypeConfiguration());
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Advert> Adverts { get; set; }
