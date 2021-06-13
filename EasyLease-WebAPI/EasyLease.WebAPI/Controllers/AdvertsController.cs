@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyLease.Contracts;
+using EasyLease.Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyLease.WebAPI.Controllers {
@@ -19,8 +20,21 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpGet]
         public ActionResult GetAdverts() {
             try {
-                var companies = _repository.Advert.GetAllAdverts(trackChanges: false);
-                return Ok(companies);
+                var adverts = _repository.Advert.GetAllAdverts(trackChanges: false);
+
+                var advertsDTO = adverts.Select(c => new AdvertDTO {
+                    Id = c.Id,
+                    Title = c.Title,
+                    Description = c.Description,
+                    CreatedAd = c.CreatedAd,
+                    UpdatedAd = c.UpdatedAd,
+                    Slug = c.Slug,
+                    //TagList = c.AdvertTags.ToArray<string>(),
+                    Favorited = false
+                }).ToList();
+
+                return Ok(advertsDTO);
+
             } catch (Exception exc) {
                 _logger.LogError($"Something went wrong in the {nameof(GetAdverts)} action {exc}");
                 return StatusCode(500, "Internal server error");

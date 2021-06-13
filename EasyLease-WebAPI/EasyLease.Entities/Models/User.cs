@@ -16,7 +16,7 @@ namespace EasyLease.Entities.Models {
         [Required(ErrorMessage = "Description is a required field.")]
         [EmailAddress(ErrorMessage = "Email Address is not valid.")]
         public string Email { get; set; }
-        public string Bio { get; set; }
+        public string Biography { get; set; }
         public string Image { get; set; }
         public DateTime CreatedUser { get; set; }
         public DateTime? UpdatedUser { get; set; }
