@@ -9,6 +9,12 @@ namespace EasyLease.Entities.Models {
         [Column("AdvertId")]
         public Guid Id { get; set; }
 
+        [ForeignKey(nameof(AdvertType))]
+        public string AdvertTypeId { get; set; }
+
+        [Required(ErrorMessage = "Type of advert is a required field.")]
+        public AdvertType AdvertType { get; set; }
+
         [Required(ErrorMessage = "Title is a required field.")]
         [MaxLength(150, ErrorMessage = "Maximum length for the Title is 150 characters.")]
         public string Title { get; set; }
@@ -17,21 +23,20 @@ namespace EasyLease.Entities.Models {
         [MaxLength(1000, ErrorMessage = "Maximum length for the Description is 1000 characters.")]
         public string Description { get; set; }
 
+        public int NumberOfRooms { get; set; }
+        public int Area { get; set; }
+        public int Storey { get; set; }
+        public int NumberOfStoreys { get; set; }
+
         // =========== Full Address =============
-        [ForeignKey(nameof(Region))]
-        public int RegionId { get; set; }
+        public string Region { get; set; }
+        public string District { get; set; }
 
-        [Required(ErrorMessage = "Region is a required field.")]
-        public Region Region { get; set; }
-
-        [ForeignKey(nameof(District))]
-        public int DistrictId { get; set; }
-
-        [Required(ErrorMessage = "District is a required field.")]
-        public District District { get; set; }
+        [Required(ErrorMessage = "Location is a required field.")]
+        public Location Location { get; set; }
 
         [ForeignKey(nameof(SettlementType))]
-        public int SettlementTypeId { get; set; }
+        public string SettlementTypeId { get; set; }
 
         [Required(ErrorMessage = "Type of settlement is a required field.")]
         public SettlementType SettlementType { get; set; }
@@ -41,10 +46,10 @@ namespace EasyLease.Entities.Models {
         public string SettlementName { get; set; }
 
         [ForeignKey(nameof(StreetType))]
-        public int StreetTypeId { get; set; }
+        public string StreetTypeId { get; set; }
 
         [Required(ErrorMessage = "Type of street is a required field.")]
-        public Region StreetType { get; set; }
+        public StreetType StreetType { get; set; }
 
         [Required(ErrorMessage = "Name of street is a required field.")]
         [MaxLength(150, ErrorMessage = "Maximum length of the street name is 150 characters.")]
@@ -56,28 +61,32 @@ namespace EasyLease.Entities.Models {
         // ======================================
 
         public string Images { get; set; }
-        public bool ActiveAd { get; set; }
-        public decimal Price { get; set; }
 
-        [ForeignKey(nameof(PriceType))]
-        public int PriceTypeId { get; set; }
+        [Required()]
+        [Column(TypeName = "varchar(24)")]
+        public Status Status { get; set; }
 
+        [Required(ErrorMessage = "Type of price is a required field.")]
         [Column(TypeName = "varchar(24)")]
         public PriceType PriceType { get; set; }
+        public decimal Price { get; set; }
+
         public DateTime StartOfLease { get; set; }
         public DateTime? EndOfLease { get; set; }
         public DateTime CreatedAd { get; set; }
         public DateTime? UpdatedAd { get; set; }
         public string Slug { get; set; }
+
+        public ICollection<AdvertComfort> AdvertComforts { get; set; }
         public ICollection<AdvertTag> AdvertTags { get; set; }
-        //public ICollection<Tag> Tags { get; set; }
+
+        // [ForeignKey(nameof(User))]
+        // public Guid? FavoriteUserId { get; set; }
+        // public User Favorite { get; set; }
+        public ICollection<AdvertFavorite> AdvertFavorites { get; set; }
 
         [ForeignKey(nameof(User))]
-        public Guid? FavoriteUserId { get; set; }
-        public User Favorite { get; set; }
-
-        [ForeignKey(nameof(User))]
-        public Guid AuthorUserId { get; set; }
+        public Guid UserId { get; set; }
         public User Author { get; set; }
     }
 }

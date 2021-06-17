@@ -3,80 +3,62 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EasyLease.Entities.Configuration {
-    public class StreetTypeConfiguration : IEntityTypeConfiguration<Street> {
-        public void Configure(EntityTypeBuilder<Street> builder) {
+    public class StreetTypeConfiguration : IEntityTypeConfiguration<StreetType> {
+        public void Configure(EntityTypeBuilder<StreetType> builder) {
             builder.HasData(
-                new Street {
-                    Id = 1,
-                    Name = "улица"
+                new StreetType {
+                    Id = "улица"
                 },
-                new Street {
-                    Id = 2,
-                    Name = "аллея"
+                new StreetType {
+                    Id = "аллея"
                 },
-                new Street {
-                    Id = 3,
-                    Name = "бульвар"
+                new StreetType {
+                    Id = "бульвар"
                 },
-                new Street {
-                    Id = 4,
-                    Name = "взвоз"
+                new StreetType {
+                    Id = "взвоз"
                 },
-                new Street {
-                    Id = 5,
-                    Name = "въезд"
+                new StreetType {
+                    Id = "въезд"
                 },
-                new Street {
-                    Id = 6,
-                    Name = "заезд"
+                new StreetType {
+                    Id = "заезд"
                 },
-                new Street {
-                    Id = 7,
-                    Name = "кольцо"
+                new StreetType {
+                    Id = "кольцо"
                 },
-                new Street {
-                    Id = 8,
-                    Name = "магистраль"
+                new StreetType {
+                    Id = "магистраль"
                 },
-                new Street {
-                    Id = 9,
-                    Name = "набережная"
+                new StreetType {
+                    Id = "набережная"
                 },
-                new Street {
-                    Id = 10,
-                    Name = "переулок"
+                new StreetType {
+                    Id = "переулок"
                 },
-                new Street {
-                    Id = 11,
-                    Name = "площадь"
+                new StreetType {
+                    Id = "площадь"
                 },
-                new Street {
-                    Id = 12,
-                    Name = "проезд"
+                new StreetType {
+                    Id = "проезд"
                 },
-                new Street {
-                    Id = 13,
-                    Name = "проспект"
+                new StreetType {
+                    Id = "проспект"
                 },
-                new Street {
-                    Id = 14,
-                    Name = "проулок"
+                new StreetType {
+                    Id = "проулок"
                 },
-                new Street {
-                    Id = 15,
-                    Name = "разъезд"
+                new StreetType {
+                    Id = "разъезд"
                 },
-                new Street {
-                    Id = 16,
-                    Name = "спуск"
+                new StreetType {
+                    Id = "спуск"
                 },
-                new Street {
-                    Id = 17,
-                    Name = "съезд"
+                new StreetType {
+                    Id = "съезд"
                 },
-                new Street {
-                    Id = 18,
-                    Name = "тупик"
+                new StreetType {
+                    Id = "тупик"
                 }
             );
         }

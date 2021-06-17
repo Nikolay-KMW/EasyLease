@@ -9,7 +9,9 @@ namespace EasyLease.Entities.Configuration {
             builder.HasData(
                 new User {
                     Id = new Guid("c1d4c053-49b6-410c-bc78-2d54a9991870"),
-                    UserName = "Максим",
+                    FirstName = "Максим",
+                    SecondName = "",
+                    ThirdName = "",
                     Email = "max@com.ua",
                     Biography = "Просто собственник",
                     Image = "",
@@ -18,7 +20,7 @@ namespace EasyLease.Entities.Configuration {
                 },
                 new User {
                     Id = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
-                    UserName = "Nik",
+                    FirstName = "Nik",
                     Email = "Nik@com.ua",
                     Biography = "",
                     Image = "",
@@ -27,7 +29,7 @@ namespace EasyLease.Entities.Configuration {
                 },
                 new User {
                     Id = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
-                    UserName = "Влад",
+                    FirstName = "Влад",
                     Email = "vlad@com.ua",
                     Biography = "Занимаюсь сдачей недвижимости",
                     Image = "",

@@ -7,16 +7,13 @@ namespace EasyLease.Entities.Configuration {
         public void Configure(EntityTypeBuilder<SettlementType> builder) {
             builder.HasData(
                 new SettlementType {
-                    Id = 1,
-                    Name = "село"
+                    Id = "село"
                 },
                 new SettlementType {
-                    Id = 2,
-                    Name = "смт"
+                    Id = "смт"
                 },
                 new SettlementType {
-                    Id = 3,
-                    Name = "город"
+                    Id = "город"
                 }
             );
         }
