@@ -7,6 +7,5 @@ namespace EasyLease.Entities.Models {
         [Column("AdvertTypeId")]
         [MaxLength(50)]
         public string Id { get; set; }
-        //public ICollection<Advert> Adverts { get; set; }
     }
 }

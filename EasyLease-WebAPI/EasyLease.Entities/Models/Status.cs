@@ -1,6 +1,6 @@
 namespace EasyLease.Entities.Models {
     public enum Status {
-        NotActive,
+        Inactive,
         OnModeration,
         Active
     }

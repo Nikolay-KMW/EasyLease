@@ -7,7 +7,6 @@ namespace EasyLease.Entities {
     public class RepositoryContext : DbContext {
         public RepositoryContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-
             //  This sets up the composite foreign key for the Region and District properties in the Location table
             modelBuilder.Entity<Location>()
                 .HasKey(location => new { location.Region, location.District });
@@ -74,7 +73,6 @@ namespace EasyLease.Entities {
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Advert> Adverts { get; set; }
-        public DbSet<Location> Locations { get; set; }
         public DbSet<Comfort> Comforts { get; set; }
         public DbSet<Tag> Tags { get; set; }
     }

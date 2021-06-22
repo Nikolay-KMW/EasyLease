@@ -27,11 +27,8 @@ namespace EasyLease.Entities.Models {
         public DateTime CreatedUser { get; set; }
         public DateTime? UpdatedUser { get; set; }
 
-        // [InverseProperty(nameof(Advert.Favorite))]
-        // public ICollection<Advert> FavoritedAdverts { get; set; }
         public ICollection<AdvertFavorite> AdvertFavorites { get; set; }
 
-        //[InverseProperty(nameof(Advert.Author))]
         public ICollection<Advert> Adverts { get; set; }
     }
 }
