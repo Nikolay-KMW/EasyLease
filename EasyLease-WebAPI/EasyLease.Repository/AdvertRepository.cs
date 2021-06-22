@@ -14,7 +14,15 @@ namespace EasyLease.Repository {
 
         public Advert GetAdvert(Guid advertId, bool trackChanges) =>
             FindByCondition(advert => advert.Id.Equals(advertId), trackChanges).SingleOrDefault();
+
         public IEnumerable<Advert> GetAdvertsForUser(Guid userId, bool trackChanges) =>
             FindByCondition(advert => advert.UserId.Equals(userId), trackChanges).OrderBy(advert => advert.CreatedAd);
+
+        public void CreateAdvertsForUser(Guid userId, Advert advert) {
+            advert.UserId = userId;
+            advert.Status = Status.OnModeration;
+            advert.CreatedAd = DateTime.UtcNow;
+            Create(advert);
+        }
     }
 }

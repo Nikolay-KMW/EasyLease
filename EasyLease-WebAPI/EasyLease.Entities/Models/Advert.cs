@@ -23,10 +23,13 @@ namespace EasyLease.Entities.Models {
         [MaxLength(1000, ErrorMessage = "Maximum length for the Description is 1000 characters.")]
         public string Description { get; set; }
 
+        [Required(ErrorMessage = "Number of rooms is a required field.")]
         public int NumberOfRooms { get; set; }
+
+        [Required(ErrorMessage = "Area is a required field.")]
         public int Area { get; set; }
-        public int Storey { get; set; }
-        public int NumberOfStoreys { get; set; }
+        public int? Storey { get; set; }
+        public int? NumberOfStoreys { get; set; }
 
         // =========== Full Address =============
         public string Region { get; set; }

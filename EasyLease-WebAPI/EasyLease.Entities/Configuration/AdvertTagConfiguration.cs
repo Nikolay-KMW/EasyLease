@@ -11,37 +11,37 @@ namespace EasyLease.Entities.Configuration {
                 new AdvertTag {
                     AdvertId = new Guid("a1d4c053-49b6-410c-bc78-2d54a9991870"),
                     TagId = "квартира",
-                    CreatedTag = DateTime.Now
+                    CreatedTag = DateTime.UtcNow
                 },
                 new AdvertTag {
                     AdvertId = new Guid("a1d4c053-49b6-410c-bc78-2d54a9991870"),
                     TagId = "Евро ремонт",
-                    CreatedTag = DateTime.Now
+                    CreatedTag = DateTime.UtcNow
                 },
                 new AdvertTag {
                     AdvertId = new Guid("a2d4c053-49b6-410c-bc78-2d54a9991870"),
                     TagId = "дом",
-                    CreatedTag = DateTime.Now
+                    CreatedTag = DateTime.UtcNow
                 },
                 new AdvertTag {
                     AdvertId = new Guid("a3d4c053-49b6-410c-bc78-2d54a9991870"),
                     TagId = "1 комнатная",
-                    CreatedTag = DateTime.Now
+                    CreatedTag = DateTime.UtcNow
                 },
                 new AdvertTag {
                     AdvertId = new Guid("a4d4c053-49b6-410c-bc78-2d54a9991870"),
                     TagId = "5 комнатная",
-                    CreatedTag = DateTime.Now
+                    CreatedTag = DateTime.UtcNow
                 },
                 new AdvertTag {
                     AdvertId = new Guid("a4d4c053-49b6-410c-bc78-2d54a9991870"),
                     TagId = "свежий ремонт",
-                    CreatedTag = DateTime.Now
+                    CreatedTag = DateTime.UtcNow
                 },
                 new AdvertTag {
                     AdvertId = new Guid("a5d4c053-49b6-410c-bc78-2d54a9991870"),
                     TagId = "комната",
-                    CreatedTag = DateTime.Now
+                    CreatedTag = DateTime.UtcNow
                 }
             );
         }

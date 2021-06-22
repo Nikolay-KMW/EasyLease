@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EasyLease.Contracts;
 using EasyLease.Entities.DataTransferObjects;
+using EasyLease.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyLease.WebAPI.Controllers {
-    [Route("api/advers")]
+    [Route("api/adverts")]
     [ApiController]
     public class AdvertsController : ControllerBase {
         private readonly IRepositoryManager _repository;
@@ -30,7 +31,7 @@ namespace EasyLease.WebAPI.Controllers {
             return Ok(advertsDTO);
         }
 
-        [HttpGet("{advertId}")]
+        [HttpGet("{advertId}", Name = "GetAdvertById")]
         public ActionResult<AdvertDTO> GetAdvertById(Guid advertId) {
             var advert = _repository.Advert.GetAdvert(advertId, trackChanges: false);
 
@@ -43,10 +44,29 @@ namespace EasyLease.WebAPI.Controllers {
             }
         }
 
-        // [HttpPost("")]
-        // public ActionResult<Advert> PostAdvert(Advert model) {
-        //     return null;
-        // }
+        [HttpPost("user/{userId}")]
+        public IActionResult CreateAdvertForUser(Guid userId, [FromBody] AdvertCreationDTO advertCreationDTO) {
+
+            if (advertCreationDTO == null) {
+                _logger.LogError("AdvertCreationDTO object sent from client is null.");
+                return BadRequest("Advert object is null");
+            }
+
+            var user = _repository.User.GetUser(userId, trackChanges: false);
+
+            if (user == null) {
+                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var advert = _mapper.Map<Advert>(advertCreationDTO);
+
+            _repository.Advert.CreateAdvertsForUser(userId, advert);
+            _repository.Save();
+
+            var advertToReturn = _mapper.Map<AdvertDTO>(advert);
+            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+        }
 
         // [HttpPut("{id}")]
         // public IActionResult PutAdvert(int id, Advert model) {

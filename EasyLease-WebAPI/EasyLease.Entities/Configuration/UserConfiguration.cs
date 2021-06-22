@@ -15,7 +15,7 @@ namespace EasyLease.Entities.Configuration {
                     Email = "max@com.ua",
                     Biography = "Просто собственник",
                     Image = "",
-                    CreatedUser = DateTime.Now,
+                    CreatedUser = DateTime.UtcNow.AddDays(1),
                     UpdatedUser = null,
                 },
                 new User {
@@ -24,7 +24,7 @@ namespace EasyLease.Entities.Configuration {
                     Email = "Nik@com.ua",
                     Biography = "",
                     Image = "",
-                    CreatedUser = DateTime.Now,
+                    CreatedUser = DateTime.UtcNow,
                     UpdatedUser = null,
                 },
                 new User {
@@ -33,7 +33,7 @@ namespace EasyLease.Entities.Configuration {
                     Email = "vlad@com.ua",
                     Biography = "Занимаюсь сдачей недвижимости",
                     Image = "",
-                    CreatedUser = DateTime.Now,
+                    CreatedUser = DateTime.UtcNow.AddHours(3),
                     UpdatedUser = null,
                 }
             );
