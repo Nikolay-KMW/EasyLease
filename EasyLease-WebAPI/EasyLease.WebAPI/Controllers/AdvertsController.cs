@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using EasyLease.Contracts;
 using EasyLease.Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
@@ -12,39 +14,34 @@ namespace EasyLease.WebAPI.Controllers {
     public class AdvertsController : ControllerBase {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
-        public AdvertsController(IRepositoryManager repository, ILoggerManager logger) {
+        private readonly IMapper _mapper;
+
+        public AdvertsController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper) {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult GetAdverts() {
-            try {
-                var adverts = _repository.Advert.GetAllAdverts(trackChanges: false);
+        public ActionResult<IEnumerable<AdvertDTO>> GetAdverts() {
+            var adverts = _repository.Advert.GetAllAdverts(trackChanges: false);
+            var advertsDTO = _mapper.Map<IEnumerable<AdvertDTO>>(adverts);
 
-                var advertsDTO = adverts.Select(c => new AdvertDTO {
-                    Id = c.Id,
-                    Title = c.Title,
-                    Description = c.Description,
-                    CreatedAd = c.CreatedAd,
-                    UpdatedAd = c.UpdatedAd,
-                    Slug = c.Slug,
-                    //TagList = c.AdvertTags.ToArray<string>(),
-                    Favorited = false
-                }).ToList();
-
-                return Ok(advertsDTO);
-
-            } catch (Exception exc) {
-                _logger.LogError($"Something went wrong in the {nameof(GetAdverts)} action {exc}");
-                return StatusCode(500, "Internal server error");
-            }
+            return Ok(advertsDTO);
         }
 
-        // [HttpGet("{id}")]
-        // public ActionResult<Advert> GetAdvertById(int id) {
-        //     return null;
-        // }
+        [HttpGet("{advertId}")]
+        public ActionResult<AdvertDTO> GetAdvertById(Guid advertId) {
+            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: false);
+
+            if (advert == null) {
+                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
+                return NotFound();
+            } else {
+                var advertDTO = _mapper.Map<AdvertDTO>(advert);
+                return Ok(advertDTO);
+            }
+        }
 
         // [HttpPost("")]
         // public ActionResult<Advert> PostAdvert(Advert model) {
