@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace EasyLease.Entities.DataTransferObjects {
     public class ProfileDTO {

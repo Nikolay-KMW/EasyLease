@@ -26,7 +26,7 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpGet]
         public ActionResult<IEnumerable<AdvertDTO>> GetAdverts() {
             var adverts = _repository.Advert.GetAllAdverts(trackChanges: false);
-            var advertsDTO = _mapper.Map<IEnumerable<AdvertDTO>>(adverts);
+            var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(adverts);
 
             return Ok(advertsDTO);
         }
@@ -44,7 +44,7 @@ namespace EasyLease.WebAPI.Controllers {
             }
         }
 
-        [HttpPost("user/{userId}")]
+        [HttpPost("new/{userId}")]
         public IActionResult CreateAdvertForUser(Guid userId, [FromBody] AdvertCreationDTO advertCreationDTO) {
 
             if (advertCreationDTO == null) {
@@ -65,6 +65,8 @@ namespace EasyLease.WebAPI.Controllers {
             _repository.Save();
 
             var advertToReturn = _mapper.Map<AdvertDTO>(advert);
+            advertToReturn.Author = _mapper.Map<ProfileDTO>(user);
+
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
         }
 

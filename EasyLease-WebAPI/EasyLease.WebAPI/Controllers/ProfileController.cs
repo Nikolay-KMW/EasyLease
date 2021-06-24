@@ -45,7 +45,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var advertsForUser = _repository.Advert.GetAdvertsForUser(userId, trackChanges: false);
 
-            var advertsDTO = _mapper.Map<IEnumerable<AdvertDTO>>(advertsForUser);
+            var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser);
             return Ok(advertsDTO);
         }
 
