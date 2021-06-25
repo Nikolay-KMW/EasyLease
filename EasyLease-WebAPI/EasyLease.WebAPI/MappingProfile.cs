@@ -41,11 +41,18 @@ namespace EasyLease.WebAPI {
                 .ForMember(advert => advert.SettlementTypeId, config => config.MapFrom(advertCreationDTO => advertCreationDTO.SettlementType))
                 .ForMember(advert => advert.SettlementType, config => config.Ignore())
                 .ForMember(advert => advert.StreetTypeId, config => config.MapFrom(advertCreationDTO => advertCreationDTO.StreetType))
-                .ForMember(advert => advert.StreetType, config => config.Ignore());
+                .ForMember(advert => advert.StreetType, config => config.Ignore())
+                .ForMember(advert => advert.AdvertComforts, config => config.MapFrom(advertCreationDTO => advertCreationDTO.ComfortList))
+                .ForMember(advert => advert.AdvertTags, config => config.MapFrom(advertCreationDTO => advertCreationDTO.TagList.ToList()));
 
             CreateMap<AdvertComfortCreationDTO, AdvertComfort>()
                 .ForMember(advertComfort => advertComfort.ComfortId, config => config.MapFrom(adComfortCreationDTO => adComfortCreationDTO.Comfort))
                 .ForMember(advertComfort => advertComfort.Comfort, config => config.Ignore());
+
+
+            CreateMap<AdvertTagCreationDTO, AdvertTag>()
+                .ForMember(advertTag => advertTag.TagId, config => config.MapFrom(adTagCreationDTO => adTagCreationDTO.TagList))
+                .ForMember(advertTag => advertTag.Tag, config => config.Ignore());
         }
     }
 }

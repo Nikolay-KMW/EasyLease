@@ -29,7 +29,7 @@ namespace EasyLease.Repository {
             .Include(advert => advert.AdvertTags)
             .OrderBy(advert => advert.CreatedAd);
 
-        public void CreateAdvertsForUser(Guid userId, Advert advert) {
+        public void CreateAdvertForUser(Guid userId, Advert advert) {
             advert.UserId = userId;
             advert.Status = Status.OnModeration;
             advert.CreatedAd = DateTime.UtcNow;

@@ -32,6 +32,6 @@ namespace EasyLease.Entities.DataTransferObjects {
         //public string Slug { get; set; }
 
         public IEnumerable<AdvertComfortCreationDTO> ComfortList { get; set; }
-        //public IEnumerable<AdvertTagCreationDTO> TagList { get; set; }
+        public string[] TagList { get; set; }
     }
 }

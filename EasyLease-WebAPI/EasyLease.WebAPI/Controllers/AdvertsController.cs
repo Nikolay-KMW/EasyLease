@@ -61,7 +61,9 @@ namespace EasyLease.WebAPI.Controllers {
 
             var advert = _mapper.Map<Advert>(advertCreationDTO);
 
-            _repository.Advert.CreateAdvertsForUser(userId, advert);
+            _repository.Tag.AddTags(advert.AdvertTags);
+
+            _repository.Advert.CreateAdvertForUser(userId, advert);
             _repository.Save();
 
             var advertToReturn = _mapper.Map<AdvertDTO>(advert);
