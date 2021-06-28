@@ -14,10 +14,12 @@ namespace EasyLease.Repository {
             FindAll(trackChanges)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
+            .Include(advert => advert.AdvertFavorites)
             .OrderBy(advert => advert.CreatedAd).ToList();
 
         public Advert GetAdvert(Guid advertId, bool trackChanges) =>
             FindByCondition(advert => advert.Id.Equals(advertId), trackChanges)
+            .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
             .Include(advert => advert.Author)
@@ -34,6 +36,11 @@ namespace EasyLease.Repository {
             advert.Status = Status.OnModeration;
             advert.CreatedAd = DateTime.UtcNow;
             Create(advert);
+        }
+
+        public void UpdateAdvertForUser(Advert advert) {
+            advert.UpdatedAd = DateTime.UtcNow;
+            Update(advert);
         }
     }
 }

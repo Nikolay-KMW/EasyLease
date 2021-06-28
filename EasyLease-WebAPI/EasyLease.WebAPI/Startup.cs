@@ -33,6 +33,7 @@ namespace EasyLease.WebAPI {
 
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
+            services.ConfigureFileStorage(Configuration);
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers();

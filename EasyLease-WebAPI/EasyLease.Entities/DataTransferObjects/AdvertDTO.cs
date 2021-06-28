@@ -13,7 +13,7 @@ namespace EasyLease.Entities.DataTransferObjects {
         public int? Storey { get; set; }
         public int? NumberOfStoreys { get; set; }
         public string FullAddress { get; set; }
-        public string Images { get; set; }
+        public string[] Images { get; set; }
         public PriceType PriceType { get; set; }
         public decimal Price { get; set; }
         public DateTime StartOfLease { get; set; }

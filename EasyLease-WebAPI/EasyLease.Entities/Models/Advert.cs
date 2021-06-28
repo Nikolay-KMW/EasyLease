@@ -63,7 +63,7 @@ namespace EasyLease.Entities.Models {
         public int? ApartmentNumber { get; set; }
         // ======================================
 
-        public string Images { get; set; }
+        public ICollection<Image> Images { get; set; }
 
         [Required()]
         [Column(TypeName = "varchar(24)")]
@@ -78,7 +78,7 @@ namespace EasyLease.Entities.Models {
         public DateTime? EndOfLease { get; set; }
         public DateTime CreatedAd { get; set; }
         public DateTime? UpdatedAd { get; set; }
-        public string Slug { get; set; }
+        //public string Slug { get; set; }
 
         public ICollection<AdvertComfort> AdvertComforts { get; set; }
         public ICollection<AdvertTag> AdvertTags { get; set; }

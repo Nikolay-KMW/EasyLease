@@ -23,12 +23,13 @@ namespace EasyLease.Entities.Models {
         [EmailAddress(ErrorMessage = "Email Address is not valid.")]
         public string Email { get; set; }
         public string Biography { get; set; }
-        public string Image { get; set; }
+
+        [MaxLength(15500, ErrorMessage = "Maximum size for the Avatar photo is 62Kb.")]
+        public byte[] Avatar { get; set; }
         public DateTime CreatedUser { get; set; }
         public DateTime? UpdatedUser { get; set; }
 
         public ICollection<AdvertFavorite> AdvertFavorites { get; set; }
-
         public ICollection<Advert> Adverts { get; set; }
     }
 }

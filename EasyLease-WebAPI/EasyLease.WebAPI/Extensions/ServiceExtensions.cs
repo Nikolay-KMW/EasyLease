@@ -35,5 +35,11 @@ namespace EasyLease.WebAPI.Extensions {
         public static void ConfigureRepositoryManager(this IServiceCollection services) {
             services.AddScoped<IRepositoryManager, RepositoryManager>();
         }
+        public static void ConfigureFileStorage(this IServiceCollection services, IConfiguration configuration) {
+            FileStorageSettings fileStorageSettings = new FileStorageSettings();
+            configuration.GetSection("FileStorageSettings").Bind(fileStorageSettings);
+
+            services.AddSingleton<FileStorageSettings>(fileStorageSettings);
+        }
     }
 }

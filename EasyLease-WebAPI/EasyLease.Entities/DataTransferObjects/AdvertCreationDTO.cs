@@ -24,13 +24,11 @@ namespace EasyLease.Entities.DataTransferObjects {
         public int? ApartmentNumber { get; set; }
         // ======================================
 
-        public string Images { get; set; }
+        //public string Images { get; set; }
         public PriceType PriceType { get; set; }
         public decimal Price { get; set; }
         public DateTime StartOfLease { get; set; }
         public DateTime? EndOfLease { get; set; }
-        //public string Slug { get; set; }
-
         public IEnumerable<AdvertComfortCreationDTO> ComfortList { get; set; }
         public string[] TagList { get; set; }
     }

@@ -27,7 +27,6 @@ namespace EasyLease.Entities.Configuration {
                     HouseNumber = "10",
                     ApartmentNumber = 5,
 
-                    Images = "src/Сдам-2-х-комнатную-квартиру-о1",
                     Status = Status.Active,
                     PriceType = PriceType.PricePerDay,
                     Price = 100,
@@ -36,7 +35,7 @@ namespace EasyLease.Entities.Configuration {
 
                     CreatedAd = DateTime.UtcNow.AddHours(10),
                     UpdatedAd = null,
-                    Slug = "Сдам-2-х-комнатную-квартиру-о1",
+                    //Slug = "Сдам-2-х-комнатную-квартиру-о1",
                     UserId = new Guid("c1d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                  new Advert {
@@ -58,7 +57,6 @@ namespace EasyLease.Entities.Configuration {
                      HouseNumber = "8",
                      ApartmentNumber = null,
 
-                     Images = "src/Сдам-дом-о2",
                      Status = Status.Active,
                      PriceType = PriceType.PricePerMonth,
                      Price = 3000,
@@ -67,7 +65,7 @@ namespace EasyLease.Entities.Configuration {
 
                      CreatedAd = DateTime.UtcNow,
                      UpdatedAd = null,
-                     Slug = "Сдам-дом-о2",
+                     //Slug = "Сдам-дом-о2",
                      UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                  },
                  new Advert {
@@ -90,7 +88,6 @@ namespace EasyLease.Entities.Configuration {
                      HouseNumber = "25",
                      ApartmentNumber = 7,
 
-                     Images = "src/Сдам-1-комнатную-квартиру-о3",
                      Status = Status.Active,
                      PriceType = PriceType.PricePerDay,
                      Price = 50,
@@ -99,7 +96,7 @@ namespace EasyLease.Entities.Configuration {
 
                      CreatedAd = DateTime.UtcNow,
                      UpdatedAd = null,
-                     Slug = "Сдам-1-комнатную-квартиру-о3",
+                     //Slug = "Сдам-1-комнатную-квартиру-о3",
                      UserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
                  },
                 new Advert {
@@ -122,7 +119,6 @@ namespace EasyLease.Entities.Configuration {
                     HouseNumber = "2",
                     ApartmentNumber = 13,
 
-                    Images = "src/Сдам-5-х-комнатную-квартиру-о4",
                     Status = Status.Active,
                     PriceType = PriceType.PricePerDay,
                     Price = 300,
@@ -131,7 +127,7 @@ namespace EasyLease.Entities.Configuration {
 
                     CreatedAd = DateTime.UtcNow.AddHours(5),
                     UpdatedAd = null,
-                    Slug = "Сдам-5-х-комнатную-квартиру-о4",
+                    //Slug = "Сдам-5-х-комнатную-квартиру-о4",
                     UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                 new Advert {
@@ -154,7 +150,6 @@ namespace EasyLease.Entities.Configuration {
                     HouseNumber = "31",
                     ApartmentNumber = 5,
 
-                    Images = "src/Сдам-комнату-в-общежитие-о5",
                     Status = Status.Active,
                     PriceType = PriceType.PricePerMonth,
                     Price = 500,
@@ -163,7 +158,7 @@ namespace EasyLease.Entities.Configuration {
 
                     CreatedAd = DateTime.UtcNow.AddDays(3),
                     UpdatedAd = null,
-                    Slug = "Сдам-комнату-в-общежитие-о5",
+                    //Slug = "Сдам-комнату-в-общежитие-о5",
                     UserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                 new Advert {
@@ -186,7 +181,6 @@ namespace EasyLease.Entities.Configuration {
                     HouseNumber = "2",
                     ApartmentNumber = 5,
 
-                    Images = "src/Сдам-3-х-комнатную-квартиру-о6",
                     Status = Status.Active,
                     PriceType = PriceType.PricePerDay,
                     Price = 150,
@@ -195,7 +189,7 @@ namespace EasyLease.Entities.Configuration {
 
                     CreatedAd = DateTime.UtcNow.AddDays(1),
                     UpdatedAd = null,
-                    Slug = "Сдам-3-х-комнатную-квартиру-о6",
+                    //Slug = "Сдам-3-х-комнатную-квартиру-о6",
                     UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                  new Advert {
@@ -218,7 +212,6 @@ namespace EasyLease.Entities.Configuration {
                      HouseNumber = "1",
                      ApartmentNumber = 7,
 
-                     Images = "src/Сдам-3-х-комнатную-квартиру-о7",
                      Status = Status.Active,
                      PriceType = PriceType.PricePerDay,
                      Price = 300,
@@ -227,7 +220,7 @@ namespace EasyLease.Entities.Configuration {
 
                      CreatedAd = DateTime.UtcNow.AddDays(2),
                      UpdatedAd = null,
-                     Slug = "Сдам-5-х-комнатную-квартиру-о7",
+                     //Slug = "Сдам-5-х-комнатную-квартиру-о7",
                      UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                  }
             );
