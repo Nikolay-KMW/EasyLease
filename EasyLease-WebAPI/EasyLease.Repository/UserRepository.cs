@@ -11,5 +11,10 @@ namespace EasyLease.Repository {
 
         public User GetUser(Guid userId, bool trackChanges) =>
             FindByCondition(user => user.Id.Equals(userId), trackChanges).SingleOrDefault();
+
+        public void UpdateProfile(User user) {
+            user.UpdatedUser = DateTime.UtcNow;
+            Update(user);
+        }
     }
 }

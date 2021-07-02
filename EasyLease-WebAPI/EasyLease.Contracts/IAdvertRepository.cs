@@ -8,6 +8,6 @@ namespace EasyLease.Contracts {
         Advert GetAdvert(Guid advertId, bool trackChanges);
         IEnumerable<Advert> GetAdvertsForUser(Guid userId, bool trackChanges);
         void CreateAdvertForUser(Guid userId, Advert advert);
-        void UpdateAdvertForUser(Advert advert);
+        void UpdateAdvertPhotoForUser(Advert advert);
     }
 }

@@ -12,6 +12,7 @@ namespace EasyLease.Repository {
 
         public IEnumerable<Advert> GetAllAdverts(bool trackChanges) =>
             FindAll(trackChanges)
+            .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
             .Include(advert => advert.AdvertFavorites)
@@ -22,14 +23,17 @@ namespace EasyLease.Repository {
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
+            .Include(advert => advert.AdvertFavorites)
             .Include(advert => advert.Author)
             .SingleOrDefault();
 
         public IEnumerable<Advert> GetAdvertsForUser(Guid userId, bool trackChanges) =>
             FindByCondition(advert => advert.UserId.Equals(userId), trackChanges)
+            .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
-            .OrderBy(advert => advert.CreatedAd);
+            .Include(advert => advert.AdvertFavorites)
+            .OrderBy(advert => advert.CreatedAd).ToList();
 
         public void CreateAdvertForUser(Guid userId, Advert advert) {
             advert.UserId = userId;
@@ -38,7 +42,7 @@ namespace EasyLease.Repository {
             Create(advert);
         }
 
-        public void UpdateAdvertForUser(Advert advert) {
+        public void UpdateAdvertPhotoForUser(Advert advert) {
             advert.UpdatedAd = DateTime.UtcNow;
             Update(advert);
         }

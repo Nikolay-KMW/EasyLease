@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyLease.Contracts;
+using EasyLease.Entities.AppSettingsModels;
 using EasyLease.WebAPI.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,10 +20,12 @@ using NLog;
 namespace EasyLease.WebAPI {
     public class Startup {
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnv { get; }
 
-        public Startup(IConfiguration configuration) {
+        public Startup(IConfiguration configuration, IWebHostEnvironment env) {
             LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
+            WebHostEnv = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -33,15 +36,19 @@ namespace EasyLease.WebAPI {
 
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
-            services.ConfigureFileStorage(Configuration);
+            services.ConfigureFileStorage(Configuration, WebHostEnv);
+            services.ConfigureUserProfile(Configuration);
+            services.ConfigureGeneralSettings(Configuration);
+
             services.AddAutoMapper(typeof(Startup));
+            services.ConfigureAutoMapperProfile();
 
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger) {
-            if (env.IsDevelopment()) {
+        public void Configure(IApplicationBuilder app, ILoggerManager logger) {
+            if (WebHostEnv.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
 

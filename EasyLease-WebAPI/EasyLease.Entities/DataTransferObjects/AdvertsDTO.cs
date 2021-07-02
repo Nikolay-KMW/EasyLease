@@ -9,7 +9,7 @@ namespace EasyLease.Entities.DataTransferObjects {
         public string Title { get; set; }
         public string Description { get; set; }
         public string FullAddress { get; set; }
-        public string Images { get; set; }
+        public string Image { get; set; }
         public DateTime CreatedAd { get; set; }
         public string Slug { get; set; }
         public PriceType PriceType { get; set; }
