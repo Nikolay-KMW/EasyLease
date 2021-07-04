@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using EasyLease.Contracts;
@@ -30,6 +31,7 @@ namespace EasyLease.WebAPI.Controllers {
         }
 
         [HttpGet("{userId}", Name = "GetProfileById")]
+        //===============================================================================
         public ActionResult<ProfileDTO> GetProfileById(Guid userId) {
             var profile = _repository.User.GetUser(userId, trackChanges: false);
 
@@ -43,6 +45,7 @@ namespace EasyLease.WebAPI.Controllers {
         }
 
         [HttpGet("{userId}/adverts")]
+        //===============================================================================
         public ActionResult<IEnumerable<AdvertDTO>> GetAdvertsForProfile(Guid userId) {
             var profile = _repository.User.GetUser(userId, trackChanges: false);
 
@@ -58,6 +61,7 @@ namespace EasyLease.WebAPI.Controllers {
         }
 
         [HttpPost("settings/avatar/{userId}")]
+        //===============================================================================
         public IActionResult UploadPhotoForUser(Guid userId, IFormFile avatar) {
             var profile = _repository.User.GetUser(userId, trackChanges: true);
 
@@ -71,44 +75,67 @@ namespace EasyLease.WebAPI.Controllers {
                 return BadRequest("Photo is empty");
             }
 
+            var trustedFileNameForDisplay = WebUtility.HtmlEncode(avatar.FileName);
+
+            var fileExtension = Path.GetExtension(avatar.FileName).ToLower();
+
+            if (!_userProfileSettings.AllowedExtensions.Any(ext => ext == fileExtension)) {
+                _logger.LogError($"Photo sent from client has extension {fileExtension}");
+                return BadRequest($"Photo {trustedFileNameForDisplay} must has one of the extensions: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
+            }
+
             using (var memoryStream = new MemoryStream()) {
                 avatar.CopyTo(memoryStream);
 
-                if (memoryStream.Length < _userProfileSettings.FileSizeLimitForAvatar) {
-                    profile.Avatar = memoryStream.ToArray();
-
-                    _repository.User.UpdateProfile(profile);
-                    _repository.Save();
-                } else {
-                    _logger.LogError($"Photo sent from client is more than {_userProfileSettings.FileSizeLimitForAvatar * 8 / 1000}Kb.");
-                    return BadRequest($"Photo {avatar.FileName} is more than {_userProfileSettings.FileSizeLimitForAvatar * 8 / 1000}Kb.");
+                if (memoryStream.Length > _userProfileSettings.FileSizeLimitForAvatar) {
+                    _logger.LogError($"Photo sent from client is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
+                    return BadRequest($"Photo {trustedFileNameForDisplay} is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
                 }
+
+                memoryStream.Position = 0;
+
+                using (var reader = new BinaryReader(memoryStream)) {
+                    var signatures = _userProfileSettings.FileSignature[fileExtension];
+                    var headerfile = reader.ReadBytes(signatures.Max(m => m.Length));
+
+                    bool isValidSignature = signatures.Any(signature => headerfile.Take(signature.Length).SequenceEqual(signature));
+
+                    if (!isValidSignature) {
+                        _logger.LogError($"Photo sent from client has not valid signature: {fileExtension}");
+                        return BadRequest($"Photo {trustedFileNameForDisplay} must has one of the extensions.: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
+                    }
+                }
+
+                profile.Avatar = memoryStream.ToArray();
+
+                _repository.User.UpdateProfile(profile);
+                _repository.Save();
             }
 
-            // foreach (var photo in photos) {
-            //     if (photo.Length > 0) {
+            var profileToReturn = _mapper.Map<ProfileDTO>(profile);
 
+            return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
+        }
 
-            //         var fileExtension = Path.GetExtension(photo.FileName).ToLower();
+        [HttpDelete("settings/avatar/{userId}")]
+        //===============================================================================
+        public IActionResult DeletePhotoForUser(Guid userId) {
+            var profile = _repository.User.GetUser(userId, trackChanges: true);
 
-            //         if (!_fileStorageSettings.AllowedExtensions.Any(ext => ext == fileExtension)) {
-            //             _logger.LogError($"Photo sent from client has extension {fileExtension}");
-            //             return BadRequest($"Photo {photo.FileName} must has one of the extensions: { string.Join(',', _fileStorageSettings.AllowedExtensions)}.");
-            //         }
+            if (profile == null) {
+                _logger.LogInfo($"Profile with id: {userId} doesn't exist in the database");
+                return NotFound();
+            }
 
-            //         var generatedFileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
-            //         var filePath = Path.Combine(path, $"{generatedFileName}{fileExtension}");
+            if (profile.Avatar == null) {
+                _logger.LogInfo($"User with id: {userId} haven't photo");
+                return NotFound();
+            }
 
-            //         using (var stream = System.IO.File.Create(filePath)) {
-            //             photo.CopyTo(stream);
-            //         }
+            profile.Avatar = null;
 
-            //         var filePathForDB = filePath.Substring(filePath.LastIndexOf(_fileStorageSettings.PathInWebRoot));
-
-            //         images.Add(new Image() { Name = generatedFileName, Path = filePathForDB });
-            //     }
-            // }
-
+            _repository.User.UpdateProfile(profile);
+            _repository.Save();
 
             var profileToReturn = _mapper.Map<ProfileDTO>(profile);
 

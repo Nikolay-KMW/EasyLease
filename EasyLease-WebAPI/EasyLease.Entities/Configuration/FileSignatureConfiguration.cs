@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EasyLease.Entities.Configuration {
     public static class FileSignatureConfiguration {
@@ -35,13 +37,22 @@ namespace EasyLease.Entities.Configuration {
         public static Dictionary<string, List<byte[]>> GetSignaturesFromExtensions(string[] extensions) {
             var signaturesDictionary = new Dictionary<string, List<byte[]>>();
 
-            foreach (var ext in extensions) {
-                if (fileSignature[ext] != null) {
-                    var signatures = new List<byte[]>(fileSignature[ext]);
-
-                    signaturesDictionary.Add(ext, signatures);
-                }
+            if (extensions == null) {
+                throw new Exception(@$"The list of allowed extensions specified in the appsettings is incorrect. \n
+                    The list of correct values: {string.Join(',', fileSignature.Keys)}.");
             }
+
+            foreach (var ext in extensions) {
+                if (!fileSignature.ContainsKey(ext)) {
+                    throw new Exception(@$"Configuration value {ext} in the appsettings is not supported. \n
+                    The list of correct values: {string.Join(',', fileSignature.Keys)}.");
+                }
+
+                var signatures = new List<byte[]>(fileSignature[ext]);
+
+                signaturesDictionary.Add(ext, signatures);
+            }
+
             return signaturesDictionary;
         }
     }

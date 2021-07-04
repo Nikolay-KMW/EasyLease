@@ -24,7 +24,7 @@ namespace EasyLease.Entities.Models {
         public string Email { get; set; }
         public string Biography { get; set; }
 
-        [MaxLength(15500, ErrorMessage = "Maximum size for the Avatar photo is 62Kb.")]
+        [MaxLength(126976, ErrorMessage = "Maximum size for the Avatar photo is 62KB.")]
         public byte[] Avatar { get; set; }
         public DateTime CreatedUser { get; set; }
         public DateTime? UpdatedUser { get; set; }

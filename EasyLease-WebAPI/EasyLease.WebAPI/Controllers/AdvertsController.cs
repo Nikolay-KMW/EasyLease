@@ -145,8 +145,8 @@ namespace EasyLease.WebAPI.Controllers {
 
                 if (photo.Length > 0) {
                     if (photo.Length > _fileStorageSettings.FileSizeLimit) {
-                        _logger.LogError($"Photo sent from client is more than {_fileStorageSettings.FileSizeLimit / 1000000} Mb.");
-                        return BadRequest($"Photo {trustedFileNameForDisplay} is more than {_fileStorageSettings.FileSizeLimit / 1000000} Mb.");
+                        _logger.LogError($"Photo sent from client is more than {_fileStorageSettings.FileSizeLimit / (1024 * 1024)} Mb.");
+                        return BadRequest($"Photo {trustedFileNameForDisplay} is more than {_fileStorageSettings.FileSizeLimit / (1024 * 1024)} Mb.");
                     }
 
                     var fileExtension = Path.GetExtension(photo.FileName).ToLower();
