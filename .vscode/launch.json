@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/EasyLease-WebAPI/EasyLease-WebAPI/bin/Debug/netcoreapp3.1/EasyLease-WebAPI.dll",
+            "program": "${workspaceFolder}/EasyLease-WebAPI/EasyLease.WebAPI/bin/Debug/netcoreapp3.1/EasyLease.WebAPI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/EasyLease-WebAPI/EasyLease-WebAPI",
+            "cwd": "${workspaceFolder}/EasyLease-WebAPI/EasyLease.WebAPI",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
