@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EasyLease.Entities.Models {
-    public class User {
-        [Column("UserId")]
-        public Guid Id { get; set; }
-
+namespace EasyLease.Entities.DataTransferObjects {
+    public class ProfileUpdateDTO {
         [Required(ErrorMessage = "User name is a required field.")]
         [MinLength(2, ErrorMessage = "Maximum length for the name is 2 characters.")]
         [MaxLength(50, ErrorMessage = "Maximum length for the name is 50 characters.")]
@@ -24,14 +20,6 @@ namespace EasyLease.Entities.Models {
         public string Email { get; set; }
 
         [MaxLength(500, ErrorMessage = "Maximum length for the Biography is 500 characters.")]
-        public string Biography { get; set; }
-
-        [MaxLength(126976, ErrorMessage = "Maximum size for the Avatar photo is 62KB.")]
-        public byte[] Avatar { get; set; }
-        public DateTime CreatedUser { get; set; }
-        public DateTime? UpdatedUser { get; set; }
-
-        public ICollection<AdvertFavorite> AdvertFavorites { get; set; }
-        public ICollection<Advert> Adverts { get; set; }
+        public string Bio { get; set; }
     }
 }

@@ -70,6 +70,11 @@ namespace EasyLease.WebAPI.Controllers {
                 return BadRequest("Advert object is null");
             }
 
+            if (!ModelState.IsValid) {
+                _logger.LogError("Invalid model state for the AdvertCreationDTO object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var user = _repository.User.GetUser(userId, trackChanges: false);
 
             if (user == null) {
@@ -107,13 +112,6 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpPost("new/photos/{advertId}")]
         //===============================================================================
         public IActionResult UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
-            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: true);
-
-            if (advert == null) {
-                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-                return NotFound();
-            }
-
             if (photos.Count == 0) {
                 _logger.LogError("Photo sent from client is null.");
                 return BadRequest("Photo is null");
@@ -122,6 +120,13 @@ namespace EasyLease.WebAPI.Controllers {
             if (photos.Count > _fileStorageSettings.NumberOfFilesLimit) {
                 _logger.LogError($"Number of photos sent from client is more than {_fileStorageSettings.NumberOfFilesLimit}.");
                 return BadRequest($"Number of photos is more than {_fileStorageSettings.NumberOfFilesLimit}.");
+            }
+
+            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: true);
+
+            if (advert == null) {
+                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
+                return NotFound();
             }
 
             string path = _fileStorageSettings.FullPath + "\\" + advert.Id.ToString();
@@ -183,7 +188,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             advert.Images = images;
 
-            _repository.Advert.UpdateAdvertPhotoForUser(advert);
+            _repository.Advert.UpdateAdvert(advert);
             _repository.Save();
 
             var advertToReturn = _mapper.Map<AdvertDTO>(advert);
@@ -230,7 +235,7 @@ namespace EasyLease.WebAPI.Controllers {
             }
             advert.Images = images;
 
-            _repository.Advert.UpdateAdvertPhotoForUser(advert);
+            _repository.Advert.UpdateAdvert(advert);
             _repository.Save();
 
             var advertToReturn = _mapper.Map<AdvertDTO>(advert);
@@ -238,14 +243,76 @@ namespace EasyLease.WebAPI.Controllers {
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
         }
 
-        // [HttpPut("{id}")]
-        // public IActionResult PutAdvert(int id, Advert model) {
-        //     return NoContent();
-        // }
+        [HttpPut("update/{advertId}")]
+        public IActionResult UpdateAdvertForUser(Guid advertId, [FromBody] AdvertUpdateDTO advertUpdateDTO) {
+            if (advertUpdateDTO == null) {
+                _logger.LogError("AdvertUpdateDTO object sent from client is null.");
+                return BadRequest("Advert object is null");
+            }
 
-        // [HttpDelete("{id}")]
-        // public ActionResult<Advert> DeleteAdvertById(int id) {
-        //     return null;
-        // }
+            if (!ModelState.IsValid) {
+                _logger.LogError("Invalid model state for the AdvertUpdateDTO object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: true);
+
+            if (advert == null) {
+                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
+                return NotFound();
+            }
+
+            DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
+
+            if (advertUpdateDTO.StartOfLease < currenDateTime) {
+                _logger.LogInfo($"The date start of lease set {advertUpdateDTO.StartOfLease} is earlier than now {currenDateTime}.");
+                return BadRequest("The date start of lease is invalid");
+            }
+
+            if (advertUpdateDTO.EndOfLease != null) {
+                if (advertUpdateDTO.EndOfLease < advertUpdateDTO.StartOfLease) {
+                    _logger.LogInfo($"The date end of lease set {advertUpdateDTO.EndOfLease} is earlier than the date start of lease {advertUpdateDTO.StartOfLease}.");
+                    return BadRequest("The date end of lease is invalid");
+                }
+            }
+
+            _mapper.Map(advertUpdateDTO, advert);
+
+            _repository.Tag.AddTags(advert.AdvertTags);
+
+            _repository.Advert.UpdateAdvert(advert);
+            _repository.Save();
+
+            var advertToReturn = _mapper.Map<AdvertDTO>(advert);
+
+            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+        }
+
+        [HttpDelete("{advertId}")]
+        //===============================================================================
+        public IActionResult DeleteAdvertById(Guid advertId) {
+            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: false);
+
+            if (advert == null) {
+                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
+                return NotFound();
+            }
+
+            Image image = advert.Images?.FirstOrDefault();
+
+            if (image != null) {
+                string path = _fileStorageSettings.WebRootPath + image.Path[..image.Path.IndexOf(image.Name)];
+
+                DirectoryInfo dirInfo = new DirectoryInfo(path);
+                if (dirInfo.Exists) {
+                    dirInfo.Delete(true);
+                }
+            }
+
+            _repository.Advert.DeleteAdvert(advert);
+            _repository.Save();
+
+            return NoContent();
+        }
     }
 }

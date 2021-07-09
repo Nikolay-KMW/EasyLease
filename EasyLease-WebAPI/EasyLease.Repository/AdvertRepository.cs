@@ -42,9 +42,13 @@ namespace EasyLease.Repository {
             Create(advert);
         }
 
-        public void UpdateAdvertPhotoForUser(Advert advert) {
+        public void UpdateAdvert(Advert advert) {
             advert.UpdatedAd = DateTime.UtcNow;
             Update(advert);
+        }
+
+        public void DeleteAdvert(Advert advert) {
+            Delete(advert);
         }
     }
 }

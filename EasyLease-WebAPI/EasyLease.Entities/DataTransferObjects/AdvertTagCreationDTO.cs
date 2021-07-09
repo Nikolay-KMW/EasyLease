@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using EasyLease.Entities.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace EasyLease.Entities.DataTransferObjects {
     public class AdvertTagCreationDTO {

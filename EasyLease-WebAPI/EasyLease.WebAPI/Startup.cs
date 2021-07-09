@@ -43,7 +43,11 @@ namespace EasyLease.WebAPI {
             services.AddAutoMapper(typeof(Startup));
             services.ConfigureAutoMapperProfile();
 
-            services.AddControllers();
+            services.AddControllers(options => {
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+                    _ => "The field is required.");
+            });
+            services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

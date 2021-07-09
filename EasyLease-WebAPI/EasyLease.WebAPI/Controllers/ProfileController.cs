@@ -63,16 +63,16 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpPost("settings/avatar/{userId}")]
         //===============================================================================
         public IActionResult UploadPhotoForUser(Guid userId, IFormFile avatar) {
+            if (avatar == null) {
+                _logger.LogError("Photo sent from client is null.");
+                return BadRequest("Photo is empty");
+            }
+
             var profile = _repository.User.GetUser(userId, trackChanges: true);
 
             if (profile == null) {
                 _logger.LogInfo($"Profile with id: {userId} doesn't exist in the database");
                 return NotFound();
-            }
-
-            if (avatar == null) {
-                _logger.LogError("Photo sent from client is null.");
-                return BadRequest("Photo is empty");
             }
 
             var trustedFileNameForDisplay = WebUtility.HtmlEncode(avatar.FileName);
@@ -148,11 +148,34 @@ namespace EasyLease.WebAPI.Controllers {
         //     return null;
         // }
 
-        // [HttpPut("{id}")]
-        // public IActionResult PutProfile(int id, Profile model)
-        // {
-        //     return NoContent();
-        // }
+        [HttpPut("settings/{userId}")]
+        public IActionResult UpdateProfile(Guid userId, ProfileUpdateDTO profileUpdateDTO) {
+            if (profileUpdateDTO == null) {
+                _logger.LogError("ProfileUpdateDTO object sent from client is null.");
+                return BadRequest("Profile object is null");
+            }
+
+            if (!ModelState.IsValid) {
+                _logger.LogError("Invalid model state for the ProfileUpdateDTO object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            var profile = _repository.User.GetUser(userId, trackChanges: true);
+
+            if (profile == null) {
+                _logger.LogInfo($"Profile with id: {userId} doesn't exist in the database");
+                return NotFound();
+            }
+
+            _mapper.Map(profileUpdateDTO, profile);
+
+            _repository.User.UpdateProfile(profile);
+            _repository.Save();
+
+            var profileToReturn = _mapper.Map<ProfileDTO>(profile);
+
+            return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
+        }
 
         // [HttpDelete("{id}")]
         // public ActionResult<Profile> DeleteProfileById(int id)
