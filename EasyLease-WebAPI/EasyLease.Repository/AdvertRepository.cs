@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EasyLease.Contracts;
 using EasyLease.Entities;
 using EasyLease.Entities.Models;
@@ -10,30 +11,30 @@ namespace EasyLease.Repository {
     public class AdvertRepository : RepositoryBase<Advert>, IAdvertRepository {
         public AdvertRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public IEnumerable<Advert> GetAllAdverts(bool trackChanges) =>
-            FindAll(trackChanges)
+        public async Task<IEnumerable<Advert>> GetAllAdvertsAsync(bool trackChanges) =>
+            await FindAll(trackChanges)
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
             .Include(advert => advert.AdvertFavorites)
-            .OrderBy(advert => advert.CreatedAd).ToList();
+            .OrderBy(advert => advert.CreatedAd).ToListAsync().ConfigureAwait(false);
 
-        public Advert GetAdvert(Guid advertId, bool trackChanges) =>
-            FindByCondition(advert => advert.Id.Equals(advertId), trackChanges)
+        public async Task<Advert> GetAdvertAsync(Guid advertId, bool trackChanges) =>
+            await FindByCondition(advert => advert.Id.Equals(advertId), trackChanges)
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
             .Include(advert => advert.AdvertFavorites)
             .Include(advert => advert.Author)
-            .SingleOrDefault();
+            .SingleOrDefaultAsync().ConfigureAwait(false);
 
-        public IEnumerable<Advert> GetAdvertsForUser(Guid userId, bool trackChanges) =>
-            FindByCondition(advert => advert.UserId.Equals(userId), trackChanges)
+        public async Task<IEnumerable<Advert>> GetAdvertsForUserAsync(Guid userId, bool trackChanges) =>
+            await FindByCondition(advert => advert.UserId.Equals(userId), trackChanges)
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
             .Include(advert => advert.AdvertFavorites)
-            .OrderBy(advert => advert.CreatedAd).ToList();
+            .OrderBy(advert => advert.CreatedAd).ToListAsync().ConfigureAwait(false);
 
         public void CreateAdvertForUser(Guid userId, Advert advert) {
             advert.UserId = userId;

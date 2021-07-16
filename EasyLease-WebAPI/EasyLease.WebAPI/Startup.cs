@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EasyLease.Contracts;
 using EasyLease.Entities.AppSettingsModels;
+using EasyLease.WebAPI.ActionFilters;
 using EasyLease.WebAPI.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,11 +44,12 @@ namespace EasyLease.WebAPI {
             services.AddAutoMapper(typeof(Startup));
             services.ConfigureAutoMapperProfile();
 
-            services.AddControllers(options => {
-                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
-                    _ => "The field is required.");
-            });
             services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+            services.AddScoped<ValidationAdvertAttribute>();
+            services.AddScoped<ValidationProfileAttribute>();
+            services.AddScoped<ValidateAdvertExistsAttribute>();
+            services.AddScoped<ValidateProfileExistsAttribute>();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

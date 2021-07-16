@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using EasyLease.Entities.Models;
 
 namespace EasyLease.Contracts {
     public interface IAdvertRepository {
-        IEnumerable<Advert> GetAllAdverts(bool trackChanges);
-        Advert GetAdvert(Guid advertId, bool trackChanges);
-        IEnumerable<Advert> GetAdvertsForUser(Guid userId, bool trackChanges);
+        Task<IEnumerable<Advert>> GetAllAdvertsAsync(bool trackChanges);
+        Task<Advert> GetAdvertAsync(Guid advertId, bool trackChanges);
+        Task<IEnumerable<Advert>> GetAdvertsForUserAsync(Guid userId, bool trackChanges);
         void CreateAdvertForUser(Guid userId, Advert advert);
         void UpdateAdvert(Advert advert);
         void DeleteAdvert(Advert advert);

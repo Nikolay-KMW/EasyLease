@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using EasyLease.Entities.Models;
 
 namespace EasyLease.Contracts {
     public interface ITagRepository {
-        IEnumerable<Tag> AllTags(bool trackChanges);
-        void AddTags(ICollection<AdvertTag> tags);
+        Task<IEnumerable<Tag>> AllTagsAsync(bool trackChanges);
+        Task AddTagsAsync(ICollection<AdvertTag> tags);
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using EasyLease.Contracts;
 using EasyLease.Entities;
 
@@ -18,6 +19,6 @@ namespace EasyLease.Repository {
         public IComfortRepository Comfort => _comfortRepository ??= new ComfortRepository(_repositoryContext);
         public ITagRepository Tag => _tagRepository ??= new TagRepository(_repositoryContext);
 
-        public void Save() => _repositoryContext.SaveChanges();
+        public Task SaveAsync() => _repositoryContext.SaveChangesAsync();
     }
 }

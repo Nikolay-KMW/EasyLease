@@ -12,6 +12,7 @@ using EasyLease.Contracts;
 using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
+using EasyLease.WebAPI.ActionFilters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,67 +42,66 @@ namespace EasyLease.WebAPI.Controllers {
 
         [HttpGet]
         //===============================================================================
-        public ActionResult<IEnumerable<AdvertDTO>> GetAdverts() {
-            var adverts = _repository.Advert.GetAllAdverts(trackChanges: false);
+        public async Task<IActionResult> GetAdverts() {
+            var adverts = await _repository.Advert.GetAllAdvertsAsync(trackChanges: false).ConfigureAwait(false);
             var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(adverts);
 
             return Ok(advertsDTO);
         }
 
         [HttpGet("{advertId}", Name = "GetAdvertById")]
+        [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
-        public ActionResult<AdvertDTO> GetAdvertById(Guid advertId) {
-            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: false);
+        public IActionResult GetAdvertById(Guid advertId) {
+            var advert = HttpContext.Items["advert"] as Advert;
 
-            if (advert == null) {
-                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-                return NotFound();
-            } else {
-                var advertDTO = _mapper.Map<AdvertDTO>(advert);
-                return Ok(advertDTO);
-            }
+            var advertDTO = _mapper.Map<AdvertDTO>(advert);
+            return Ok(advertDTO);
         }
 
         [HttpPost("new/{userId}")]
+        [ServiceFilter(typeof(ValidationAdvertAttribute))]
+        [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
-        public IActionResult CreateAdvertForUser(Guid userId, [FromBody] AdvertCreationDTO advertCreationDTO) {
-            if (advertCreationDTO == null) {
-                _logger.LogError("AdvertCreationDTO object sent from client is null.");
-                return BadRequest("Advert object is null");
-            }
+        public async Task<IActionResult> CreateAdvertForUser(Guid userId, [FromBody] AdvertCreationDTO advertCreationDTO) {
+            // if (advertCreationDTO == null) {
+            //     _logger.LogError("AdvertCreationDTO object sent from client is null.");
+            //     return BadRequest("Advert object is null");
+            // }
 
-            if (!ModelState.IsValid) {
-                _logger.LogError("Invalid model state for the AdvertCreationDTO object");
-                return UnprocessableEntity(ModelState);
-            }
+            // var user = await _repository.User.GetUserAsync(userId, trackChanges: false).ConfigureAwait(false);
 
-            var user = _repository.User.GetUser(userId, trackChanges: false);
+            // if (user == null) {
+            //     _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+            //     return NotFound();
+            // }
 
-            if (user == null) {
-                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
-                return NotFound();
-            }
+            // DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
 
-            DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
+            // if (advertCreationDTO.StartOfLease < currenDateTime) {
+            //     _logger.LogInfo($"The date start of lease set {advertCreationDTO.StartOfLease} is earlier than now {currenDateTime}.");
+            //     ModelState.AddModelError(nameof(advertCreationDTO.StartOfLease), "The date start of lease is invalid");
+            // }
 
-            if (advertCreationDTO.StartOfLease < currenDateTime) {
-                _logger.LogInfo($"The date start of lease set {advertCreationDTO.StartOfLease} is earlier than now {currenDateTime}.");
-                return BadRequest("The date start of lease is invalid");
-            }
+            // if (advertCreationDTO.EndOfLease != null) {
+            //     if (advertCreationDTO.EndOfLease < advertCreationDTO.StartOfLease) {
+            //         _logger.LogInfo($"The date end of lease set {advertCreationDTO.EndOfLease} is earlier than the date start of lease {advertCreationDTO.StartOfLease}.");
+            //         ModelState.AddModelError(nameof(advertCreationDTO.EndOfLease), "The date end of lease is invalid");
+            //     }
+            // }
 
-            if (advertCreationDTO.EndOfLease != null) {
-                if (advertCreationDTO.EndOfLease < advertCreationDTO.StartOfLease) {
-                    _logger.LogInfo($"The date end of lease set {advertCreationDTO.EndOfLease} is earlier than the date start of lease {advertCreationDTO.StartOfLease}.");
-                    return BadRequest("The date end of lease is invalid");
-                }
-            }
+            // if (!ModelState.IsValid) {
+            //     _logger.LogError("Invalid model state for the AdvertCreationDTO object");
+            //     return UnprocessableEntity(ModelState);
+            // }
 
+            var user = HttpContext.Items["user"] as User;
             var advert = _mapper.Map<Advert>(advertCreationDTO);
 
-            _repository.Tag.AddTags(advert.AdvertTags);
+            await _repository.Tag.AddTagsAsync(advert.AdvertTags).ConfigureAwait(false);
 
             _repository.Advert.CreateAdvertForUser(userId, advert);
-            _repository.Save();
+            await _repository.SaveAsync().ConfigureAwait(false);
 
             var advertToReturn = _mapper.Map<AdvertDTO>(advert);
             advertToReturn.Author = _mapper.Map<ProfileDTO>(user);
@@ -109,9 +109,10 @@ namespace EasyLease.WebAPI.Controllers {
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
         }
 
-        [HttpPost("new/photos/{advertId}")]
+        [HttpPut("new/photos/{advertId}")]
+        [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
-        public IActionResult UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
+        public async Task<IActionResult> UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
             if (photos.Count == 0) {
                 _logger.LogError("Photo sent from client is null.");
                 return BadRequest("Photo is null");
@@ -122,12 +123,14 @@ namespace EasyLease.WebAPI.Controllers {
                 return BadRequest($"Number of photos is more than {_fileStorageSettings.NumberOfFilesLimit}.");
             }
 
-            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: true);
+            // var advert = await _repository.Advert.GetAdvertAsync(advertId, trackChanges: true).ConfigureAwait(false);
 
-            if (advert == null) {
-                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-                return NotFound();
-            }
+            // if (advert == null) {
+            //     _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
+            //     return NotFound();
+            // }
+
+            var advert = HttpContext.Items["advert"] as Advert;
 
             string path = _fileStorageSettings.FullPath + "\\" + advert.Id.ToString();
 
@@ -177,7 +180,7 @@ namespace EasyLease.WebAPI.Controllers {
                     var filePath = Path.Combine(path, $"{generatedFileName}{fileExtension}");
 
                     using (var stream = System.IO.File.Create(filePath)) {
-                        photo.CopyTo(stream);
+                        await photo.CopyToAsync(stream).ConfigureAwait(false);
                     }
 
                     var filePathForDB = filePath[filePath.LastIndexOf(_fileStorageSettings.PathInWebRoot)..];
@@ -189,22 +192,25 @@ namespace EasyLease.WebAPI.Controllers {
             advert.Images = images;
 
             _repository.Advert.UpdateAdvert(advert);
-            _repository.Save();
+            await _repository.SaveAsync().ConfigureAwait(false);
 
             var advertToReturn = _mapper.Map<AdvertDTO>(advert);
 
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
         }
 
-        [HttpDelete("delete/photo/{advertId}/{namePhoto}")]
+        [HttpPut("delete/photo/{advertId}/{namePhoto}")]
+        [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
-        public IActionResult DeletePhotoForAdvert(Guid advertId, string namePhoto) {
-            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: true);
+        public async Task<IActionResult> DeletePhotoForAdvert(Guid advertId, string namePhoto) {
+            // var advert = await _repository.Advert.GetAdvertAsync(advertId, trackChanges: true).ConfigureAwait(false);
 
-            if (advert == null) {
-                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-                return NotFound();
-            }
+            // if (advert == null) {
+            //     _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
+            //     return NotFound();
+            // }
+
+            var advert = HttpContext.Items["advert"] as Advert;
 
             var trustedFileNameForDisplay = WebUtility.HtmlEncode(namePhoto);
             var namePhotoWithoutExtension = Path.GetFileNameWithoutExtension(namePhoto);
@@ -236,7 +242,7 @@ namespace EasyLease.WebAPI.Controllers {
             advert.Images = images;
 
             _repository.Advert.UpdateAdvert(advert);
-            _repository.Save();
+            await _repository.SaveAsync().ConfigureAwait(false);
 
             var advertToReturn = _mapper.Map<AdvertDTO>(advert);
 
@@ -244,44 +250,47 @@ namespace EasyLease.WebAPI.Controllers {
         }
 
         [HttpPut("update/{advertId}")]
-        public IActionResult UpdateAdvertForUser(Guid advertId, [FromBody] AdvertUpdateDTO advertUpdateDTO) {
-            if (advertUpdateDTO == null) {
-                _logger.LogError("AdvertUpdateDTO object sent from client is null.");
-                return BadRequest("Advert object is null");
-            }
+        [ServiceFilter(typeof(ValidationAdvertAttribute))]
+        [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
+        public async Task<IActionResult> UpdateAdvertForUser(Guid advertId, [FromBody] AdvertUpdateDTO advertUpdateDTO) {
+            // if (advertUpdateDTO == null) {
+            //     _logger.LogError("AdvertUpdateDTO object sent from client is null.");
+            //     return BadRequest("Advert object is null");
+            // }
 
-            if (!ModelState.IsValid) {
-                _logger.LogError("Invalid model state for the AdvertUpdateDTO object");
-                return UnprocessableEntity(ModelState);
-            }
+            // if (!ModelState.IsValid) {
+            //     _logger.LogError("Invalid model state for the AdvertUpdateDTO object");
+            //     return UnprocessableEntity(ModelState);
+            // }
 
-            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: true);
+            // var advert = await _repository.Advert.GetAdvertAsync(advertId, trackChanges: true).ConfigureAwait(false);
 
-            if (advert == null) {
-                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-                return NotFound();
-            }
+            // if (advert == null) {
+            //     _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
+            //     return NotFound();
+            // }
 
-            DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
+            // DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
 
-            if (advertUpdateDTO.StartOfLease < currenDateTime) {
-                _logger.LogInfo($"The date start of lease set {advertUpdateDTO.StartOfLease} is earlier than now {currenDateTime}.");
-                return BadRequest("The date start of lease is invalid");
-            }
+            // if (advertUpdateDTO.StartOfLease < currenDateTime) {
+            //     _logger.LogInfo($"The date start of lease set {advertUpdateDTO.StartOfLease} is earlier than now {currenDateTime}.");
+            //     return BadRequest("The date start of lease is invalid");
+            // }
 
-            if (advertUpdateDTO.EndOfLease != null) {
-                if (advertUpdateDTO.EndOfLease < advertUpdateDTO.StartOfLease) {
-                    _logger.LogInfo($"The date end of lease set {advertUpdateDTO.EndOfLease} is earlier than the date start of lease {advertUpdateDTO.StartOfLease}.");
-                    return BadRequest("The date end of lease is invalid");
-                }
-            }
+            // if (advertUpdateDTO.EndOfLease != null) {
+            //     if (advertUpdateDTO.EndOfLease < advertUpdateDTO.StartOfLease) {
+            //         _logger.LogInfo($"The date end of lease set {advertUpdateDTO.EndOfLease} is earlier than the date start of lease {advertUpdateDTO.StartOfLease}.");
+            //         return BadRequest("The date end of lease is invalid");
+            //     }
+            // }
 
+            var advert = HttpContext.Items["advert"] as Advert;
             _mapper.Map(advertUpdateDTO, advert);
 
-            _repository.Tag.AddTags(advert.AdvertTags);
+            await _repository.Tag.AddTagsAsync(advert.AdvertTags).ConfigureAwait(false);
 
             _repository.Advert.UpdateAdvert(advert);
-            _repository.Save();
+            await _repository.SaveAsync().ConfigureAwait(false);
 
             var advertToReturn = _mapper.Map<AdvertDTO>(advert);
 
@@ -289,14 +298,17 @@ namespace EasyLease.WebAPI.Controllers {
         }
 
         [HttpDelete("{advertId}")]
+        [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
-        public IActionResult DeleteAdvertById(Guid advertId) {
-            var advert = _repository.Advert.GetAdvert(advertId, trackChanges: false);
+        public async Task<IActionResult> DeleteAdvertById(Guid advertId) {
+            // var advert = await _repository.Advert.GetAdvertAsync(advertId, trackChanges: false).ConfigureAwait(false);
 
-            if (advert == null) {
-                _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-                return NotFound();
-            }
+            // if (advert == null) {
+            //     _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
+            //     return NotFound();
+            // }
+
+            var advert = HttpContext.Items["advert"] as Advert;
 
             Image image = advert.Images?.FirstOrDefault();
 
@@ -310,7 +322,7 @@ namespace EasyLease.WebAPI.Controllers {
             }
 
             _repository.Advert.DeleteAdvert(advert);
-            _repository.Save();
+            await _repository.SaveAsync().ConfigureAwait(false);
 
             return NoContent();
         }
