@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace EasyLease.Entities.DataTransferObjects {
     public class ProfileUpdateDTO {
         [Required(ErrorMessage = "User name is a required field.")]
-        [MinLength(2, ErrorMessage = "Maximum length for the name is 2 characters.")]
+        [MinLength(2, ErrorMessage = "Minimum length for the name is 2 characters.")]
         [MaxLength(50, ErrorMessage = "Maximum length for the name is 50 characters.")]
         public string FirstName { get; set; }
 

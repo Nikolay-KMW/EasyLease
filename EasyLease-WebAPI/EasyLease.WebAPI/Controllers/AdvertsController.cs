@@ -64,37 +64,6 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> CreateAdvertForUser(Guid userId, [FromBody] AdvertCreationDTO advertCreationDTO) {
-            // if (advertCreationDTO == null) {
-            //     _logger.LogError("AdvertCreationDTO object sent from client is null.");
-            //     return BadRequest("Advert object is null");
-            // }
-
-            // var user = await _repository.User.GetUserAsync(userId, trackChanges: false).ConfigureAwait(false);
-
-            // if (user == null) {
-            //     _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
-            //     return NotFound();
-            // }
-
-            // DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
-
-            // if (advertCreationDTO.StartOfLease < currenDateTime) {
-            //     _logger.LogInfo($"The date start of lease set {advertCreationDTO.StartOfLease} is earlier than now {currenDateTime}.");
-            //     ModelState.AddModelError(nameof(advertCreationDTO.StartOfLease), "The date start of lease is invalid");
-            // }
-
-            // if (advertCreationDTO.EndOfLease != null) {
-            //     if (advertCreationDTO.EndOfLease < advertCreationDTO.StartOfLease) {
-            //         _logger.LogInfo($"The date end of lease set {advertCreationDTO.EndOfLease} is earlier than the date start of lease {advertCreationDTO.StartOfLease}.");
-            //         ModelState.AddModelError(nameof(advertCreationDTO.EndOfLease), "The date end of lease is invalid");
-            //     }
-            // }
-
-            // if (!ModelState.IsValid) {
-            //     _logger.LogError("Invalid model state for the AdvertCreationDTO object");
-            //     return UnprocessableEntity(ModelState);
-            // }
-
             var user = HttpContext.Items["user"] as User;
             var advert = _mapper.Map<Advert>(advertCreationDTO);
 
@@ -110,26 +79,10 @@ namespace EasyLease.WebAPI.Controllers {
         }
 
         [HttpPut("new/photos/{advertId}")]
+        [ServiceFilter(typeof(ValidationPhotoForAdvertAttribute))]
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
-            if (photos.Count == 0) {
-                _logger.LogError("Photo sent from client is null.");
-                return BadRequest("Photo is null");
-            }
-
-            if (photos.Count > _fileStorageSettings.NumberOfFilesLimit) {
-                _logger.LogError($"Number of photos sent from client is more than {_fileStorageSettings.NumberOfFilesLimit}.");
-                return BadRequest($"Number of photos is more than {_fileStorageSettings.NumberOfFilesLimit}.");
-            }
-
-            // var advert = await _repository.Advert.GetAdvertAsync(advertId, trackChanges: true).ConfigureAwait(false);
-
-            // if (advert == null) {
-            //     _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-            //     return NotFound();
-            // }
-
             var advert = HttpContext.Items["advert"] as Advert;
 
             string path = _fileStorageSettings.FullPath + "\\" + advert.Id.ToString();
@@ -149,44 +102,18 @@ namespace EasyLease.WebAPI.Controllers {
             }
 
             foreach (var photo in photos) {
-                var trustedFileNameForDisplay = WebUtility.HtmlEncode(photo.FileName);
+                var fileExtension = Path.GetExtension(photo.FileName).ToLower();
 
-                if (photo.Length > 0) {
-                    if (photo.Length > _fileStorageSettings.FileSizeLimit) {
-                        _logger.LogError($"Photo sent from client is more than {_fileStorageSettings.FileSizeLimit / (1024 * 1024)} Mb.");
-                        return BadRequest($"Photo {trustedFileNameForDisplay} is more than {_fileStorageSettings.FileSizeLimit / (1024 * 1024)} Mb.");
-                    }
+                var generatedFileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
+                var filePath = Path.Combine(path, $"{generatedFileName}{fileExtension}");
 
-                    var fileExtension = Path.GetExtension(photo.FileName).ToLower();
-
-                    if (!_fileStorageSettings.AllowedExtensions.Any(ext => ext == fileExtension)) {
-                        _logger.LogError($"Photo sent from client has extension {fileExtension}");
-                        return BadRequest($"Photo {trustedFileNameForDisplay} must has one of the extensions: { string.Join(',', _fileStorageSettings.AllowedExtensions)}.");
-                    }
-
-                    using (var reader = new BinaryReader(photo.OpenReadStream())) {
-                        var signatures = _fileStorageSettings.FileSignature[fileExtension];
-                        var headerfile = reader.ReadBytes(signatures.Max(m => m.Length));
-
-                        bool isValidSignature = signatures.Any(signature => headerfile.Take(signature.Length).SequenceEqual(signature));
-
-                        if (!isValidSignature) {
-                            _logger.LogError($"Photo sent from client has not valid signature: {fileExtension}");
-                            return BadRequest($"Photo {trustedFileNameForDisplay} must has one of the extensions.: { string.Join(',', _fileStorageSettings.AllowedExtensions)}.");
-                        }
-                    }
-
-                    var generatedFileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
-                    var filePath = Path.Combine(path, $"{generatedFileName}{fileExtension}");
-
-                    using (var stream = System.IO.File.Create(filePath)) {
-                        await photo.CopyToAsync(stream).ConfigureAwait(false);
-                    }
-
-                    var filePathForDB = filePath[filePath.LastIndexOf(_fileStorageSettings.PathInWebRoot)..];
-
-                    images.Add(new Image() { Name = generatedFileName, Path = filePathForDB });
+                using (var stream = System.IO.File.Create(filePath)) {
+                    await photo.CopyToAsync(stream).ConfigureAwait(false);
                 }
+
+                var filePathForDB = filePath[filePath.LastIndexOf(_fileStorageSettings.PathInWebRoot)..];
+
+                images.Add(new Image() { Name = generatedFileName, Path = filePathForDB });
             }
 
             advert.Images = images;
@@ -201,33 +128,13 @@ namespace EasyLease.WebAPI.Controllers {
 
         [HttpPut("delete/photo/{advertId}/{namePhoto}")]
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
+        [ServiceFilter(typeof(ValidateImageExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> DeletePhotoForAdvert(Guid advertId, string namePhoto) {
-            // var advert = await _repository.Advert.GetAdvertAsync(advertId, trackChanges: true).ConfigureAwait(false);
-
-            // if (advert == null) {
-            //     _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-            //     return NotFound();
-            // }
-
             var advert = HttpContext.Items["advert"] as Advert;
-
-            var trustedFileNameForDisplay = WebUtility.HtmlEncode(namePhoto);
-            var namePhotoWithoutExtension = Path.GetFileNameWithoutExtension(namePhoto);
+            var image = HttpContext.Items["image"] as Image;
 
             ICollection<Image> images = advert.Images;
-
-            if (images == null) {
-                _logger.LogInfo($"Advert with id: {advertId} haven't photo");
-                return NotFound();
-            }
-
-            Image image = images.FirstOrDefault(image => image.Name == namePhotoWithoutExtension);
-
-            if (image == null) {
-                _logger.LogInfo($"Photo {trustedFileNameForDisplay} not found");
-                return NotFound();
-            }
 
             string path = _fileStorageSettings.WebRootPath + image.Path;
 
@@ -235,10 +142,7 @@ namespace EasyLease.WebAPI.Controllers {
                 System.IO.File.Delete(path);
             }
 
-            if (!images.Remove(image)) {
-                _logger.LogError("Image not remove from images collection.");
-                return BadRequest($"Photo {trustedFileNameForDisplay} not remove.");
-            }
+            images.Remove(image);
             advert.Images = images;
 
             _repository.Advert.UpdateAdvert(advert);
@@ -252,38 +156,8 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpPut("update/{advertId}")]
         [ServiceFilter(typeof(ValidationAdvertAttribute))]
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
+        //===============================================================================
         public async Task<IActionResult> UpdateAdvertForUser(Guid advertId, [FromBody] AdvertUpdateDTO advertUpdateDTO) {
-            // if (advertUpdateDTO == null) {
-            //     _logger.LogError("AdvertUpdateDTO object sent from client is null.");
-            //     return BadRequest("Advert object is null");
-            // }
-
-            // if (!ModelState.IsValid) {
-            //     _logger.LogError("Invalid model state for the AdvertUpdateDTO object");
-            //     return UnprocessableEntity(ModelState);
-            // }
-
-            // var advert = await _repository.Advert.GetAdvertAsync(advertId, trackChanges: true).ConfigureAwait(false);
-
-            // if (advert == null) {
-            //     _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-            //     return NotFound();
-            // }
-
-            // DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
-
-            // if (advertUpdateDTO.StartOfLease < currenDateTime) {
-            //     _logger.LogInfo($"The date start of lease set {advertUpdateDTO.StartOfLease} is earlier than now {currenDateTime}.");
-            //     return BadRequest("The date start of lease is invalid");
-            // }
-
-            // if (advertUpdateDTO.EndOfLease != null) {
-            //     if (advertUpdateDTO.EndOfLease < advertUpdateDTO.StartOfLease) {
-            //         _logger.LogInfo($"The date end of lease set {advertUpdateDTO.EndOfLease} is earlier than the date start of lease {advertUpdateDTO.StartOfLease}.");
-            //         return BadRequest("The date end of lease is invalid");
-            //     }
-            // }
-
             var advert = HttpContext.Items["advert"] as Advert;
             _mapper.Map(advertUpdateDTO, advert);
 
@@ -301,13 +175,6 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> DeleteAdvertById(Guid advertId) {
-            // var advert = await _repository.Advert.GetAdvertAsync(advertId, trackChanges: false).ConfigureAwait(false);
-
-            // if (advert == null) {
-            //     _logger.LogInfo($"Advert with id: {advertId} doesn't exist in the database");
-            //     return NotFound();
-            // }
-
             var advert = HttpContext.Items["advert"] as Advert;
 
             Image image = advert.Images?.FirstOrDefault();

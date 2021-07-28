@@ -49,6 +49,9 @@ namespace EasyLease.WebAPI {
             services.AddScoped<ValidationProfileAttribute>();
             services.AddScoped<ValidateAdvertExistsAttribute>();
             services.AddScoped<ValidateProfileExistsAttribute>();
+            services.AddScoped<ValidationPhotoForAdvertAttribute>();
+            services.AddScoped<ValidationPhotoForUserAttribute>();
+            services.AddScoped<ValidateImageExistsAttribute>();
             services.AddControllers();
         }
 

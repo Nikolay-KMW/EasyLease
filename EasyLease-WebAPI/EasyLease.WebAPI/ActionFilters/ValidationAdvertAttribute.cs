@@ -41,11 +41,6 @@ namespace EasyLease.WebAPI.ActionFilters {
                 }
             }
 
-            // if (!ModelState.IsValid) {
-            //     _logger.LogError("Invalid model state for the AdvertCreationDTO object");
-            //     return UnprocessableEntity(ModelState);
-            // }
-
             if (!context.ModelState.IsValid) {
                 _logger.LogError($"Invalid model state for the object. Controller: {controller}, action: {action}");
                 context.Result = new UnprocessableEntityObjectResult(context.ModelState);

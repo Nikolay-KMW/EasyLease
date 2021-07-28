@@ -36,15 +36,6 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
         public IActionResult GetProfileById(Guid userId) {
-            // var profile = await _repository.User.GetUserAsync(userId, trackChanges: false).ConfigureAwait(false);
-
-            // if (profile == null) {
-            //     _logger.LogInfo($"User with id: {userId} doesn't exist in the database");
-            //     return NotFound();
-            // } else {
-            //     var profileDTO = _mapper.Map<ProfileDTO>(profile);
-            //     return Ok(profileDTO);
-            // }
             var user = HttpContext.Items["user"] as User;
 
             var profileDTO = _mapper.Map<ProfileDTO>(user);
@@ -56,13 +47,6 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> GetAdvertsForUser(Guid userId) {
-            // var profile = await _repository.User.GetUserAsync(userId, trackChanges: false).ConfigureAwait(false);
-
-            // if (profile == null) {
-            //     _logger.LogInfo($"User with id: {userId} doesn't exist in the database");
-            //     return NotFound();
-            // }
-
             var advertsForUser = await _repository.Advert.GetAdvertsForUserAsync(userId, trackChanges: false).ConfigureAwait(false);
 
             var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser);
@@ -71,58 +55,14 @@ namespace EasyLease.WebAPI.Controllers {
 
         [HttpPut("settings/avatar/{userId}")]
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
+        [ServiceFilter(typeof(ValidationPhotoForUserAttribute))]
         //===============================================================================
         public async Task<IActionResult> UploadPhotoForUser(Guid userId, IFormFile avatar) {
-            if (avatar == null) {
-                _logger.LogError("Photo sent from client is null.");
-                return BadRequest("Photo is empty");
-            }
-
-            // var profile = await _repository.User.GetUserAsync(userId, trackChanges: true).ConfigureAwait(false);
-
-            // if (profile == null) {
-            //     _logger.LogInfo($"Profile with id: {userId} doesn't exist in the database");
-            //     return NotFound();
-            // }
-
             var user = HttpContext.Items["user"] as User;
+            user.Avatar = HttpContext.Items["avatar"] as byte[];
 
-            var trustedFileNameForDisplay = WebUtility.HtmlEncode(avatar.FileName);
-
-            var fileExtension = Path.GetExtension(avatar.FileName).ToLower();
-
-            if (!_userProfileSettings.AllowedExtensions.Any(ext => ext == fileExtension)) {
-                _logger.LogError($"Photo sent from client has extension {fileExtension}");
-                return BadRequest($"Photo {trustedFileNameForDisplay} must has one of the extensions: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
-            }
-
-            using (var memoryStream = new MemoryStream()) {
-                await avatar.CopyToAsync(memoryStream).ConfigureAwait(false);
-
-                if (memoryStream.Length > _userProfileSettings.FileSizeLimitForAvatar) {
-                    _logger.LogError($"Photo sent from client is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
-                    return BadRequest($"Photo {trustedFileNameForDisplay} is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
-                }
-
-                memoryStream.Position = 0;
-
-                using (var reader = new BinaryReader(memoryStream)) {
-                    var signatures = _userProfileSettings.FileSignature[fileExtension];
-                    var headerfile = reader.ReadBytes(signatures.Max(m => m.Length));
-
-                    bool isValidSignature = signatures.Any(signature => headerfile.Take(signature.Length).SequenceEqual(signature));
-
-                    if (!isValidSignature) {
-                        _logger.LogError($"Photo sent from client has not valid signature: {fileExtension}");
-                        return BadRequest($"Photo {trustedFileNameForDisplay} must has one of the extensions.: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
-                    }
-                }
-
-                user.Avatar = memoryStream.ToArray();
-
-                _repository.User.UpdateProfile(user);
-                await _repository.SaveAsync().ConfigureAwait(false);
-            }
+            _repository.User.UpdateProfile(user);
+            await _repository.SaveAsync().ConfigureAwait(false);
 
             var profileToReturn = _mapper.Map<ProfileDTO>(user);
 
@@ -133,18 +73,6 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> DeletePhotoForUser(Guid userId) {
-            // var profile = await _repository.User.GetUserAsync(userId, trackChanges: true).ConfigureAwait(false);
-
-            // if (profile == null) {
-            //     _logger.LogInfo($"Profile with id: {userId} doesn't exist in the database");
-            //     return NotFound();
-            // }
-
-            // if (profile.Avatar == null) {
-            //     _logger.LogInfo($"User with id: {userId} haven't photo");
-            //     return NotFound();
-            // }
-
             var user = HttpContext.Items["user"] as User;
 
             user.Avatar = null;
@@ -167,23 +95,6 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidationProfileAttribute))]
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         public async Task<IActionResult> UpdateProfile(Guid userId, ProfileUpdateDTO profileUpdateDTO) {
-            // if (profileUpdateDTO == null) {
-            //     _logger.LogError("ProfileUpdateDTO object sent from client is null.");
-            //     return BadRequest("Profile object is null");
-            // }
-
-            // if (!ModelState.IsValid) {
-            //     _logger.LogError("Invalid model state for the ProfileUpdateDTO object");
-            //     return UnprocessableEntity(ModelState);
-            // }
-
-            // var profile = await _repository.User.GetUserAsync(userId, trackChanges: true).ConfigureAwait(false);
-
-            // if (profile == null) {
-            //     _logger.LogInfo($"Profile with id: {userId} doesn't exist in the database");
-            //     return NotFound();
-            // }
-
             var user = HttpContext.Items["user"] as User;
 
             _mapper.Map(profileUpdateDTO, user);
