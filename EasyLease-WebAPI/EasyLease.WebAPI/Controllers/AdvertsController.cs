@@ -13,6 +13,7 @@ using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
 using EasyLease.WebAPI.ActionFilters;
+using EasyLease.WebAPI.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,21 +24,15 @@ namespace EasyLease.WebAPI.Controllers {
     [ApiController]
     public class AdvertsController : ControllerBase {
         private readonly IRepositoryManager _repository;
-        private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
-        private readonly FileStorageSettings _fileStorageSettings;
-        private readonly GeneralSettings _generalSettings;
+        private readonly FileStorage _fileStorage;
 
         public AdvertsController(IRepositoryManager repository,
-                                 ILoggerManager logger,
-                                 FileStorageSettings fileStorageSettings,
-                                 GeneralSettings generalSettings,
+                                 FileStorage fileStorage,
                                  IMapper mapper) {
             _repository = repository;
-            _logger = logger;
             _mapper = mapper;
-            _fileStorageSettings = fileStorageSettings;
-            _generalSettings = generalSettings;
+            _fileStorage = fileStorage;
         }
 
         [HttpGet]
@@ -85,38 +80,7 @@ namespace EasyLease.WebAPI.Controllers {
         public async Task<IActionResult> UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
             var advert = HttpContext.Items["advert"] as Advert;
 
-            string path = _fileStorageSettings.FullPath + "\\" + advert.Id.ToString();
-
-            ICollection<Image> images = new Collection<Image>();
-
-            DirectoryInfo dirInfo = new DirectoryInfo(path);
-            if (!dirInfo.Exists) {
-                dirInfo.Create();
-            }
-
-            var files = dirInfo.GetFiles();
-            if (files != null) {
-                foreach (var file in files) {
-                    file.Delete();
-                }
-            }
-
-            foreach (var photo in photos) {
-                var fileExtension = Path.GetExtension(photo.FileName).ToLower();
-
-                var generatedFileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
-                var filePath = Path.Combine(path, $"{generatedFileName}{fileExtension}");
-
-                using (var stream = System.IO.File.Create(filePath)) {
-                    await photo.CopyToAsync(stream).ConfigureAwait(false);
-                }
-
-                var filePathForDB = filePath[filePath.LastIndexOf(_fileStorageSettings.PathInWebRoot)..];
-
-                images.Add(new Image() { Name = generatedFileName, Path = filePathForDB });
-            }
-
-            advert.Images = images;
+            advert.Images = await _fileStorage.SavePhotoByIdAsync(advertId, photos).ConfigureAwait(false);
 
             _repository.Advert.UpdateAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);
@@ -134,16 +98,9 @@ namespace EasyLease.WebAPI.Controllers {
             var advert = HttpContext.Items["advert"] as Advert;
             var image = HttpContext.Items["image"] as Image;
 
-            ICollection<Image> images = advert.Images;
+            _fileStorage.DeletePhotoByPath(image.Path);
 
-            string path = _fileStorageSettings.WebRootPath + image.Path;
-
-            if (System.IO.File.Exists(path)) {
-                System.IO.File.Delete(path);
-            }
-
-            images.Remove(image);
-            advert.Images = images;
+            advert.Images.Remove(image);
 
             _repository.Advert.UpdateAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);
@@ -180,12 +137,7 @@ namespace EasyLease.WebAPI.Controllers {
             Image image = advert.Images?.FirstOrDefault();
 
             if (image != null) {
-                string path = _fileStorageSettings.WebRootPath + image.Path[..image.Path.IndexOf(image.Name)];
-
-                DirectoryInfo dirInfo = new DirectoryInfo(path);
-                if (dirInfo.Exists) {
-                    dirInfo.Delete(true);
-                }
+                _fileStorage.DeletePhotosById(advertId);
             }
 
             _repository.Advert.DeleteAdvert(advert);

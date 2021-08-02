@@ -6,6 +6,7 @@ using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.Configuration;
 using EasyLease.LoggerService;
 using EasyLease.Repository;
+using EasyLease.WebAPI.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,9 @@ namespace EasyLease.WebAPI.Extensions {
             fileStorageSettings.FileSignature = FileSignatureConfiguration.GetSignaturesFromExtensions(fileStorageSettings.AllowedExtensions);
 
             services.AddSingleton<FileStorageSettings>(fileStorageSettings);
+
+            FileStorage fileStorage = new FileStorage(fileStorageSettings);
+            services.AddSingleton<FileStorage>(fileStorage);
         }
 
         public static void ConfigureUserProfile(this IServiceCollection services, IConfiguration configuration) {
