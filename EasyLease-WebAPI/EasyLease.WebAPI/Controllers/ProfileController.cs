@@ -18,17 +18,10 @@ namespace EasyLease.WebAPI.Controllers {
     [ApiController]
     public class ProfileController : ControllerBase {
         private readonly IRepositoryManager _repository;
-        private readonly ILoggerManager _logger;
-        private readonly UserProfileSettings _userProfileSettings;
         private readonly IMapper _mapper;
 
-        public ProfileController(IRepositoryManager repository,
-                                 ILoggerManager logger,
-                                 UserProfileSettings userProfileSettings,
-                                 IMapper mapper) {
+        public ProfileController(IRepositoryManager repository, IMapper mapper) {
             _repository = repository;
-            _logger = logger;
-            _userProfileSettings = userProfileSettings;
             _mapper = mapper;
         }
 

@@ -1,17 +1,23 @@
+using System;
 using System.Collections.Generic;
+using System.Text;
 using AutoMapper;
 using EasyLease.Contracts;
 using EasyLease.Entities;
 using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.Configuration;
+using EasyLease.Entities.Models;
 using EasyLease.LoggerService;
 using EasyLease.Repository;
 using EasyLease.WebAPI.Utilities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EasyLease.WebAPI.Extensions {
     public static class ServiceExtensions {
@@ -51,7 +57,7 @@ namespace EasyLease.WebAPI.Extensions {
             services.AddSingleton<FileStorageSettings>(fileStorageSettings);
 
             FileStorage fileStorage = new FileStorage(fileStorageSettings);
-            services.AddSingleton<FileStorage>(fileStorage);
+            services.AddSingleton<IFileStorage>(fileStorage);
         }
 
         public static void ConfigureUserProfile(this IServiceCollection services, IConfiguration configuration) {
@@ -73,6 +79,54 @@ namespace EasyLease.WebAPI.Extensions {
         public static void ConfigureAutoMapperProfile(this IServiceCollection services) {
             services.AddSingleton<IMapper>(provider => new MapperConfiguration(cfg =>
                 cfg.AddProfile(new MappingProfile(provider.GetService<GeneralSettings>()))).CreateMapper());
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services, IConfiguration configuration) {
+            UserProfileSettings userProfileSettings = new UserProfileSettings();
+            configuration.GetSection("UserProfileSettings").Bind(userProfileSettings);
+
+            var builder = services.AddIdentityCore<User>(options => {
+                // Password settings.
+                options.Password.RequireDigit = userProfileSettings.RequireDigitForPassword;
+                options.Password.RequireLowercase = userProfileSettings.RequireLowercaseForPassword;
+                options.Password.RequireUppercase = userProfileSettings.RequireUppercaseForPassword;
+                options.Password.RequireNonAlphanumeric = userProfileSettings.RequireNonAlphanumericPassword;
+                options.Password.RequiredLength = userProfileSettings.RequiredLengthForPassword;
+
+                // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(userProfileSettings.DefaultLockoutTimeSpanForFailedAccess);
+                options.Lockout.MaxFailedAccessAttempts = userProfileSettings.MaxFailedAccessForSignIn;
+                options.Lockout.AllowedForNewUsers = userProfileSettings.AllowedLockoutForNewUsers;
+
+                // User settings.
+                options.User.AllowedUserNameCharacters = userProfileSettings.AllowedUserNameCharacters;
+                options.User.RequireUniqueEmail = userProfileSettings.RequireUniqueEmail;
+            })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<RepositoryContext>().AddDefaultTokenProviders();
+        }
+
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration) {
+            JwtSettings jwtSettings = new JwtSettings();
+            configuration.GetSection("JwtSettings").Bind(jwtSettings);
+
+            var secretKey = Environment.GetEnvironmentVariable("SECRET");
+
+            services.AddAuthentication(opt => {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options => {
+                options.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.ValidIssuer,
+                    ValidAudience = jwtSettings.ValidAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                };
+            });
         }
     }
 }

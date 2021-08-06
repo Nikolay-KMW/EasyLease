@@ -1,12 +1,17 @@
+using System;
 using System.Linq;
 using EasyLease.Entities.Configuration;
 using EasyLease.Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyLease.Entities {
-    public class RepositoryContext : DbContext {
+    public class RepositoryContext : IdentityDbContext<User, IdentityRole<Guid>, Guid> {
         public RepositoryContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            base.OnModelCreating(modelBuilder);
+
             //  This sets up the composite foreign key for the Region and District properties in the Location table
             modelBuilder.Entity<Location>()
                 .HasKey(location => new { location.Region, location.District });
@@ -70,8 +75,10 @@ namespace EasyLease.Entities {
             modelBuilder.ApplyConfiguration(new SettlementTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StreetTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AdvertFavoriteConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
         }
-        public DbSet<User> Users { get; set; }
+        // public DbSet<User> Users { get; set; }
         public DbSet<Advert> Adverts { get; set; }
         public DbSet<Comfort> Comforts { get; set; }
         public DbSet<Tag> Tags { get; set; }

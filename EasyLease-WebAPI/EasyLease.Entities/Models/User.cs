@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace EasyLease.Entities.Models {
-    public class User {
-        [Column("UserId")]
-        public Guid Id { get; set; }
+    public class User : IdentityUser<Guid> {
+        // [Column("UserId")]
+        // public Guid Id { get; set; }
 
         [Required(ErrorMessage = "User name is a required field.")]
         [MinLength(2, ErrorMessage = "Maximum length for the name is 2 characters.")]
@@ -19,9 +20,9 @@ namespace EasyLease.Entities.Models {
         [MaxLength(50, ErrorMessage = "Maximum length for the third name is 50 characters.")]
         public string ThirdName { get; set; }
 
-        [Required(ErrorMessage = "Email is a required field.")]
-        [EmailAddress(ErrorMessage = "Email Address is not valid.")]
-        public string Email { get; set; }
+        // [Required(ErrorMessage = "Email is a required field.")]
+        // [EmailAddress(ErrorMessage = "Email Address is not valid.")]
+        // public string Email { get; set; }
 
         [MaxLength(500, ErrorMessage = "Maximum length for the Biography is 500 characters.")]
         public string Biography { get; set; }

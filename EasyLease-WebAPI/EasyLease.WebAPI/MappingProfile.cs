@@ -90,6 +90,10 @@ namespace EasyLease.WebAPI {
 
             CreateMap<ProfileUpdateDTO, User>()
                 .ForMember(user => user.Biography, config => config.MapFrom(profileUpdateDTO => profileUpdateDTO.Bio));
+
+            CreateMap<UserRegistrationDTO, User>()
+                .ForMember(user => user.FirstName, config => config.MapFrom(userRegistrationDTO => userRegistrationDTO.UserName))
+                .ForMember(user => user.CreatedUser, config => config.MapFrom(_ => DateTime.UtcNow));
         }
     }
 }

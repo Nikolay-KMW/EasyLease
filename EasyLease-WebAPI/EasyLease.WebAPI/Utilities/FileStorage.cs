@@ -1,21 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using EasyLease.Contracts;
 using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace EasyLease.WebAPI.Utilities {
-    public class FileStorage {
+    public class FileStorage : IFileStorage {
         private readonly FileStorageSettings _fileStorageSettings;
 
         public FileStorage(FileStorageSettings fileStorageSettings) {
             _fileStorageSettings = fileStorageSettings;
         }
 
-        internal async Task<ICollection<Image>> SavePhotoByIdAsync(Guid id, List<IFormFile> photos) {
+        public async Task<ICollection<Image>> SavePhotoByIdAsync<TFile>(Guid id, IList<TFile> photos) {
             string path = _fileStorageSettings.FullPath + "\\" + id.ToString();
 
             ICollection<Image> images = new Collection<Image>();
@@ -26,7 +28,7 @@ namespace EasyLease.WebAPI.Utilities {
             dirInfo.Create();
 
             if (dirInfo.Exists) {
-                foreach (var photo in photos) {
+                foreach (IFormFile photo in photos) {
                     var fileExtension = Path.GetExtension(photo.FileName).ToLower();
 
                     var generatedFileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
@@ -45,7 +47,7 @@ namespace EasyLease.WebAPI.Utilities {
             return images;
         }
 
-        internal void DeletePhotosById(Guid id) {
+        public void DeletePhotosById(Guid id) {
             string path = _fileStorageSettings.FullPath + "\\" + id.ToString();
 
             DirectoryInfo dirInfo = new DirectoryInfo(path);
@@ -54,7 +56,7 @@ namespace EasyLease.WebAPI.Utilities {
             }
         }
 
-        internal void DeletePhotoByPath(string path) {
+        public void DeletePhotoByPath(string path) {
             string fullPathForPhoto = _fileStorageSettings.WebRootPath + path;
 
             if (System.IO.File.Exists(fullPathForPhoto)) {

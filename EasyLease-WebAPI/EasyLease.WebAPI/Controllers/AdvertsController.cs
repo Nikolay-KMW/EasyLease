@@ -1,23 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using AutoMapper;
 using EasyLease.Contracts;
-using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
 using EasyLease.WebAPI.ActionFilters;
-using EasyLease.WebAPI.Utilities;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace EasyLease.WebAPI.Controllers {
     [Route("api/adverts")]
@@ -25,10 +17,10 @@ namespace EasyLease.WebAPI.Controllers {
     public class AdvertsController : ControllerBase {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
-        private readonly FileStorage _fileStorage;
+        private readonly IFileStorage _fileStorage;
 
         public AdvertsController(IRepositoryManager repository,
-                                 FileStorage fileStorage,
+                                 IFileStorage fileStorage,
                                  IMapper mapper) {
             _repository = repository;
             _mapper = mapper;
@@ -44,7 +36,7 @@ namespace EasyLease.WebAPI.Controllers {
             return Ok(advertsDTO);
         }
 
-        [HttpGet("{advertId}", Name = "GetAdvertById")]
+        [HttpGet("{advertId}", Name = "GetAdvertById"), Authorize]
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
         public IActionResult GetAdvertById(Guid advertId) {
@@ -80,7 +72,7 @@ namespace EasyLease.WebAPI.Controllers {
         public async Task<IActionResult> UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
             var advert = HttpContext.Items["advert"] as Advert;
 
-            advert.Images = await _fileStorage.SavePhotoByIdAsync(advertId, photos).ConfigureAwait(false);
+            advert.Images = await _fileStorage.SavePhotoByIdAsync<IFormFile>(advertId, photos).ConfigureAwait(false);
 
             _repository.Advert.UpdateAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);

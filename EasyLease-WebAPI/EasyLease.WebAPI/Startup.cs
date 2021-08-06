@@ -7,6 +7,7 @@ using EasyLease.Contracts;
 using EasyLease.Entities.AppSettingsModels;
 using EasyLease.WebAPI.ActionFilters;
 using EasyLease.WebAPI.Extensions;
+using EasyLease.WebAPI.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -52,6 +53,12 @@ namespace EasyLease.WebAPI {
             services.AddScoped<ValidationPhotoForAdvertAttribute>();
             services.AddScoped<ValidationPhotoForUserAttribute>();
             services.AddScoped<ValidateImageExistsAttribute>();
+            services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+
+            services.AddAuthentication();
+            services.ConfigureIdentity(Configuration);
+            services.ConfigureJWT(Configuration);
+
             services.AddControllers();
         }
 
@@ -70,6 +77,8 @@ namespace EasyLease.WebAPI {
             app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
 
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
