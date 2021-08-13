@@ -7,7 +7,9 @@ using EasyLease.Contracts;
 using EasyLease.Entities.AppSettingsModels;
 using EasyLease.WebAPI.ActionFilters;
 using EasyLease.WebAPI.Extensions;
+using EasyLease.WebAPI.Services;
 using EasyLease.WebAPI.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -55,7 +57,16 @@ namespace EasyLease.WebAPI {
             services.AddScoped<ValidateImageExistsAttribute>();
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
+            services.AddTransient<IAuthorizationHandler, UserIsOwnerAuthorizationHandler>();
+            services.AddHttpContextAccessor();
+
             services.AddAuthentication();
+
+            services.AddAuthorization(opts => {
+                opts.AddPolicy("UserIsOwner",
+                    policy => policy.Requirements.Add(new UserIsOwnerRequirement()));
+            });
+
             services.ConfigureIdentity(Configuration);
             services.ConfigureJWT(Configuration);
 

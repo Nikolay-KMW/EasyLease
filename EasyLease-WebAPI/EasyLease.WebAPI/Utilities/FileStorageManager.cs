@@ -10,10 +10,10 @@ using EasyLease.Entities.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace EasyLease.WebAPI.Utilities {
-    public class FileStorage : IFileStorage {
+    public class FileStorageManager : IFileStorageManager {
         private readonly FileStorageSettings _fileStorageSettings;
 
-        public FileStorage(FileStorageSettings fileStorageSettings) {
+        public FileStorageManager(FileStorageSettings fileStorageSettings) {
             _fileStorageSettings = fileStorageSettings;
         }
 

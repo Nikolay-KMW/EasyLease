@@ -17,14 +17,14 @@ namespace EasyLease.WebAPI.Controllers {
     public class AdvertsController : ControllerBase {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
-        private readonly IFileStorage _fileStorage;
+        private readonly IFileStorageManager _fileStorageManager;
 
         public AdvertsController(IRepositoryManager repository,
-                                 IFileStorage fileStorage,
+                                 IFileStorageManager fileStorageManager,
                                  IMapper mapper) {
             _repository = repository;
             _mapper = mapper;
-            _fileStorage = fileStorage;
+            _fileStorageManager = fileStorageManager;
         }
 
         [HttpGet]
@@ -33,7 +33,7 @@ namespace EasyLease.WebAPI.Controllers {
             var adverts = await _repository.Advert.GetAllAdvertsAsync(trackChanges: false).ConfigureAwait(false);
             var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(adverts);
 
-            return Ok(advertsDTO);
+            return Ok(new { adverts = advertsDTO });
         }
 
         [HttpGet("{advertId}", Name = "GetAdvertById"), Authorize]
@@ -72,7 +72,7 @@ namespace EasyLease.WebAPI.Controllers {
         public async Task<IActionResult> UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
             var advert = HttpContext.Items["advert"] as Advert;
 
-            advert.Images = await _fileStorage.SavePhotoByIdAsync<IFormFile>(advertId, photos).ConfigureAwait(false);
+            advert.Images = await _fileStorageManager.SavePhotoByIdAsync<IFormFile>(advertId, photos).ConfigureAwait(false);
 
             _repository.Advert.UpdateAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);
@@ -90,7 +90,7 @@ namespace EasyLease.WebAPI.Controllers {
             var advert = HttpContext.Items["advert"] as Advert;
             var image = HttpContext.Items["image"] as Image;
 
-            _fileStorage.DeletePhotoByPath(image.Path);
+            _fileStorageManager.DeletePhotoByPath(image.Path);
 
             advert.Images.Remove(image);
 
@@ -129,7 +129,7 @@ namespace EasyLease.WebAPI.Controllers {
             Image image = advert.Images?.FirstOrDefault();
 
             if (image != null) {
-                _fileStorage.DeletePhotosById(advertId);
+                _fileStorageManager.DeletePhotosById(advertId);
             }
 
             _repository.Advert.DeleteAdvert(advert);

@@ -29,7 +29,7 @@ namespace EasyLease.WebAPI.ActionFilters {
             IFormFile avatar = (IFormFile)context.ActionArguments.SingleOrDefault(x => x.Key.Equals("avatar")).Value;
 
             if (avatar == null) {
-                _logger.LogError("Photo sent from client is null. Controller: {controller}, action: { action}");
+                _logger.LogError($"Photo sent from client is null. Controller: {controller}, action: { action}");
                 context.Result = new BadRequestObjectResult($"Photo is empty. Controller: {controller}, action: {action}");
                 return;
             }
@@ -78,6 +78,5 @@ namespace EasyLease.WebAPI.ActionFilters {
             //     context.Result = new UnprocessableEntityObjectResult(context.ModelState);
             // }
         }
-        //public void OnActionExecuted(ActionExecutedContext context) { }
     }
 }

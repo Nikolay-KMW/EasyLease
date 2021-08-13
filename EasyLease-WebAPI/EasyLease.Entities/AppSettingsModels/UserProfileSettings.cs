@@ -11,7 +11,6 @@ namespace EasyLease.Entities.AppSettingsModels {
         public short MaxFailedAccessForSignIn { get; set; }
         public bool AllowedLockoutForNewUsers { get; set; }
         public string AllowedUserNameCharacters { get; set; }
-        public bool RequireUniqueEmail { get; set; }
         public long FileSizeLimitForAvatar { get; set; }
         public string[] AllowedExtensions { get; set; }
         public Dictionary<string, List<byte[]>> FileSignature { get; set; }

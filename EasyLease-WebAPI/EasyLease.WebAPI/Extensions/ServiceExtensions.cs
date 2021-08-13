@@ -56,8 +56,8 @@ namespace EasyLease.WebAPI.Extensions {
 
             services.AddSingleton<FileStorageSettings>(fileStorageSettings);
 
-            FileStorage fileStorage = new FileStorage(fileStorageSettings);
-            services.AddSingleton<IFileStorage>(fileStorage);
+            FileStorageManager fileStorageManager = new FileStorageManager(fileStorageSettings);
+            services.AddSingleton<IFileStorageManager>(fileStorageManager);
         }
 
         public static void ConfigureUserProfile(this IServiceCollection services, IConfiguration configuration) {
@@ -100,7 +100,7 @@ namespace EasyLease.WebAPI.Extensions {
 
                 // User settings.
                 options.User.AllowedUserNameCharacters = userProfileSettings.AllowedUserNameCharacters;
-                options.User.RequireUniqueEmail = userProfileSettings.RequireUniqueEmail;
+                options.User.RequireUniqueEmail = true;
             })
             .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<RepositoryContext>().AddDefaultTokenProviders();

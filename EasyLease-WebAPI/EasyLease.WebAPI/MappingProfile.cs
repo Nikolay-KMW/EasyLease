@@ -15,6 +15,9 @@ namespace EasyLease.WebAPI {
         private string ArrayBytesToJsonSerialize(byte[] source) =>
             source != null ? JsonSerializer.Serialize(source) : null;
 
+        private string BuildFullUserName(User user) =>
+            string.Join(' ', user.FirstName, user.SecondName, user.ThirdName);
+
         private string BuildFullAddress(Advert advert) =>
             string.Format($"{advert.Region} обл., {advert.District} р-н., {advert.SettlementTypeId} {advert.SettlementName}, {advert.StreetTypeId} {advert.StreetName}, дом №{advert.HouseNumber}, кв. №{advert.ApartmentNumber}");
 
@@ -84,7 +87,12 @@ namespace EasyLease.WebAPI {
                 .ForMember(advertTag => advertTag.Tag, config => config.Ignore());
 
             CreateMap<User, ProfileDTO>()
-                .ForMember(profileDTO => profileDTO.UserName, config => config.MapFrom(user => string.Join(' ', user.FirstName, user.SecondName, user.ThirdName)))
+                .ForMember(profileDTO => profileDTO.UserName, config => config.MapFrom(user => BuildFullUserName(user)))
+                .ForMember(profileDTO => profileDTO.Bio, config => config.MapFrom(user => user.Biography))
+                .ForMember(profileDTO => profileDTO.Image, config => config.MapFrom(user => ArrayBytesToJsonSerialize(user.Avatar)));
+
+            CreateMap<User, UserDTO>()
+                .ForMember(userDTO => userDTO.UserName, config => config.MapFrom(user => BuildFullUserName(user)))
                 .ForMember(profileDTO => profileDTO.Bio, config => config.MapFrom(user => user.Biography))
                 .ForMember(profileDTO => profileDTO.Image, config => config.MapFrom(user => ArrayBytesToJsonSerialize(user.Avatar)));
 

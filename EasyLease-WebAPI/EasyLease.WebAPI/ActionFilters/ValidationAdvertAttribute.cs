@@ -30,13 +30,13 @@ namespace EasyLease.WebAPI.ActionFilters {
             DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
 
             if (advertDTO.StartOfLease < currenDateTime) {
-                _logger.LogInfo($"The date start of lease set {advertDTO.StartOfLease} is earlier than now {currenDateTime}.");
+                _logger.LogError($"The date start of lease set {advertDTO.StartOfLease} is earlier than now {currenDateTime}.");
                 context.ModelState.AddModelError(nameof(advertDTO.StartOfLease), "The date start of lease is invalid");
             }
 
             if (advertDTO.EndOfLease != null) {
                 if (advertDTO.EndOfLease < advertDTO.StartOfLease) {
-                    _logger.LogInfo($"The date end of lease set {advertDTO.EndOfLease} is earlier than the date start of lease {advertDTO.StartOfLease}.");
+                    _logger.LogError($"The date end of lease set {advertDTO.EndOfLease} is earlier than the date start of lease {advertDTO.StartOfLease}.");
                     context.ModelState.AddModelError(nameof(advertDTO.EndOfLease), "The date end of lease is invalid");
                 }
             }

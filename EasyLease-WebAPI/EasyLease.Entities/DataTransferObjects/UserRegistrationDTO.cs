@@ -17,5 +17,9 @@ namespace EasyLease.Entities.DataTransferObjects {
         [MinLength(8, ErrorMessage = "Minimum length for the password is 8 characters.")]
         [MaxLength(1000, ErrorMessage = "Maximum length for the password is 1000 characters.")]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "Password is a required field.")]
+        [Compare("Password", ErrorMessage = "Passwords not match")]
+        public string PasswordConfirm { get; set; }
     }
 }

@@ -15,9 +15,9 @@ namespace EasyLease.Entities.DataTransferObjects {
         [MaxLength(50, ErrorMessage = "Maximum length for the third name is 50 characters.")]
         public string ThirdName { get; set; }
 
-        [Required(ErrorMessage = "Email is a required field.")]
-        [EmailAddress(ErrorMessage = "Email Address is not valid.")]
-        public string Email { get; set; }
+        // [Required(ErrorMessage = "Email is a required field.")]
+        // [EmailAddress(ErrorMessage = "Email Address is not valid.")]
+        // public string Email { get; set; }
 
         [MaxLength(500, ErrorMessage = "Maximum length for the Biography is 500 characters.")]
         public string Bio { get; set; }
