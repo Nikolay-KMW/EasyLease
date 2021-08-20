@@ -56,15 +56,14 @@ namespace EasyLease.WebAPI {
             services.AddScoped<ValidationPhotoForUserAttribute>();
             services.AddScoped<ValidateImageExistsAttribute>();
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
-
-            services.AddTransient<IAuthorizationHandler, UserIsOwnerAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, UserIsOwnerAdvertAuthorizationHandler>();
             services.AddHttpContextAccessor();
 
             services.AddAuthentication();
 
-            services.AddAuthorization(opts => {
-                opts.AddPolicy("UserIsOwner",
-                    policy => policy.Requirements.Add(new UserIsOwnerRequirement()));
+            services.AddAuthorization(options => {
+                options.AddPolicy("UserIsOwnerAdvert",
+                    policy => policy.Requirements.Add(new UserIsOwnerAdvertRequirement()));
             });
 
             services.ConfigureIdentity(Configuration);
@@ -82,12 +81,11 @@ namespace EasyLease.WebAPI {
             app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseRouting();
 
             app.UseCors("CorsPolicy");
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
-
-            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();

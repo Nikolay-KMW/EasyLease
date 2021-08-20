@@ -16,7 +16,6 @@ namespace EasyLease.Repository {
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
-            .Include(advert => advert.AdvertFavorites)
             .OrderBy(advert => advert.CreatedAd).ToListAsync().ConfigureAwait(false);
 
         public async Task<Advert> GetAdvertAsync(Guid advertId, bool trackChanges) =>
@@ -24,7 +23,6 @@ namespace EasyLease.Repository {
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
-            .Include(advert => advert.AdvertFavorites)
             .Include(advert => advert.Author)
             .SingleOrDefaultAsync().ConfigureAwait(false);
 
@@ -33,7 +31,6 @@ namespace EasyLease.Repository {
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
-            .Include(advert => advert.AdvertFavorites)
             .OrderBy(advert => advert.CreatedAd).ToListAsync().ConfigureAwait(false);
 
         public void CreateAdvertForUser(Guid userId, Advert advert) {

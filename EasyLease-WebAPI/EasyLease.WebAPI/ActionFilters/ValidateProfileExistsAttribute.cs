@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using EasyLease.Contracts;
+using EasyLease.Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -15,11 +17,12 @@ namespace EasyLease.WebAPI.ActionFilters {
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
-            var method = context.HttpContext.Request.Method;
-            var trackChanges = method.Equals("PUT") || method.Equals("DELETE");
-            var userId = (Guid)context.ActionArguments["userId"];
+            var trackChanges = context.HttpContext.Request.Method.Equals("PUT");
 
-            var user = await _repository.User.GetUserAsync(userId, trackChanges).ConfigureAwait(false);
+            User user = null;
+            if (context.ActionArguments.TryGetValue("userId", out var userId)) {
+                user = await _repository.User.GetUserAsync((Guid)userId, trackChanges).ConfigureAwait(false);
+            }
 
             if (user == null) {
                 _logger.LogInfo($"User with id: {userId} doesn't exist in the database");

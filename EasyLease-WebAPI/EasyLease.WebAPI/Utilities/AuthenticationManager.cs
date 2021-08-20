@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,11 +18,7 @@ namespace EasyLease.WebAPI.Utilities {
     public class AuthenticationManager : IAuthenticationManager {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
-        private User _user;
-        private readonly Task<IdentityResult> _cachedTaskNull = Task.FromResult<IdentityResult>(null);
-        private readonly Task<bool> _cachedTaskFalse = Task.FromResult<bool>(false);
 
-        public User GetUser => _user;
         public TimeSpan DefaultLockoutTimeSpan { get; }
 
         public AuthenticationManager(UserManager<User> userManager, IConfiguration configuration) {
@@ -29,49 +27,64 @@ namespace EasyLease.WebAPI.Utilities {
             DefaultLockoutTimeSpan = _userManager.Options.Lockout.DefaultLockoutTimeSpan;
         }
 
-        public async Task<IdentityResult> CreateUserAsync(User user, string password) {
-            var result = await _userManager.CreateAsync(user, password).ConfigureAwait(false);
-            _user = user;
-
-            return result;
-        }
-        public async Task<bool> ValidateUserAsync(UserAuthenticationDTO userAuth) {
-            _user = await _userManager.FindByEmailAsync(userAuth.Email).ConfigureAwait(false);
-
-            return _user != null && await _userManager.CheckPasswordAsync(_user, userAuth.Password).ConfigureAwait(false);
+        public bool TryGetUserId(ClaimsPrincipal claimsPrincipal, out Guid userId) {
+            return Guid.TryParse(_userManager.GetUserId(claimsPrincipal), out userId);
         }
 
-        public Task<IdentityResult> AssignRolesToUserAsync(IEnumerable<string> roles) {
-            return _user != null
-                ? _userManager.AddToRolesAsync(_user, roles)
-                : _cachedTaskNull;
+        public Task<User> GetAuthorizedUserAsync(ClaimsPrincipal claimsPrincipal) {
+            return _userManager.GetUserAsync(claimsPrincipal);
         }
 
-        public Task<IdentityResult> AccessFailedCountAsync() {
-            return _user != null
-                ? _userManager.AccessFailedAsync(_user)
-                : _cachedTaskNull;
+        // public async Task<User> GetUserFullAsync(ClaimsPrincipal claimsPrincipal, bool trackChanges) {
+        //     User receivedUser = await _userManager.GetUserAsync(claimsPrincipal).ConfigureAwait(false);
+
+        //     if (receivedUser == null) {
+        //         return null;
+        //     }
+
+        //     return !trackChanges
+        //      ? await _userManager.Users.Where(user => user.Id.Equals(receivedUser.Id)).AsNoTracking().Include(user => user.AdvertFavorites).SingleOrDefaultAsync().ConfigureAwait(false)
+        //      : await _userManager.Users.Where(user => user.Id.Equals(receivedUser.Id)).Include(user => user.AdvertFavorites).SingleOrDefaultAsync().ConfigureAwait(false);
+        // }
+
+        public Task<IdentityResult> CreateUserAsync(User user, string password) {
+            return _userManager.CreateAsync(user, password);
         }
 
-        public Task<bool> IsLockedOutAsync() {
-            return _user != null
-                ? _userManager.IsLockedOutAsync(_user)
-                : _cachedTaskFalse;
+        public Task<IdentityResult> UpdateUserAsync(User user) {
+            return _userManager.UpdateAsync(user);
         }
 
-        public Task<IdentityResult> ResetAccessFailedCountAsync() {
-            return _user != null
-                ? _userManager.ResetAccessFailedCountAsync(_user)
-                : _cachedTaskNull;
+        public async Task<(User user, (bool EmailIsNotValid, bool PasswordIsNotValid) validatorErrors)> GetAndValidateUserAsync(UserAuthenticationDTO userAuthDTO) {
+            var user = await _userManager.FindByEmailAsync(userAuthDTO.Email).ConfigureAwait(false);
+            var passwordIsValid = await _userManager.CheckPasswordAsync(user, userAuthDTO.Password).ConfigureAwait(false);
+
+            return (user, (user == null, !passwordIsValid));
         }
 
-        public Task<string> CreateTokenAsync() {
-            return CreateJwtToken();
+        public Task<IdentityResult> AssignRolesAsync(User user, IEnumerable<string> roles) {
+            return _userManager.AddToRolesAsync(user, roles);
         }
 
-        private async Task<string> CreateJwtToken() {
+        public Task<IdentityResult> AccessFailedCountAsync(User user) {
+            return _userManager.AccessFailedAsync(user);
+        }
+
+        public Task<bool> IsLockedOutAsync(User user) {
+            return _userManager.IsLockedOutAsync(user);
+        }
+
+        public Task<IdentityResult> ResetAccessFailedCountAsync(User user) {
+            return _userManager.ResetAccessFailedCountAsync(user);
+        }
+
+        public Task<string> CreateTokenAsync(User user) {
+            return CreateJwtToken(user);
+        }
+
+        private async Task<string> CreateJwtToken(User user) {
             var signingCredentials = GetSigningCredentials();
-            var claims = await GetClaims().ConfigureAwait(false);
+            var claims = await GetClaims(user).ConfigureAwait(false);
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
 
             return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
@@ -84,9 +97,9 @@ namespace EasyLease.WebAPI.Utilities {
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
-        private async Task<List<Claim>> GetClaims() {
-            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, _user.Id.ToString()), new Claim(ClaimTypes.Email, _user.Email) };
-            var roles = await _userManager.GetRolesAsync(_user).ConfigureAwait(false);
+        private async Task<List<Claim>> GetClaims(User user) {
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), new Claim(ClaimTypes.Email, user.Email) };
+            var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
             foreach (var role in roles) {
                 claims.Add(new Claim(ClaimTypes.Role, role));

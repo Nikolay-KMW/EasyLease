@@ -27,6 +27,17 @@ namespace EasyLease.WebAPI {
         private DateTime? ConvertToUTC(DateTime? sourceDataTime) =>
             sourceDataTime.HasValue ? (DateTime?)DateTime.SpecifyKind(sourceDataTime.Value, DateTimeKind.Unspecified).AddHours(-hoursOffset) : null;
 
+        private bool SetFavorite(Advert advert, ResolutionContext context) {
+            if (context.Options.Items["favoriteAdverts"] is List<AdvertFavorite> favoriteAdverts) {
+                foreach (var advertFavorite in favoriteAdverts) {
+                    if (advertFavorite.AdvertId == advert.Id) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public MappingProfile(GeneralSettings generalSettings) {
             hoursOffset = generalSettings.HoursOffsetForUkraine;
 
@@ -37,8 +48,8 @@ namespace EasyLease.WebAPI {
                 .ForMember(advertsDTO => advertsDTO.Image, config => config.MapFrom(advert => advert.Images.FirstOrDefault().Path.Replace("\\", "/")))
                 .ForMember(advertsDTO => advertsDTO.Slug, config => config.MapFrom(advert => advert.Id.ToString()))
                 .ForMember(advertsDTO => advertsDTO.ComfortList, config => config.MapFrom(advert => advert.AdvertComforts.Select(advertComforts => advertComforts.ComfortId)))
-                .ForMember(advertsDTO => advertsDTO.TagList, config => config.MapFrom(advert => advert.AdvertTags.Select(advertTags => advertTags.TagId)));
-            //.ForMember(advertsDTO => advertsDTO.Favorited, config => config.MapFrom(advert => advert.AdvertFavorites));
+                .ForMember(advertsDTO => advertsDTO.TagList, config => config.MapFrom(advert => advert.AdvertTags.Select(advertTags => advertTags.TagId)))
+                .ForMember(advertsDTO => advertsDTO.Favorited, config => config.MapFrom((advert, advertsDTO, _, context) => SetFavorite(advert, context)));
 
             CreateMap<Advert, AdvertDTO>()
                 .ForMember(advertDTO => advertDTO.AdvertType, config => config.MapFrom(advert => advert.AdvertTypeId))
@@ -51,8 +62,8 @@ namespace EasyLease.WebAPI {
                 .ForMember(advertDTO => advertDTO.Images, config => config.MapFrom(advert => advert.Images.Select(images => images.Path.Replace("\\", "/"))))
                 .ForMember(advertDTO => advertDTO.Slug, config => config.MapFrom(advert => advert.Id.ToString()))
                 .ForMember(advertDTO => advertDTO.ComfortList, config => config.MapFrom(advert => advert.AdvertComforts.Select(advertComforts => advertComforts.ComfortId)))
-                .ForMember(advertDTO => advertDTO.TagList, config => config.MapFrom(advert => advert.AdvertTags.Select(advertTags => advertTags.TagId)));
-            //.ForMember(advertDTO => advertDTO.Favorited, config => config.MapFrom(advert => advert.AdvertFavorites));
+                .ForMember(advertDTO => advertDTO.TagList, config => config.MapFrom(advert => advert.AdvertTags.Select(advertTags => advertTags.TagId)))
+                .ForMember(advertDTO => advertDTO.Favorited, config => config.MapFrom((advert, advertsDTO, _, context) => SetFavorite(advert, context)));
 
             CreateMap<AdvertCreationDTO, Advert>()
                 .ForMember(advert => advert.StartOfLease, config => config.MapFrom(advertCreationDTO => ConvertToUTC(advertCreationDTO.StartOfLease)))

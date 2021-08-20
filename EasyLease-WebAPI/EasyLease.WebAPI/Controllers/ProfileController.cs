@@ -21,10 +21,12 @@ namespace EasyLease.WebAPI.Controllers {
     public class ProfileController : ControllerBase {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
+        private readonly IAuthenticationManager _authManager;
 
-        public ProfileController(IRepositoryManager repository, IMapper mapper) {
+        public ProfileController(IRepositoryManager repository, IMapper mapper, IAuthenticationManager authManager) {
             _repository = repository;
             _mapper = mapper;
+            _authManager = authManager;
         }
 
         [HttpGet("{userId}", Name = "GetProfileById")]
@@ -44,16 +46,15 @@ namespace EasyLease.WebAPI.Controllers {
         public async Task<IActionResult> GetAdvertsForUser(Guid userId) {
             var advertsForUser = await _repository.Advert.GetAdvertsForUserAsync(userId, trackChanges: false).ConfigureAwait(false);
 
-            var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser);
+            var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser); // TODO !!!!!
             return Ok(advertsDTO);
         }
 
-        [HttpPut("settings/avatar/{userId}"), Authorize(Policy = "UserIsOwner")]
-        [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
+        [HttpPut("settings/avatar"), Authorize]
         [ServiceFilter(typeof(ValidationPhotoForUserAttribute))]
         //===============================================================================
-        public async Task<IActionResult> UploadPhotoForUser(Guid userId, IFormFile avatar) {
-            var user = HttpContext.Items["user"] as User;
+        public async Task<IActionResult> UploadPhotoForUser(IFormFile avatar) {
+            var user = await _authManager.GetAuthorizedUserAsync(HttpContext.User).ConfigureAwait(false);
             user.Avatar = HttpContext.Items["avatar"] as byte[];
 
             _repository.User.UpdateProfile(user);
@@ -64,12 +65,10 @@ namespace EasyLease.WebAPI.Controllers {
             return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
         }
 
-        [HttpDelete("settings/avatar/{userId}"), Authorize(Policy = "UserIsOwner")]
-        [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
+        [HttpDelete("settings/avatar"), Authorize]
         //===============================================================================
-        public async Task<IActionResult> DeletePhotoForUser(Guid userId) {
-            var user = HttpContext.Items["user"] as User;
-
+        public async Task<IActionResult> DeletePhotoForUser() {
+            var user = await _authManager.GetAuthorizedUserAsync(HttpContext.User).ConfigureAwait(false);
             user.Avatar = null;
 
             _repository.User.UpdateProfile(user);
@@ -80,17 +79,10 @@ namespace EasyLease.WebAPI.Controllers {
             return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
         }
 
-        // [HttpPost("")]
-        // public ActionResult<Profile> PostProfile(Profile model)
-        // {
-        //     return null;
-        // }
-
-        [HttpPut("settings/{userId}"), Authorize(Policy = "UserIsOwner")]
+        [HttpPut("settings"), Authorize]
         [ServiceFilter(typeof(ValidationProfileAttribute))]
-        [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
-        public async Task<IActionResult> UpdateProfile(Guid userId, ProfileUpdateDTO profileUpdateDTO) {
-            var user = HttpContext.Items["user"] as User;
+        public async Task<IActionResult> UpdateProfile(ProfileUpdateDTO profileUpdateDTO) {
+            var user = await _authManager.GetAuthorizedUserAsync(HttpContext.User).ConfigureAwait(false);
 
             _mapper.Map(profileUpdateDTO, user);
 

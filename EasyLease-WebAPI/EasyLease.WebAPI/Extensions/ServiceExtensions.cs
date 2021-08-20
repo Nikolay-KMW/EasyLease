@@ -103,6 +103,7 @@ namespace EasyLease.WebAPI.Extensions {
                 options.User.RequireUniqueEmail = true;
             })
             .AddRoles<IdentityRole<Guid>>()
+            .AddErrorDescriber<CustomIdentityErrorDescriber>()
             .AddEntityFrameworkStores<RepositoryContext>().AddDefaultTokenProviders();
         }
 
