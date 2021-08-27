@@ -28,9 +28,9 @@ namespace EasyLease.WebAPI {
             sourceDataTime.HasValue ? (DateTime?)DateTime.SpecifyKind(sourceDataTime.Value, DateTimeKind.Unspecified).AddHours(-hoursOffset) : null;
 
         private bool SetFavorite(Advert advert, ResolutionContext context) {
-            if (context.Options.Items["favoriteAdverts"] is List<AdvertFavorite> favoriteAdverts) {
-                foreach (var advertFavorite in favoriteAdverts) {
-                    if (advertFavorite.AdvertId == advert.Id) {
+            if (context.Options.Items["favoriteAdverts"] is List<FavoriteAdvert> favoriteAdverts) {
+                foreach (var favoriteAdvert in favoriteAdverts) {
+                    if (favoriteAdvert.AdvertId == advert.Id) {
                         return true;
                     }
                 }
@@ -104,8 +104,8 @@ namespace EasyLease.WebAPI {
 
             CreateMap<User, UserDTO>()
                 .ForMember(userDTO => userDTO.UserName, config => config.MapFrom(user => BuildFullUserName(user)))
-                .ForMember(profileDTO => profileDTO.Bio, config => config.MapFrom(user => user.Biography))
-                .ForMember(profileDTO => profileDTO.Image, config => config.MapFrom(user => ArrayBytesToJsonSerialize(user.Avatar)));
+                .ForMember(userDTO => userDTO.Bio, config => config.MapFrom(user => user.Biography))
+                .ForMember(userDTO => userDTO.Image, config => config.MapFrom(user => ArrayBytesToJsonSerialize(user.Avatar)));
 
             CreateMap<ProfileUpdateDTO, User>()
                 .ForMember(user => user.Biography, config => config.MapFrom(profileUpdateDTO => profileUpdateDTO.Bio));

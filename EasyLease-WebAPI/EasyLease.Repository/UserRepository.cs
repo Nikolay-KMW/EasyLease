@@ -14,16 +14,30 @@ namespace EasyLease.Repository {
         public async Task<User> GetUserAsync(Guid userId, bool trackChanges) =>
             await FindByCondition(user => user.Id.Equals(userId), trackChanges).SingleOrDefaultAsync().ConfigureAwait(false);
 
-        public async Task<User> GetUserWhitAdFavoritesAsync(Guid userId, bool trackChanges) =>
-            await FindByCondition(user => user.Id.Equals(userId), trackChanges).Include(user => user.AdvertFavorites).SingleOrDefaultAsync().ConfigureAwait(false);
+        public async Task<User> GetUserWhitFavoriteAdvertsAsync(Guid userId, bool trackChanges) =>
+            await FindByCondition(user => user.Id.Equals(userId), trackChanges).Include(user => user.FavoriteAdverts).SingleOrDefaultAsync().ConfigureAwait(false);
 
         public void UpdateProfile(User user) {
             user.UpdatedUser = DateTime.UtcNow;
             Update(user);
         }
 
-        public void AddAdvertToFavorites(User user) {
-            Update(user);
+        public void AddAdvertToFavorites(User user, Guid advertId) {
+            bool advertExists = user.FavoriteAdverts.Any(favoriteAdvert => favoriteAdvert.AdvertId == advertId);
+
+            if (!advertExists) {
+                user.FavoriteAdverts.Add(new FavoriteAdvert { AdvertId = advertId, UserId = user.Id });
+                Update(user);
+            }
+        }
+
+        public void DeleteAdvertFromFavorites(User user, Guid advertId) {
+            var advertToRemove = user.FavoriteAdverts.SingleOrDefault(favoriteAdvert => favoriteAdvert.AdvertId == advertId);
+
+            if (advertToRemove != null) {
+                user.FavoriteAdverts.Remove(advertToRemove);
+                Update(user);
+            }
         }
     }
 }

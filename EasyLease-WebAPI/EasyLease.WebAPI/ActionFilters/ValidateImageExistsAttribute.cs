@@ -37,7 +37,6 @@ namespace EasyLease.WebAPI.ActionFilters {
             if (images == null) {
                 _logger.LogInfo($"Advert with id: {advertId} haven't photo");
                 context.Result = new NotFoundResult();
-                // return;
             }
 
             Image image = images.FirstOrDefault(image => image.Name == namePhotoWithoutExtension);

@@ -35,18 +35,6 @@ namespace EasyLease.WebAPI.Utilities {
             return _userManager.GetUserAsync(claimsPrincipal);
         }
 
-        // public async Task<User> GetUserFullAsync(ClaimsPrincipal claimsPrincipal, bool trackChanges) {
-        //     User receivedUser = await _userManager.GetUserAsync(claimsPrincipal).ConfigureAwait(false);
-
-        //     if (receivedUser == null) {
-        //         return null;
-        //     }
-
-        //     return !trackChanges
-        //      ? await _userManager.Users.Where(user => user.Id.Equals(receivedUser.Id)).AsNoTracking().Include(user => user.AdvertFavorites).SingleOrDefaultAsync().ConfigureAwait(false)
-        //      : await _userManager.Users.Where(user => user.Id.Equals(receivedUser.Id)).Include(user => user.AdvertFavorites).SingleOrDefaultAsync().ConfigureAwait(false);
-        // }
-
         public Task<IdentityResult> CreateUserAsync(User user, string password) {
             return _userManager.CreateAsync(user, password);
         }

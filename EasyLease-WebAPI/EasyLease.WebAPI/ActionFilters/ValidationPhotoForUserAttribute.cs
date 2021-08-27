@@ -72,11 +72,6 @@ namespace EasyLease.WebAPI.ActionFilters {
             if (context.ModelState.IsValid) {
                 await next().ConfigureAwait(false);
             }
-
-            // if (!context.ModelState.IsValid) {
-            //     _logger.LogError($"Invalid model state for the object. Controller: {controller}, action: {action}");
-            //     context.Result = new UnprocessableEntityObjectResult(context.ModelState);
-            // }
         }
     }
 }

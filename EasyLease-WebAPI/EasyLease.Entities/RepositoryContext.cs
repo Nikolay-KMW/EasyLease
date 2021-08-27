@@ -5,6 +5,7 @@ using EasyLease.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EasyLease.Entities {
     public class RepositoryContext : IdentityDbContext<User, IdentityRole<Guid>, Guid> {
@@ -51,18 +52,18 @@ namespace EasyLease.Entities {
                 .HasForeignKey(advertComfort => advertComfort.ComfortId);
 
             //  This set up many-to-many relationship for the Advert (favorites) and User tables
-            modelBuilder.Entity<AdvertFavorite>()
-                .HasKey(advertFavorite => new { advertFavorite.AdvertId, advertFavorite.UserId });
+            modelBuilder.Entity<FavoriteAdvert>()
+                .HasKey(favoriteAdvert => new { favoriteAdvert.AdvertId, favoriteAdvert.UserId });
 
-            modelBuilder.Entity<AdvertFavorite>()
-                .HasOne(advertFavorite => advertFavorite.Advert)
-                .WithMany(advert => advert.AdvertFavorites)
-                .HasForeignKey(advertFavorite => advertFavorite.AdvertId);
+            modelBuilder.Entity<FavoriteAdvert>()
+                .HasOne(favoriteAdvert => favoriteAdvert.Advert)
+                .WithMany(advert => advert.Subscribers)
+                .HasForeignKey(favoriteAdvert => favoriteAdvert.AdvertId);
 
-            modelBuilder.Entity<AdvertFavorite>()
-                .HasOne(advertFavorite => advertFavorite.User)
-                .WithMany(user => user.AdvertFavorites)
-                .HasForeignKey(advertFavorite => advertFavorite.UserId);
+            modelBuilder.Entity<FavoriteAdvert>()
+                .HasOne(favoriteAdvert => favoriteAdvert.User)
+                .WithMany(user => user.FavoriteAdverts)
+                .HasForeignKey(favoriteAdvert => favoriteAdvert.UserId);
 
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new AdvertConfiguration());
@@ -74,7 +75,7 @@ namespace EasyLease.Entities {
             modelBuilder.ApplyConfiguration(new AdvertComfortConfiguration());
             modelBuilder.ApplyConfiguration(new SettlementTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StreetTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new AdvertFavoriteConfiguration());
+            modelBuilder.ApplyConfiguration(new FavoriteAdvertConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
         }

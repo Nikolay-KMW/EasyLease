@@ -11,8 +11,6 @@ namespace EasyLease.Contracts {
         TimeSpan DefaultLockoutTimeSpan { get; }
         bool TryGetUserId(ClaimsPrincipal claimsPrincipal, out Guid userId);
         Task<User> GetAuthorizedUserAsync(ClaimsPrincipal claimsPrincipal);
-
-        // Task<User> GetUserFullAsync(ClaimsPrincipal claimsPrincipal, bool trackChanges);
         Task<IdentityResult> CreateUserAsync(User user, string password);
         Task<IdentityResult> UpdateUserAsync(User user);
         Task<IdentityResult> AssignRolesAsync(User user, IEnumerable<string> roles);

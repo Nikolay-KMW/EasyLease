@@ -1,7 +1,8 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EasyLease.Entities.Models {
-    public class AdvertFavorite {
+    public class FavoriteAdvert {
         public Guid AdvertId { get; set; }
         public Advert Advert { get; set; }
 

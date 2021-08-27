@@ -35,7 +35,6 @@ namespace EasyLease.Entities.Configuration {
 
                     CreatedAd = DateTime.UtcNow.AddHours(10),
                     UpdatedAd = null,
-                    //Slug = "Сдам-2-х-комнатную-квартиру-о1",
                     UserId = new Guid("c1d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                  new Advert {
@@ -65,7 +64,6 @@ namespace EasyLease.Entities.Configuration {
 
                      CreatedAd = DateTime.UtcNow,
                      UpdatedAd = null,
-                     //Slug = "Сдам-дом-о2",
                      UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                  },
                  new Advert {
@@ -96,7 +94,6 @@ namespace EasyLease.Entities.Configuration {
 
                      CreatedAd = DateTime.UtcNow,
                      UpdatedAd = null,
-                     //Slug = "Сдам-1-комнатную-квартиру-о3",
                      UserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
                  },
                 new Advert {
@@ -127,7 +124,6 @@ namespace EasyLease.Entities.Configuration {
 
                     CreatedAd = DateTime.UtcNow.AddHours(5),
                     UpdatedAd = null,
-                    //Slug = "Сдам-5-х-комнатную-квартиру-о4",
                     UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                 new Advert {
@@ -158,7 +154,6 @@ namespace EasyLease.Entities.Configuration {
 
                     CreatedAd = DateTime.UtcNow.AddDays(3),
                     UpdatedAd = null,
-                    //Slug = "Сдам-комнату-в-общежитие-о5",
                     UserId = new Guid("c3d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                 new Advert {
@@ -189,7 +184,6 @@ namespace EasyLease.Entities.Configuration {
 
                     CreatedAd = DateTime.UtcNow.AddDays(1),
                     UpdatedAd = null,
-                    //Slug = "Сдам-3-х-комнатную-квартиру-о6",
                     UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                 },
                  new Advert {
@@ -220,7 +214,6 @@ namespace EasyLease.Entities.Configuration {
 
                      CreatedAd = DateTime.UtcNow.AddDays(2),
                      UpdatedAd = null,
-                     //Slug = "Сдам-5-х-комнатную-квартиру-о7",
                      UserId = new Guid("c2d4c053-49b6-410c-bc78-2d54a9991870"),
                  }
             );

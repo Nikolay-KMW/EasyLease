@@ -35,8 +35,9 @@ namespace EasyLease.WebAPI.Controllers {
         public IActionResult GetProfileById(Guid userId) {
             var user = HttpContext.Items["user"] as User;
 
-            var profileDTO = _mapper.Map<ProfileDTO>(user);
-            return Ok(profileDTO);
+            var profileToReturn = _mapper.Map<ProfileDTO>(user);
+
+            return Ok(profileToReturn);
 
         }
 
@@ -44,10 +45,16 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> GetAdvertsForUser(Guid userId) {
+            var user = _authManager.TryGetUserId(HttpContext.User, out Guid authUserId)
+                ? await _repository.User.GetUserWhitFavoriteAdvertsAsync(authUserId, trackChanges: false).ConfigureAwait(false)
+                : null;
+
             var advertsForUser = await _repository.Advert.GetAdvertsForUserAsync(userId, trackChanges: false).ConfigureAwait(false);
 
-            var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser); // TODO !!!!!
-            return Ok(advertsDTO);
+            var favoriteAdverts = user?.FavoriteAdverts?.ToList();
+            var advertsToReturn = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+
+            return Ok(advertsToReturn);
         }
 
         [HttpPut("settings/avatar"), Authorize]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EasyLease.Contracts;
@@ -33,56 +34,31 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpGet]
         //===============================================================================
         public async Task<IActionResult> GetAdverts() {
-            // var user = await _authManager.GetUserFullAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
-            // var favoriteAdverts = user?.AdvertFavorites?.ToList();
-
-            var authUser = await _authManager.GetAuthorizedUserAsync(HttpContext.User).ConfigureAwait(false);
-
-            User user = authUser != null
-                ? await _repository.User.GetUserWhitAdFavoritesAsync(authUser.Id, trackChanges: false).ConfigureAwait(false)
-                : null;
-
-            var favoriteAdverts = user?.AdvertFavorites?.ToList();
-
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
             var adverts = await _repository.Advert.GetAllAdvertsAsync(trackChanges: false).ConfigureAwait(false);
 
-            var advertsDTO = _mapper.Map<IEnumerable<AdvertsDTO>>(adverts, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+            var advertsToReturn = BuildAdvertsDTOToReturn(adverts, user);
 
-            return Ok(new { adverts = advertsDTO });
+            return Ok(new { adverts = advertsToReturn });
         }
 
         [HttpGet("{advertId}", Name = "GetAdvertById")]
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> GetAdvertById(Guid advertId) {
-            // var user = await _authManager.GetUserFullAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
-            // var favoriteAdverts = user?.AdvertFavorites?.ToList();
-
-            var authUser = await _authManager.GetAuthorizedUserAsync(HttpContext.User).ConfigureAwait(false);
-
-            User user = authUser != null
-                ? await _repository.User.GetUserWhitAdFavoritesAsync(authUser.Id, trackChanges: false).ConfigureAwait(false)
-                : null;
-
-            var favoriteAdverts = user?.AdvertFavorites?.ToList();
-
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
             var advert = HttpContext.Items["advert"] as Advert;
 
-            var advertDTO = _mapper.Map<AdvertDTO>(advert, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
-            return Ok(advertDTO);
+            var advertToReturn = BuildAdvertDTOToReturn(advert, user);
+
+            return Ok(advertToReturn);
         }
 
         [HttpPost("new"), Authorize]
         [ServiceFilter(typeof(ValidationAdvertAttribute))]
         //===============================================================================
         public async Task<IActionResult> CreateAdvertForUser([FromBody] AdvertCreationDTO advertCreationDTO) {
-            //var user = await _authManager.GetUserAsync(HttpContext.User).ConfigureAwait(false);
-
-            User user = _authManager.TryGetUserId(HttpContext.User, out Guid userId)
-                ? await _repository.User.GetUserWhitAdFavoritesAsync(userId, trackChanges: false).ConfigureAwait(false)
-                : null;
-
-            var favoriteAdverts = user?.AdvertFavorites?.ToList();
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
 
             var advert = _mapper.Map<Advert>(advertCreationDTO);
 
@@ -91,7 +67,7 @@ namespace EasyLease.WebAPI.Controllers {
             _repository.Advert.CreateAdvertForUser(user.Id, advert);
             await _repository.SaveAsync().ConfigureAwait(false);
 
-            var advertToReturn = _mapper.Map<AdvertDTO>(advert, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+            var advertToReturn = BuildAdvertDTOToReturn(advert, user);
             advertToReturn.Author = _mapper.Map<ProfileDTO>(user);
 
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
@@ -102,15 +78,7 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
-            // var user = await _authManager.GetUserFullAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
-            // var favoriteAdverts = user?.AdvertFavorites?.ToList();
-
-            User user = _authManager.TryGetUserId(HttpContext.User, out Guid userId)
-                ? await _repository.User.GetUserWhitAdFavoritesAsync(userId, trackChanges: false).ConfigureAwait(false)
-                : null;
-
-            var favoriteAdverts = user?.AdvertFavorites?.ToList();
-
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
             var advert = HttpContext.Items["advert"] as Advert;
 
             advert.Images = await _fileStorageManager.SavePhotoByIdAsync<IFormFile>(advertId, photos).ConfigureAwait(false);
@@ -118,7 +86,7 @@ namespace EasyLease.WebAPI.Controllers {
             _repository.Advert.UpdateAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);
 
-            var advertToReturn = _mapper.Map<AdvertDTO>(advert, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+            var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
         }
@@ -128,14 +96,9 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateImageExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> DeletePhotoForAdvert(Guid advertId, string namePhoto) {
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
             var advert = HttpContext.Items["advert"] as Advert;
             var image = HttpContext.Items["image"] as Image;
-
-            User user = _authManager.TryGetUserId(HttpContext.User, out Guid userId)
-                ? await _repository.User.GetUserWhitAdFavoritesAsync(userId, trackChanges: false).ConfigureAwait(false)
-                : null;
-
-            var favoriteAdverts = user?.AdvertFavorites?.ToList();
 
             _fileStorageManager.DeletePhotoByPath(image.Path);
 
@@ -144,7 +107,7 @@ namespace EasyLease.WebAPI.Controllers {
             _repository.Advert.UpdateAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);
 
-            var advertToReturn = _mapper.Map<AdvertDTO>(advert, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+            var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
         }
@@ -154,21 +117,17 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> UpdateAdvertForUser(Guid advertId, [FromBody] AdvertUpdateDTO advertUpdateDTO) {
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
             var advert = HttpContext.Items["advert"] as Advert;
+
             _mapper.Map(advertUpdateDTO, advert);
-
-            User user = _authManager.TryGetUserId(HttpContext.User, out Guid userId)
-                ? await _repository.User.GetUserWhitAdFavoritesAsync(userId, trackChanges: false).ConfigureAwait(false)
-                : null;
-
-            var favoriteAdverts = user?.AdvertFavorites?.ToList();
 
             await _repository.Tag.AddTagsAsync(advert.AdvertTags).ConfigureAwait(false);
 
             _repository.Advert.UpdateAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);
 
-            var advertToReturn = _mapper.Map<AdvertDTO>(advert, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+            var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
         }
@@ -195,23 +154,46 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> AddAdvertToFavorites(Guid advertId) {
-            // var user = await _authManager.GetUserFullAsync(HttpContext.User, trackChanges: true).ConfigureAwait(false);
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: true).ConfigureAwait(false);
             var advert = HttpContext.Items["advert"] as Advert;
 
-            User user = _authManager.TryGetUserId(HttpContext.User, out Guid userId)
-                ? await _repository.User.GetUserWhitAdFavoritesAsync(userId, trackChanges: false).ConfigureAwait(false)
-                : null;
-
-            user.AdvertFavorites.Add(new AdvertFavorite { AdvertId = advert.Id, UserId = user.Id });
-
-            _repository.User.AddAdvertToFavorites(user); // TODO !!!!!!!!!!!!!!!!!
+            _repository.User.AddAdvertToFavorites(user, advertId);
             await _repository.SaveAsync().ConfigureAwait(false);
 
-            var favoriteAdverts = user?.AdvertFavorites?.ToList();
-
-            var advertToReturn = _mapper.Map<AdvertDTO>(advert, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+            var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+        }
+
+        [HttpDelete("{advertId}/favorite"), Authorize]
+        [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
+        //===============================================================================
+        public async Task<IActionResult> DeleteAdvertFromFavorites(Guid advertId) {
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: true).ConfigureAwait(false);
+            var advert = HttpContext.Items["advert"] as Advert;
+
+            _repository.User.DeleteAdvertFromFavorites(user, advertId);
+            await _repository.SaveAsync().ConfigureAwait(false);
+
+            var advertToReturn = BuildAdvertDTOToReturn(advert, user);
+
+            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+        }
+
+        private Task<User> GetAuthorizedUserWhitFavoriteAdsAsync(ClaimsPrincipal claimsPrincipal, bool trackChanges) {
+            return _authManager.TryGetUserId(claimsPrincipal, out Guid userId)
+                ? _repository.User.GetUserWhitFavoriteAdvertsAsync(userId, trackChanges: trackChanges)
+                : Task.FromResult<User>(null);
+        }
+
+        private AdvertDTO BuildAdvertDTOToReturn(Advert advert, User user) {
+            var favoriteAdverts = user?.FavoriteAdverts?.ToList();
+            return _mapper.Map<AdvertDTO>(advert, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+        }
+
+        private IEnumerable<AdvertsDTO> BuildAdvertsDTOToReturn(IEnumerable<Advert> adverts, User user) {
+            var favoriteAdverts = user?.FavoriteAdverts?.ToList();
+            return _mapper.Map<IEnumerable<AdvertsDTO>>(adverts, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
         }
     }
 }
