@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using EasyLease.Entities.Models;
 
 namespace EasyLease.Contracts {
-    public interface IComfortRepository {
-        Task<IEnumerable<Comfort>> GetAllComfortsAsync(bool trackChanges);
+    public interface IAdvertTypeRepository {
+        Task<IEnumerable<AdvertType>> GetAllAdvertTypeAsync(bool trackChanges);
     }
 }

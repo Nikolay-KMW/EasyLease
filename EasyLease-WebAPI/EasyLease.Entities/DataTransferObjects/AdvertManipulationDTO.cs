@@ -60,9 +60,9 @@ namespace EasyLease.Entities.DataTransferObjects {
         public int? ApartmentNumber { get; set; }
         // ======================================
 
-        //[Required(ErrorMessage = "Type of price is a required field.")]
-        [EnumDataType(typeof(PriceType))]
-        public PriceType PriceType { get; set; }
+        // [EnumDataType(typeof(PriceType))]
+        // public PriceType PriceType { get; set; }
+        public string PriceType { get; set; }
 
         [Required(ErrorMessage = "Price is a required field.")]
         [Range(0, 1000000, ErrorMessage = "Price can't be more then 1000000.")]
@@ -71,10 +71,22 @@ namespace EasyLease.Entities.DataTransferObjects {
         [Required(ErrorMessage = "Start of lease is a required field.")]
         public DateTime StartOfLease { get; set; }
         public DateTime? EndOfLease { get; set; }
-        public IEnumerable<AdvertComfortCreationDTO> ComfortList { get; set; }
+
+        // public IEnumerable<AdvertComfortCreationDTO> ComfortList { get; set; }
+        public string[] ComfortList { get; set; }
+
+        // public IEnumerable<AdvertTagCreationDTO> TagList { get; set; }
         public string[] TagList { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
+            if (!Enum.TryParse<PriceType>(this.PriceType, ignoreCase: true, out PriceType enumValue)) {
+                yield return new ValidationResult($"Enum value {this.PriceType} is not valid for the PriceType.", new[] { nameof(this.PriceType) });
+            }
+
+            if (TagList.Length > 5) {
+                yield return new ValidationResult("The list of tags can't be more then 5 words.", new[] { nameof(TagList) });
+            }
+
             foreach (string tag in TagList) {
                 if (tag.Length < 1 || tag.Length > 30) {
                     yield return new ValidationResult("Tag can't be lower than 1 and bigger then 30 characters.",
@@ -82,5 +94,15 @@ namespace EasyLease.Entities.DataTransferObjects {
                 }
             }
         }
+    }
+
+    // Most likely it will not be needed
+    public class AdvertComfortCreationDTO {
+        public string Comfort { get; set; }
+    }
+
+    // Most likely it will not be needed
+    public class AdvertTagCreationDTO {
+        public string TagList { get; set; }
     }
 }

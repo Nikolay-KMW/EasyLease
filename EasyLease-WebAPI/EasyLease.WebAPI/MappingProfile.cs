@@ -38,6 +38,23 @@ namespace EasyLease.WebAPI {
             return false;
         }
 
+        private AdvertLocationDTO[] GetAdvertLocationDTO(IEnumerable<Location> locations) {
+            List<AdvertLocationDTO> locationsDTO = new List<AdvertLocationDTO>();
+
+            string region = null;
+            foreach (var location in locations) {
+                if (region != location.Region) {
+                    locationsDTO.Add(new AdvertLocationDTO() { Region = location.Region });
+                    region = location.Region;
+                }
+                if (region == location.Region) {
+                    locationsDTO.Last().District.Add(location.District);
+                }
+            }
+
+            return locationsDTO.ToArray<AdvertLocationDTO>();
+        }
+
         public MappingProfile(GeneralSettings generalSettings) {
             hoursOffset = generalSettings.HoursOffsetForUkraine;
 
@@ -74,7 +91,8 @@ namespace EasyLease.WebAPI {
                 .ForMember(advert => advert.SettlementType, config => config.Ignore())
                 .ForMember(advert => advert.StreetTypeId, config => config.MapFrom(advertCreationDTO => advertCreationDTO.StreetType))
                 .ForMember(advert => advert.StreetType, config => config.Ignore())
-                .ForMember(advert => advert.AdvertComforts, config => config.MapFrom(advertCreationDTO => advertCreationDTO.ComfortList))
+                //.ForMember(advert => advert.AdvertComforts, config => config.MapFrom(advertCreationDTO => advertCreationDTO.ComfortList))
+                .ForMember(advert => advert.AdvertComforts, config => config.MapFrom(advertCreationDTO => advertCreationDTO.ComfortList.Select(comfort => new AdvertComfort() { ComfortId = comfort })))
                 .ForMember(advert => advert.AdvertTags, config => config.MapFrom(advertCreationDTO => advertCreationDTO.TagList.Select(tag => new AdvertTag() { TagId = tag, CreatedTag = DateTime.UtcNow })));
 
             CreateMap<AdvertUpdateDTO, Advert>()
@@ -86,16 +104,24 @@ namespace EasyLease.WebAPI {
                 .ForMember(advert => advert.SettlementType, config => config.Ignore())
                 .ForMember(advert => advert.StreetTypeId, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.StreetType))
                 .ForMember(advert => advert.StreetType, config => config.Ignore())
-                .ForMember(advert => advert.AdvertComforts, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.ComfortList))
+                //.ForMember(advert => advert.AdvertComforts, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.ComfortList))
+                .ForMember(advert => advert.AdvertComforts, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.ComfortList.Select(comfort => new AdvertComfort() { ComfortId = comfort })))
                 .ForMember(advert => advert.AdvertTags, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.TagList.Select(tag => new AdvertTag() { TagId = tag, CreatedTag = DateTime.UtcNow })));
 
-            CreateMap<AdvertComfortCreationDTO, AdvertComfort>()
-                .ForMember(advertComfort => advertComfort.ComfortId, config => config.MapFrom(adComfortCreationDTO => adComfortCreationDTO.Comfort))
-                .ForMember(advertComfort => advertComfort.Comfort, config => config.Ignore());
+            CreateMap<AdvertAdditionalDataIDTO, AdvertAdditionalDataDTO>()
+                .ForMember(additionalDataDTO => additionalDataDTO.AdvertType, config => config.MapFrom(additionalDataIDTO => additionalDataIDTO.AdvertType.Select(adType => adType.Id)))
+                .ForMember(additionalDataDTO => additionalDataDTO.SettlementType, config => config.MapFrom(additionalDataIDTO => additionalDataIDTO.SettlementType.Select(settlementType => settlementType.Id)))
+                .ForMember(additionalDataDTO => additionalDataDTO.StreetType, config => config.MapFrom(additionalDataIDTO => additionalDataIDTO.StreetType.Select(streetType => streetType.Id)))
+                .ForMember(additionalDataDTO => additionalDataDTO.Locations, config => config.MapFrom(additionalDataIDTO => GetAdvertLocationDTO(additionalDataIDTO.Locations)))
+                .ForMember(additionalDataDTO => additionalDataDTO.Comforts, config => config.MapFrom(additionalDataIDTO => additionalDataIDTO.Comforts.Select(comfort => comfort.Id)));
 
-            CreateMap<AdvertTagCreationDTO, AdvertTag>()
-                .ForMember(advertTag => advertTag.TagId, config => config.MapFrom(adTagCreationDTO => adTagCreationDTO.TagList))
-                .ForMember(advertTag => advertTag.Tag, config => config.Ignore());
+            // CreateMap<AdvertComfortCreationDTO, AdvertComfort>()
+            //     .ForMember(advertComfort => advertComfort.ComfortId, config => config.MapFrom(adComfortCreationDTO => adComfortCreationDTO.Comfort))
+            //     .ForMember(advertComfort => advertComfort.Comfort, config => config.Ignore());
+
+            // CreateMap<AdvertTagCreationDTO, AdvertTag>()
+            //     .ForMember(advertTag => advertTag.TagId, config => config.MapFrom(adTagCreationDTO => adTagCreationDTO.TagList))
+            //     .ForMember(advertTag => advertTag.Tag, config => config.Ignore());
 
             CreateMap<User, ProfileDTO>()
                 .ForMember(profileDTO => profileDTO.UserName, config => config.MapFrom(user => BuildFullUserName(user)))
