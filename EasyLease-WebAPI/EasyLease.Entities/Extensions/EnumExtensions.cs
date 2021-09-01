@@ -18,6 +18,5 @@ namespace EasyLease.Entities.Extensions {
 
             return displayName;
         }
-
     }
 }

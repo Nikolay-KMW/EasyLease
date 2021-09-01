@@ -9,11 +9,13 @@ using EasyLease.Contracts;
 using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
+using EasyLease.Entities.RequestFeatures;
 using EasyLease.WebAPI.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EasyLease.WebAPI.Controllers {
     [Route("api/profile")]
@@ -38,18 +40,19 @@ namespace EasyLease.WebAPI.Controllers {
             var profileToReturn = _mapper.Map<ProfileDTO>(user);
 
             return Ok(profileToReturn);
-
         }
 
         [HttpGet("{userId}/adverts")]
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
-        public async Task<IActionResult> GetAdvertsForUser(Guid userId) {
+        public async Task<IActionResult> GetAdvertsForUser(Guid userId, [FromQuery] AdvertParameters advertParameters) {
             var user = _authManager.TryGetUserId(HttpContext.User, out Guid authUserId)
                 ? await _repository.User.GetUserWhitFavoriteAdvertsAsync(authUserId, trackChanges: false).ConfigureAwait(false)
                 : null;
 
-            var advertsForUser = await _repository.Advert.GetAdvertsForUserAsync(userId, trackChanges: false).ConfigureAwait(false);
+            var advertsForUser = await _repository.Advert.GetAdvertsForUserAsync(userId, advertParameters, trackChanges: false).ConfigureAwait(false);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(advertsForUser.MetaData));
 
             var favoriteAdverts = user?.FavoriteAdverts?.ToList();
             var advertsToReturn = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);

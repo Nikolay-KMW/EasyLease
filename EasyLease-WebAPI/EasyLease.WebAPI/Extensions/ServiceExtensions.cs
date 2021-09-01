@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
 using EasyLease.Contracts;
@@ -77,8 +76,8 @@ namespace EasyLease.WebAPI.Extensions {
         }
 
         public static void ConfigureAutoMapperProfile(this IServiceCollection services) {
-            services.AddSingleton<IMapper>(provider => new MapperConfiguration(cfg =>
-                cfg.AddProfile(new MappingProfile(provider.GetService<GeneralSettings>()))).CreateMapper());
+            services.AddSingleton<IMapper>(provider => new MapperConfiguration(config =>
+                config.AddProfile(new MappingProfile(provider.GetService<GeneralSettings>()))).CreateMapper());
         }
 
         public static void ConfigureIdentity(this IServiceCollection services, IConfiguration configuration) {

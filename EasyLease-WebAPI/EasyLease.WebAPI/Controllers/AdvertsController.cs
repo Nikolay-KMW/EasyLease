@@ -7,10 +7,12 @@ using AutoMapper;
 using EasyLease.Contracts;
 using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
+using EasyLease.Entities.RequestFeatures;
 using EasyLease.WebAPI.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EasyLease.WebAPI.Controllers {
     [Route("api/adverts")]
@@ -33,9 +35,11 @@ namespace EasyLease.WebAPI.Controllers {
 
         [HttpGet]
         //===============================================================================
-        public async Task<IActionResult> GetAdverts() {
+        public async Task<IActionResult> GetAdverts([FromQuery] AdvertParameters advertParameters) {
             User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
-            var adverts = await _repository.Advert.GetAllAdvertsAsync(trackChanges: false).ConfigureAwait(false);
+            var adverts = await _repository.Advert.GetAllAdvertsAsync(advertParameters, trackChanges: false).ConfigureAwait(false);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(adverts.MetaData));
 
             var advertsToReturn = BuildAdvertsDTOToReturn(adverts, user);
 

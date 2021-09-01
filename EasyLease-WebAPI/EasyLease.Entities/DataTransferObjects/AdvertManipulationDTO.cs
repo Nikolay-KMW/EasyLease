@@ -16,19 +16,15 @@ namespace EasyLease.Entities.DataTransferObjects {
         [MaxLength(1000, ErrorMessage = "Maximum length for the Description is 1000 characters.")]
         public string Description { get; set; }
 
-        //[Required(ErrorMessage = "Number of rooms is a required field.")]
         [Range(1, 500, ErrorMessage = "Number of rooms is required and it can't be less then 1 and more then 500")]
         public int NumberOfRooms { get; set; }
 
-        //[Required(ErrorMessage = "Area is a required field.")]
         [Range(1, 100000, ErrorMessage = "Area is required and it can't be less than 1 m2 and more then 100000 m2.")]
         public int Area { get; set; }
 
-        //[MaxLength(1000, ErrorMessage = "Storey can't be more then 1000.")]
         [Range(1, 1000, ErrorMessage = "Storey can't be be below than 1 and above then 1000.")]
         public int? Storey { get; set; }
 
-        //[MaxLength(1000, ErrorMessage = "Number of storey can't be more then 1000.")]
         [Range(1, 1000, ErrorMessage = "Number of storey can't be less then 1 and more then 1000.")]
         public int? NumberOfStoreys { get; set; }
 
@@ -97,12 +93,12 @@ namespace EasyLease.Entities.DataTransferObjects {
     }
 
     // Most likely it will not be needed
-    public class AdvertComfortCreationDTO {
-        public string Comfort { get; set; }
-    }
+    // public class AdvertComfortCreationDTO {
+    //     public string Comfort { get; set; }
+    // }
 
     // Most likely it will not be needed
-    public class AdvertTagCreationDTO {
-        public string TagList { get; set; }
-    }
+    // public class AdvertTagCreationDTO {
+    //     public string TagList { get; set; }
+    // }
 }
