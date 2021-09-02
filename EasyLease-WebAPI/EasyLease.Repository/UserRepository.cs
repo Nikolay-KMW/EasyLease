@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EasyLease.Contracts;
 using EasyLease.Entities;
 using EasyLease.Entities.Models;
+using EasyLease.Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyLease.Repository {
@@ -16,6 +17,24 @@ namespace EasyLease.Repository {
 
         public async Task<User> GetUserWhitFavoriteAdvertsAsync(Guid userId, bool trackChanges) =>
             await FindByCondition(user => user.Id.Equals(userId), trackChanges).Include(user => user.FavoriteAdverts).SingleOrDefaultAsync().ConfigureAwait(false);
+
+        public async Task<(PagedList<Advert>, User user)> GetFavoriteAdvertsForUserAsync(Guid userId, AdvertParameters advertParameters, bool trackChanges) {
+            var user = await FindByCondition(user => user.Id.Equals(userId), trackChanges)
+            .Include(user => user.FavoriteAdverts)
+            .ThenInclude(favoriteAd => favoriteAd.Advert.Images)
+            .Include(user => user.FavoriteAdverts)
+            .ThenInclude(favoriteAd => favoriteAd.Advert.AdvertComforts)
+            .Include(user => user.FavoriteAdverts)
+            .ThenInclude(favoriteAd => favoriteAd.Advert.AdvertTags)
+            .SingleOrDefaultAsync().ConfigureAwait(false);
+
+            var adverts = user.FavoriteAdverts.Select(favoriteAd => favoriteAd.Advert).OrderBy(advert => advert.CreatedAd);
+
+            return (PagedList<Advert>.ToPagedList(adverts,
+                                                  advertParameters.PageNumber,
+                                                  advertParameters.PageSize,
+                                                  advertParameters.PageOffset), user);
+        }
 
         public void UpdateProfile(User user) {
             user.UpdatedUser = DateTime.UtcNow;

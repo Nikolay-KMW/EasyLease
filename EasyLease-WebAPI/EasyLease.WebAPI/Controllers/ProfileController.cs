@@ -45,14 +45,29 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpGet("{userId}/adverts")]
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
-        public async Task<IActionResult> GetAdvertsForUser(Guid userId, [FromQuery] AdvertParameters advertParameters) {
+        public async Task<IActionResult> GetAdvertsPostedUser(Guid userId, [FromQuery] AdvertParameters advertParameters) {
             var user = _authManager.TryGetUserId(HttpContext.User, out Guid authUserId)
                 ? await _repository.User.GetUserWhitFavoriteAdvertsAsync(authUserId, trackChanges: false).ConfigureAwait(false)
                 : null;
 
-            var advertsForUser = await _repository.Advert.GetAdvertsForUserAsync(userId, advertParameters, trackChanges: false).ConfigureAwait(false);
+            var advertsForUser = await _repository.Advert.GetAdvertsPostedUserAsync(userId, advertParameters, trackChanges: false).ConfigureAwait(false);
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(advertsForUser.MetaData));
+
+            var favoriteAdverts = user?.FavoriteAdverts?.ToList();
+            var advertsToReturn = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
+
+            return Ok(advertsToReturn);
+        }
+
+        [HttpGet("favorite-adverts"), Authorize]
+        //===============================================================================
+        public async Task<IActionResult> GetFavoriteAdvertsForUser([FromQuery] AdvertParameters advertParameters) {
+            var (advertsForUser, user) = _authManager.TryGetUserId(HttpContext.User, out Guid authUserId)
+                ? await _repository.User.GetFavoriteAdvertsForUserAsync(authUserId, advertParameters, trackChanges: false).ConfigureAwait(false)
+                : (null, null);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(advertsForUser?.MetaData));
 
             var favoriteAdverts = user?.FavoriteAdverts?.ToList();
             var advertsToReturn = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
@@ -91,6 +106,7 @@ namespace EasyLease.WebAPI.Controllers {
 
         [HttpPut("settings"), Authorize]
         [ServiceFilter(typeof(ValidationProfileAttribute))]
+        //===============================================================================
         public async Task<IActionResult> UpdateProfile(ProfileUpdateDTO profileUpdateDTO) {
             var user = await _authManager.GetAuthorizedUserAsync(HttpContext.User).ConfigureAwait(false);
 

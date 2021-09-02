@@ -35,7 +35,7 @@ namespace EasyLease.Repository {
             .Include(advert => advert.Author)
             .SingleOrDefaultAsync().ConfigureAwait(false);
 
-        public async Task<PagedList<Advert>> GetAdvertsForUserAsync(Guid userId, AdvertParameters advertParameters, bool trackChanges) {
+        public async Task<PagedList<Advert>> GetAdvertsPostedUserAsync(Guid userId, AdvertParameters advertParameters, bool trackChanges) {
             var adverts = await FindByCondition(advert => advert.UserId.Equals(userId), trackChanges)
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
