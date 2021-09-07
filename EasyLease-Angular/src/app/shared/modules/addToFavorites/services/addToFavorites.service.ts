@@ -11,20 +11,20 @@ export class AddToFavoritesService {
   constructor(private http: HttpClient) {}
 
   getUrl(slug: string): string {
-    return `${environment.apiUrl}/articles/${slug}/favorite`;
+    return `${environment.apiUrl}/adverts/${slug}/favorite`;
   }
 
-  getArticle(response: GetAdvertResponseInterface): AdvertInterface {
-    return response.article;
+  getAdvert(response: GetAdvertResponseInterface): AdvertInterface {
+    return response.advert;
   }
 
   addToFavorites(slug: string): Observable<AdvertInterface> {
     const url = this.getUrl(slug);
-    return this.http.post<GetAdvertResponseInterface>(url, {}).pipe(map(this.getArticle));
+    return this.http.post<GetAdvertResponseInterface>(url, {}).pipe(map(this.getAdvert));
   }
 
   removeFromFavorites(slug: string): Observable<AdvertInterface> {
     const url = this.getUrl(slug);
-    return this.http.delete<GetAdvertResponseInterface>(url).pipe(map(this.getArticle));
+    return this.http.delete<GetAdvertResponseInterface>(url).pipe(map(this.getAdvert));
   }
 }

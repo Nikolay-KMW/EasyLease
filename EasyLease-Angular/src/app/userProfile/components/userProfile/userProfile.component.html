@@ -6,21 +6,32 @@
             <div class="col-12 col-md-10">
                 <div class="card card-profile">
                     <div class="card-avatar">
-                        <a href="">
-                            <img src="user-image" [src]="userProfile.image" class="img">
-                        </a>
+                        <div>
+                            <img *ngIf="!userProfile.image" src="assets/img/avatar.png" />
+                        </div>
+                        <div>
+                            <img *ngIf="userProfile.image"
+                                [src]="bypassSecurityTrust('data:image/jpg/jpeg/png/gif;base64,' + userProfile.image)" />
+                        </div>
                     </div>
                     <div class="card-body">
-                        <h3 class="card-category text-gray">Artist</h3>
-                        <h2 class="card-title">{{userProfile?.username}}</h2>
-                        <p class="card-description"> {{userProfile?.bio}} Don't be scared of the truth because we need
+                        <h2 class="card-title">{{userProfile?.userName}}</h2>
+                        <mat-divider *ngIf="userProfile.bio" class="m-2"></mat-divider>
+                        <p class="card-description px-2" *ngIf="userProfile.bio"> {{userProfile?.bio}} Don't be scared
+                            of the truth because we
+                            need
                             to
                             restart the human
                             foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but
                             the back is...
                         </p>
-                        <button class="my-1 py-1 col-md-auto" mat-raised-button color="warn"
-                            *ngIf="isCurrentUserProfile$ | async" [routerLink]="[ '/settings']">
+                        <mat-divider class="m-2"></mat-divider>
+                        <div class="bg-info text-white visit py-2 mx-2">
+                            <div>На сайте c: {{userProfile.createdUser | date:'dd.MM.yyyyг.'}}</div>
+                            <div>Последняя активность: {{userProfile.visitedUser | date:'dd.MM.yyyyг. HH:mm'}}</div>
+                        </div>
+                        <button class="my-1 py-0" mat-raised-button color="success"
+                            *ngIf="isCurrentUserProfile$ | async" [routerLink]="[ '/profile/settings']">
                             <fa-icon [icon]="faUserCog" size="lg" class="pr-2" transform="grow-1">
                             </fa-icon>
                             Редактировать профиль

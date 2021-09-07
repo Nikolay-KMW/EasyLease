@@ -6,6 +6,7 @@ import {of} from 'rxjs';
 import {FeedService} from '../../services/feed.service';
 import {getFeedAction, getFeedFailureAction, getFeedSuccessAction} from '../actions/getFeed.action';
 import {GetFeedResponseInterface} from '../../types/getFeedResponse.interface';
+import {HttpResponse} from '@angular/common/http';
 
 @Injectable()
 export class GetFeedEffect {
@@ -16,8 +17,12 @@ export class GetFeedEffect {
       ofType(getFeedAction),
       switchMap(({url}) => {
         return this.feedService.getFeed(url).pipe(
-          map((feed: GetFeedResponseInterface) => {
-            return getFeedSuccessAction({feed});
+          map((httpResponse: HttpResponse<GetFeedResponseInterface>) => {
+            let pagination = httpResponse.headers.get('X-Pagination');
+            if (pagination != null) {
+              httpResponse.body!.advertCount = JSON.parse(pagination)?.TotalCount;
+            }
+            return getFeedSuccessAction({feed: httpResponse.body!});
           }),
           catchError(() => {
             return of(getFeedFailureAction());

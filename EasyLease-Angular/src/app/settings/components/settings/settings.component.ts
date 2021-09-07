@@ -78,7 +78,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.currentUser = currentUser;
 
         this.image.setValue(this.currentUser.image);
-        this.username.setValue(this.currentUser.username);
+        this.username.setValue(this.currentUser.userName);
         this.bio.setValue(this.currentUser.bio);
         this.email.setValue(this.currentUser.email);
       });

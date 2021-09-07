@@ -60,9 +60,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const request: LoginRequestInterface = {
-      user: this.form.value,
-    };
+    const request: LoginRequestInterface = this.form.value;
     this.store.dispatch(loginAction({request}));
   }
 }

@@ -7,10 +7,19 @@ import {ShellComponent} from './components/shell/shell.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [ShellComponent],
-  imports: [CommonModule, MatSidenavModule, MatListModule, FontAwesomeModule, MatDividerModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatSidenavModule,
+    MatListModule,
+    FontAwesomeModule,
+    MatDividerModule,
+    MatButtonModule,
+  ],
   exports: [ShellComponent],
   providers: [],
 })

@@ -13,7 +13,7 @@ import {BackendErrorMessageModule} from '../shared/modules/backendErrorMessage/b
 
 const routs = [
   {
-    path: 'settings',
+    path: 'profile/settings',
     component: SettingsComponent,
   },
 ];

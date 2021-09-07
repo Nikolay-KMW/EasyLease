@@ -3,7 +3,7 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
-import {TagType} from 'src/app/shared/types/Tag.type';
+import {TagType} from 'src/app/shared/types/tag.type';
 import {getTagsAction} from '../../store/actions/getTags.action';
 import {errorSelector, isLoadingSelector, tagsSelector} from '../../store/selectors';
 
@@ -27,7 +27,7 @@ export class TagsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.apiUrlProps) {
-      this.store.dispatch(getTagsAction({url: this.apiUrlProps}));
+      //this.store.dispatch(getTagsAction({url: this.apiUrlProps}));
     }
   }
 }

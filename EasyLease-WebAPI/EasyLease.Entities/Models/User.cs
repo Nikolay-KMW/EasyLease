@@ -24,6 +24,7 @@ namespace EasyLease.Entities.Models {
         public byte[] Avatar { get; set; }
         public DateTime CreatedUser { get; set; }
         public DateTime? UpdatedUser { get; set; }
+        public DateTime VisitedUser { get; set; }
 
         public ICollection<FavoriteAdvert> FavoriteAdverts { get; set; }
         public ICollection<Advert> Adverts { get; set; }

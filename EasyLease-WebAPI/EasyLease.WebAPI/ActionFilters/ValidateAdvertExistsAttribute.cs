@@ -17,7 +17,9 @@ namespace EasyLease.WebAPI.ActionFilters {
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
-            var trackChanges = context.HttpContext.Request.Method.Equals("PUT");
+            var method = context.HttpContext.Request.Method;
+            var namePhoto = context.HttpContext.Request.Query["namePhoto"].ToString();
+            var trackChanges = method.Equals("PUT") || (method.Equals("DELETE") && !String.IsNullOrWhiteSpace(namePhoto));
 
             Advert advert = null;
             if (context.ActionArguments.TryGetValue("advertId", out var advertId)) {

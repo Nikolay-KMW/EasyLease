@@ -20,6 +20,6 @@ namespace EasyLease.Entities.DataTransferObjects {
 
         [Required(ErrorMessage = "Password is a required field.")]
         [Compare("Password", ErrorMessage = "Passwords not match")]
-        public string PasswordConfirm { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }

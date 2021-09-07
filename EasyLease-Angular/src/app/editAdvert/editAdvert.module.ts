@@ -15,7 +15,7 @@ import {LoadingModule} from '../shared/modules/loading/loading.module';
 
 const routes = [
   {
-    path: 'advert/:slug/edit',
+    path: 'advert/:slug',
     component: EditAdvertComponent,
   },
 ];

@@ -44,7 +44,7 @@ export class AddToFavoritesEffect {
     () =>
       this.actions$.pipe(
         ofType(addToFavoritesFailureAction),
-        tap(() => this.router.navigate(['login']))
+        tap(() => this.router.navigate(['authentication/login']))
       ),
     {dispatch: false}
   );

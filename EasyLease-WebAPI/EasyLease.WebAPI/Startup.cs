@@ -57,6 +57,7 @@ namespace EasyLease.WebAPI {
             services.AddScoped<ValidateImageExistsAttribute>();
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
             services.AddScoped<IAuthorizationHandler, UserIsOwnerAdvertAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, UserVisitAuthorizationHandler>();
             services.AddHttpContextAccessor();
 
             services.AddAuthentication();
@@ -64,6 +65,8 @@ namespace EasyLease.WebAPI {
             services.AddAuthorization(options => {
                 options.AddPolicy("UserIsOwnerAdvert",
                     policy => policy.Requirements.Add(new UserIsOwnerAdvertRequirement()));
+                options.AddPolicy("UserVisit",
+                    policy => policy.Requirements.Add(new UserVisitRequirement()));
             });
 
             services.ConfigureIdentity(Configuration);

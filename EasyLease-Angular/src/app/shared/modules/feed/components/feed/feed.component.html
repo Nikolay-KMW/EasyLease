@@ -2,63 +2,60 @@
 <el-error-message *ngIf="error$ | async"></el-error-message>
 
 <div *ngIf="feed$ | async">
-    <div class="card" *ngFor="let article of (feed$ | async)?.articles">
+    <div class="card" *ngFor="let advert of (feed$ | async)?.adverts">
         <div class="card-body container-fluid">
-            <div class="row justify-content-center content">
-                <div class="col-lg-4 col-md-12">
-                    <a [routerLink]="[ '/profiles', article.author.username ]">
-                        <img [src]="article.author.image" class="card-img img-raised" />
+            <div class="row justify-content-between content">
+                <div class="col-lg-4 col-md-12 img-wrapper">
+                    <a [routerLink]="[ '/advert', advert.slug ]">
+                        <img *ngIf="!advert.image" src="assets/img/apartment.png" class="card-img img-raised" />
+                        <img *ngIf="advert.image" src="{{uploadUrl + advert.image}}" class="card-img img-raised" />
                     </a>
                 </div>
-                <div class="col-lg-6 col-md-9 d-flex flex-column justify-content-between">
-                    <a [routerLink]="[ '/articles', article.slug ]" class="my-2">
-                        <h4 class="card-title overflow-hidden">{{article.title}}</h4>
-                        <p class="card-description overflow-hidden">{{article.description}} Комната - прекрасно
+                <div class="col-lg-6 col-md-9 d-flex flex-column justify-content-between pl-lg-1 desc">
+                    <div class="my-2">
+                        <h2 class="card-title text-truncate font-weight-bolder">{{advert.title}}</h2>
+                        <h4 class="card-text text-truncate font-weight-bolder mt-0 mb-2">{{advert.fullAddress}}</h4>
+                        <p class="card-description overflow-hidden text-justify mb-0">{{advert.description}}
+                            Комната -
+                            прекрасно
                             убранная. Там стоит бюро красного дерева, два
                             дивана, обитые шелковою материею, красивые ширмы с вышитыми небывалыми в природе птицами и
                             плодами. Имеются там шелковые занавесы, ковры, несколько картин, бронза, фарфор и множество
-                            красивых мелочей</p>
-                    </a>
-                    <div class="my-2">
+                            красивых мелочей.</p>
+                    </div>
+                    <div class="mt-0 mb-2 mb-md-0">
                         <div class="card-link">
-                            <a [routerLink]="[ '/profiles', article.author.username ]">
-                                <img [src]="article.author.image" class="card-img user-icon" />
-                            </a>
-                            <span> Создано:, {{article.createdAt}}</span>
+                            <span> Создано: {{advert.createdAd | date:'dd.MM.yyyyг. HH:mm'}}</span>
                         </div>
                         <mat-divider class="my-2"></mat-divider>
-                        <div class="tag-list overflow-hidden">
-                            <el-tag-list [tags]="article.tagList"></el-tag-list>
+                        <div class="comfort-list overflow-hidden">
+                            <el-comfort-list [comfortList]="advert.comfortList"></el-comfort-list>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-3 d-flex flex-md-column justify-content-between">
-                    <div class="ml-md-auto my-2">
-                        <el-add-to-favorites [isFavorited]="article.favorited" [advertSlug]="article.slug">
+                <div class="col-lg-2 col-md-3 d-flex flex-md-column justify-content-between favorite pl-md-0">
+                    <div class="ml-md-auto">
+                        <el-add-to-favorites [isFavorited]="advert.favorited" [advertSlug]="advert.slug">
                         </el-add-to-favorites>
                     </div>
                     <div class="ml-auto">
-                        <button mat-raised-button color="primary" class="overflow-hidden">
-                            Детальнее
+                        <button mat-stroked-button color="info" class="price br-20"
+                            [routerLink]="[ '/advert', advert.slug ]">
+                            <div class="d-flex justify-content-center">
+                                <div class="text-truncate">{{advert.price}}</div>
+                                <div class="pl-1">гр.</div>
+                            </div>
                         </button>
                     </div>
-
-                    <!-- <div class="row justify-content-end my-2">
-                        <div class="col-auto w-50">
-                            <div> ADD TO FAVORITES</div>
-                        </div>
+                    <div class="ml-auto">
+                        <button mat-raised-button color="primary" [routerLink]="[ '/advert', advert.slug ]">
+                            Смотреть
+                        </button>
                     </div>
-                    <div class="row justify-content-end">
-                        <div class="col-auto">
-                            <button mat-button-raised color="primary" class="overflow-hidden w-100 mx-auto">
-                                от: 1000гр.
-                            </button>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
     </div>
-    <el-pagination [total]="(feed$ | async)?.articlesCount" [limit]="limit" [url]="baseUrl" [currentPage]="currentPage">
+    <el-pagination [total]="(feed$ | async)?.advertCount" [limit]="limit" [url]="baseUrl" [currentPage]="currentPage">
     </el-pagination>
 </div>

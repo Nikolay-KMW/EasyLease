@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs';
 
 import {setSelectedTagAction} from 'src/app/shared/modules/tags/store/actions/setSelectedTag.action';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
-import {TagType} from 'src/app/shared/types/Tag.type';
+import {TagType} from 'src/app/shared/types/tag.type';
 
 @Component({
   selector: 'el-filter-feed',

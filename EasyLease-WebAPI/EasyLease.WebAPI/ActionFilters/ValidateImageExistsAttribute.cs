@@ -20,13 +20,12 @@ namespace EasyLease.WebAPI.ActionFilters {
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
-            var trackChanges = context.HttpContext.Request.Method.Equals("PUT");
-            string namePhoto = (string)context.ActionArguments["namePhoto"];
+            string namePhoto = context.HttpContext.Request.Query["namePhoto"].ToString();
 
             Advert advert = null;
             if (context.ActionArguments.TryGetValue("advertId", out var advertId)) {
                 advert = (Advert)context.HttpContext.Items["advert"] ??
-                    await _repository.Advert.GetAdvertAsync((Guid)advertId, trackChanges).ConfigureAwait(false);
+                    await _repository.Advert.GetAdvertAsync((Guid)advertId, trackChanges: false).ConfigureAwait(false);
             }
 
             var trustedFileNameForDisplay = WebUtility.HtmlEncode(namePhoto);

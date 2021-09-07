@@ -22,7 +22,7 @@
         <span class="spacer"></span>
         <div class="pull-right">
             <ng-container *ngIf="isLoggedIn$ | async">
-                <button mat-raised-button [routerLink]="['/advert/new']" (click)="menuClosed()"
+                <button mat-raised-button [routerLink]="['/advert']" (click)="menuClosed()"
                     class="el-btn-nav d-none d-sm-inline-block mx-1 px-4 py-2">
                     <div class="row">
                         <fa-icon [icon]="faPencilAlt" size="lg" class="col el-icon-btn-drop-shadow px-2"
@@ -33,15 +33,18 @@
                         </div>
                     </div>
                 </button>
-                <button mat-raised-button [routerLink]="['/profiles', ((currentUser$ | async)!.username)]"
+                <button mat-raised-button [routerLink]="['/profile', ((currentUser$ | async)!.id)]"
                     (click)="menuClosed()" class="el-btn-nav mx-1 px-4 py-2">
                     <div class="row">
-                        <fa-icon [icon]="faSmile" size="lg" class="col el-icon-btn-drop-shadow px-2" [fixedWidth]="true"
-                            transform="grow-6">
+                        <fa-icon *ngIf="!(currentUser$ | async)!.image" [icon]="faSmile" size="lg"
+                            class="col el-icon-btn-drop-shadow px-1" [fixedWidth]="true" transform="grow-6">
                         </fa-icon>
-                        <div class="col d-none d-md-block link-text px-1">
-                            <img [src]="((currentUser$ | async)!.image)" class="d-block w-100" />
-                            {{((currentUser$ | async)!.username)}}
+                        <div class="avatar m-auto img-raised rounded-circle">
+                            <img *ngIf="(currentUser$ | async)!.image"
+                                [src]="bypassSecurityTrust('data:image/jpg/jpeg/png/gif;base64,' + (currentUser$ | async)!.image)" />
+                        </div>
+                        <div class="col d-none d-md-block link-text ml-1 px-1">
+                            {{((currentUser$ | async)!.firstName)}}
                         </div>
                     </div>
                 </button>
@@ -55,18 +58,17 @@
                 <mat-menu #menu="matMenu" xPosition="before" overlapTrigger="false" class="mat-menu">
                     <mat-divider class="m-2"></mat-divider>
                     <button mat-menu-item class="el-btn-side-nav"
-                        [routerLink]="['/profile', ((currentUser$ | async)!.username)]">
+                        [routerLink]="['/profile', ((currentUser$ | async)!.id), 'adverts']">
                         <fa-icon [icon]="faList" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true"
                             transform="grow-2">
                         </fa-icon> <span class="px-2">Мои объявления</span>
                     </button>
-                    <button mat-menu-item class="el-btn-side-nav"
-                        [routerLink]="['/profile', ((currentUser$ | async)!.username), 'favorites']">
+                    <button mat-menu-item class="el-btn-side-nav" [routerLink]="['/profile/favorite-adverts']">
                         <fa-icon [icon]="faList" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true"
                             transform="grow-2">
                         </fa-icon> <span class="px-2">Избранные</span>
                     </button>
-                    <button mat-menu-item class="el-btn-side-nav" [routerLink]="['/settings']">
+                    <button mat-menu-item class="el-btn-side-nav" [routerLink]="['/profile/settings']">
                         <fa-icon [icon]="faUserCog" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true"
                             transform="grow-2">
                         </fa-icon> <span class="px-2">Настройки</span>
@@ -80,7 +82,7 @@
                 </mat-menu>
             </ng-container>
             <ng-container *ngIf="isAnonymous$ | async">
-                <button mat-raised-button [routerLink]="['/login']" class="el-btn-nav mx-1 px-4 py-2">
+                <button mat-raised-button [routerLink]="['authentication/login']" class="el-btn-nav mx-1 px-4 py-2">
                     <div class="row">
                         <fa-icon [icon]="faSignInAlt" size="lg" class="col el-icon-btn-drop-shadow px-2"
                             [fixedWidth]="true" transform="grow-12">
@@ -90,7 +92,7 @@
                         </div>
                     </div>
                 </button>
-                <button mat-raised-button [routerLink]="['/register']" class="el-btn-nav mx-1 px-4 py-2">
+                <button mat-raised-button [routerLink]="['authentication/register']" class="el-btn-nav mx-1 px-4 py-2">
                     <div class="row">
                         <fa-icon [icon]="faUserPlus" size="lg" class="col el-icon-btn-drop-shadow px-2"
                             [fixedWidth]="true" transform="grow-6">

@@ -22,6 +22,7 @@ export class FeedComponent implements OnInit, OnChanges, OnDestroy {
   error$: Observable<string | null>;
   feed$: Observable<GetFeedResponseInterface | null>;
 
+  uploadUrl: string = environment.uploadUrl;
   limit: number;
   baseUrl!: string;
   queryParamsSubscription: Subscription;

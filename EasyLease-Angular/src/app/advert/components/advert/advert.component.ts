@@ -18,6 +18,10 @@ import {advertSelector, errorSelector, isLoadingSelector} from '../../store/sele
 import {deleteAdvertAction} from '../../store/actions/deleteAdvert.action';
 import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
+import {PriceType} from 'src/app/shared/types/price.type';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {ImagePathType} from 'src/app/shared/types/imagePath.type';
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'el-advert',
@@ -25,9 +29,14 @@ import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banne
   styleUrls: ['./advert.component.scss'],
 })
 export class AdvertComponent implements OnInit, OnDestroy {
+  //PriceType = PriceType;
+  priceType: string = PriceType.PricePerMonth;
+
   slug: string | null;
   advert: AdvertInterface | null = null;
   advertSubscription: Subscription;
+
+  bypassSecurityTrust: (value: string) => SafeResourceUrl;
 
   isLoading$: Observable<boolean>;
   error$: Observable<string | null>;
@@ -36,20 +45,17 @@ export class AdvertComponent implements OnInit, OnDestroy {
   faTrash: IconDefinition = faTrash;
   faEdit: IconDefinition = faEdit;
 
-  slides = [
-    {image: 'assets/img/city-profile.jpg'},
-    {image: 'assets/img/bg2.jpg'},
-    {image: 'assets/img/city.jpg'},
-    {image: 'assets/img/cover.jpg'},
-    {image: 'assets/img/sidebar-1.jpg'},
-  ];
+  slides = [{image: 'assets/img/apartment.png'}];
 
-  constructor(private store: Store<AppStateInterface>, private route: ActivatedRoute) {
+  constructor(private store: Store<AppStateInterface>, private route: ActivatedRoute, private sanitizer: DomSanitizer) {
     // Initialize values
+    this.bypassSecurityTrust = this.sanitizer.bypassSecurityTrustResourceUrl;
     this.slug = this.route.snapshot.paramMap.get('slug');
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
+
     // TODO: implements errors
     this.error$ = this.store.pipe(select(errorSelector));
+
     this.isAuthor$ = combineLatest([
       this.store.pipe(select(advertSelector)),
       this.store.pipe(select(currentUserSelector)),
@@ -58,7 +64,7 @@ export class AdvertComponent implements OnInit, OnDestroy {
         if (!advert || !currentUser) {
           return false;
         }
-        return currentUser.username === advert.author.username;
+        return currentUser.userName === advert.author?.userName;
       })
     );
 
@@ -68,9 +74,30 @@ export class AdvertComponent implements OnInit, OnDestroy {
     }
 
     // Initialize listeners
-    this.advertSubscription = this.store
-      .pipe(select(advertSelector))
-      .subscribe((advert: AdvertInterface | null) => (this.advert = advert));
+    this.advertSubscription = this.store.pipe(select(advertSelector)).subscribe((advert: AdvertInterface | null) => {
+      this.advert = advert;
+      if (advert) {
+        this.priceType = PriceType[advert.priceType as string as keyof typeof PriceType];
+        if (advert.images.length > 0) {
+          this.slides = this.getSlideImage(advert.images);
+        }
+      }
+    });
+  }
+
+  // GetValue = (valueKey: string): string => {
+  //   const key = Object.keys(PriceType).find((key) => key === valueKey);
+  //   return PriceType[key as keyof typeof PriceType];
+  // };
+
+  getSlideImage(imagePaths: ImagePathType[]): {image: string}[] {
+    let slides: {image: string}[] = [];
+
+    for (let index = 0; index < imagePaths.length; index++) {
+      const slide = environment.uploadUrl + imagePaths[index];
+      slides[index] = {image: slide};
+    }
+    return slides;
   }
 
   ngOnInit(): void {
@@ -81,7 +108,7 @@ export class AdvertComponent implements OnInit, OnDestroy {
     this.store.dispatch(setTitleAction({title: 'Объявление'}));
     this.store.dispatch(
       setDescriptionAction({
-        description: 'Здесь Ви можете сделать ставку',
+        description: 'Здесь Ви можете предложить свою цену',
       })
     );
   }

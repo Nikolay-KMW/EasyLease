@@ -13,10 +13,10 @@ export class CreateAdvertService {
   constructor(private http: HttpClient) {}
 
   createAdvert(advertInput: AdvertInputInterface): Observable<AdvertInterface> {
-    const fullUrl = environment.apiUrl + '/articles';
+    const fullUrl = environment.apiUrl + '/adverts';
 
     return this.http
       .post<SaveAdvertResponseInterface>(fullUrl, advertInput)
-      .pipe(map((response: SaveAdvertResponseInterface) => response.article));
+      .pipe(map((response: SaveAdvertResponseInterface) => response.advert));
   }
 }

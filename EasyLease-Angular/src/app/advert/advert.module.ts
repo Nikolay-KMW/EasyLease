@@ -18,8 +18,10 @@ import {MatCarouselModule} from 'ng-mat-carousel';
 import {TagListModule} from '../shared/modules/tagList/tagList.module';
 import {AdvertService} from './services/advert.service';
 import {DeleteAdvertEffect} from './store/effects/deleteAdvert.effect';
+import {ComfortListModule} from '../shared/modules/comfortList/comfortList.module';
+import {AddToFavoritesModule} from '../shared/modules/addToFavorites/addToFavorites.module';
 
-const routes = [{path: 'articles/:slug', component: AdvertComponent}];
+const routes = [{path: 'advert/:slug', component: AdvertComponent}];
 
 @NgModule({
   declarations: [AdvertComponent],
@@ -30,7 +32,9 @@ const routes = [{path: 'articles/:slug', component: AdvertComponent}];
     MatButtonModule,
     ErrorMessageModule,
     LoadingModule,
+    ComfortListModule,
     TagListModule,
+    AddToFavoritesModule,
     FontAwesomeModule,
     HammerModule,
     MatCarouselModule.forRoot(),

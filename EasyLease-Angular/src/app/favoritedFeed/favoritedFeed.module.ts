@@ -6,7 +6,7 @@ import {FavoritedFeedComponent} from './components/favoritedFeed/favoritedFeed.c
 import {FeedModule} from '../shared/modules/feed/feed.module';
 import {TagsModule} from '../shared/modules/tags/tags.module';
 
-const routes = [{path: 'profile/:slug/favorites', component: FavoritedFeedComponent}];
+const routes = [{path: 'profile/favorite-adverts', component: FavoritedFeedComponent}];
 
 @NgModule({
   declarations: [FavoritedFeedComponent],

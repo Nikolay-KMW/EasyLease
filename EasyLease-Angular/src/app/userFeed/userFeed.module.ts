@@ -6,7 +6,7 @@ import {UserFeedComponent} from './components/userFeed/userFeed.component';
 import {FeedModule} from '../shared/modules/feed/feed.module';
 import {TagsModule} from '../shared/modules/tags/tags.module';
 
-const routes = [{path: 'profile/:slug', component: UserFeedComponent}];
+const routes = [{path: 'profile/:slug/adverts', component: UserFeedComponent}];
 
 @NgModule({
   declarations: [UserFeedComponent],

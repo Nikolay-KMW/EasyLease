@@ -39,7 +39,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var profileToReturn = _mapper.Map<ProfileDTO>(user);
 
-            return Ok(profileToReturn);
+            return Ok(new { profile = profileToReturn });
         }
 
         [HttpGet("{userId}/adverts")]
@@ -57,7 +57,7 @@ namespace EasyLease.WebAPI.Controllers {
             var favoriteAdverts = user?.FavoriteAdverts?.ToList();
             var advertsToReturn = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
 
-            return Ok(advertsToReturn);
+            return Ok(new { adverts = advertsToReturn });
         }
 
         [HttpGet("favorite-adverts"), Authorize]
@@ -72,10 +72,10 @@ namespace EasyLease.WebAPI.Controllers {
             var favoriteAdverts = user?.FavoriteAdverts?.ToList();
             var advertsToReturn = _mapper.Map<IEnumerable<AdvertsDTO>>(advertsForUser, opt => opt.Items["favoriteAdverts"] = favoriteAdverts);
 
-            return Ok(advertsToReturn);
+            return Ok(new { adverts = advertsToReturn });
         }
 
-        [HttpPut("settings/avatar"), Authorize]
+        [HttpPut("settings/avatar"), Authorize(Policy = "UserVisit")]
         [ServiceFilter(typeof(ValidationPhotoForUserAttribute))]
         //===============================================================================
         public async Task<IActionResult> UploadPhotoForUser(IFormFile avatar) {
@@ -90,7 +90,7 @@ namespace EasyLease.WebAPI.Controllers {
             return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
         }
 
-        [HttpDelete("settings/avatar"), Authorize]
+        [HttpDelete("settings/avatar"), Authorize(Policy = "UserVisit")]
         //===============================================================================
         public async Task<IActionResult> DeletePhotoForUser() {
             var user = await _authManager.GetAuthorizedUserAsync(HttpContext.User).ConfigureAwait(false);
@@ -104,7 +104,7 @@ namespace EasyLease.WebAPI.Controllers {
             return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
         }
 
-        [HttpPut("settings"), Authorize]
+        [HttpPut("settings"), Authorize(Policy = "UserVisit")]
         [ServiceFilter(typeof(ValidationProfileAttribute))]
         //===============================================================================
         public async Task<IActionResult> UpdateProfile(ProfileUpdateDTO profileUpdateDTO) {

@@ -12,8 +12,8 @@ namespace EasyLease.WebAPI {
     public class MappingProfile : Profile {
         private readonly double hoursOffset;
 
-        private string ArrayBytesToJsonSerialize(byte[] source) =>
-            source != null ? JsonSerializer.Serialize(source) : null;
+        private string ArrayBytesToBase64String(byte[] source) =>
+            source != null ? Convert.ToBase64String(source, Base64FormattingOptions.InsertLineBreaks) : null;
 
         private string BuildFullUserName(User user) =>
             string.Join(' ', user.FirstName, user.SecondName, user.ThirdName);
@@ -126,19 +126,23 @@ namespace EasyLease.WebAPI {
             CreateMap<User, ProfileDTO>()
                 .ForMember(profileDTO => profileDTO.UserName, config => config.MapFrom(user => BuildFullUserName(user)))
                 .ForMember(profileDTO => profileDTO.Bio, config => config.MapFrom(user => user.Biography))
-                .ForMember(profileDTO => profileDTO.Image, config => config.MapFrom(user => ArrayBytesToJsonSerialize(user.Avatar)));
+                .ForMember(profileDTO => profileDTO.CreatedUser, config => config.MapFrom(user => user.CreatedUser.ToShortDateString()))
+                .ForMember(profileDTO => profileDTO.VisitedUser, config => config.MapFrom(user => ConvertToTimeZone(user.VisitedUser)))
+                .ForMember(profileDTO => profileDTO.Image, config => config.MapFrom(user => ArrayBytesToBase64String(user.Avatar)));
 
             CreateMap<User, UserDTO>()
                 .ForMember(userDTO => userDTO.UserName, config => config.MapFrom(user => BuildFullUserName(user)))
                 .ForMember(userDTO => userDTO.Bio, config => config.MapFrom(user => user.Biography))
-                .ForMember(userDTO => userDTO.Image, config => config.MapFrom(user => ArrayBytesToJsonSerialize(user.Avatar)));
+                .ForMember(userDTO => userDTO.VisitedUser, config => config.MapFrom(user => ConvertToTimeZone(user.VisitedUser)))
+                .ForMember(userDTO => userDTO.Image, config => config.MapFrom(user => ArrayBytesToBase64String(user.Avatar)));
 
             CreateMap<ProfileUpdateDTO, User>()
                 .ForMember(user => user.Biography, config => config.MapFrom(profileUpdateDTO => profileUpdateDTO.Bio));
 
             CreateMap<UserRegistrationDTO, User>()
                 .ForMember(user => user.FirstName, config => config.MapFrom(userRegistrationDTO => userRegistrationDTO.UserName))
-                .ForMember(user => user.CreatedUser, config => config.MapFrom(_ => DateTime.UtcNow));
+                .ForMember(user => user.CreatedUser, config => config.MapFrom(_ => DateTime.UtcNow))
+                .ForMember(user => user.VisitedUser, config => config.MapFrom(_ => DateTime.UtcNow));
         }
     }
 }

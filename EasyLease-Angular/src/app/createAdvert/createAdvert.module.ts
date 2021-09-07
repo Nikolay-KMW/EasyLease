@@ -12,7 +12,7 @@ import {reducers} from './store/reducers';
 
 const routes = [
   {
-    path: 'advert/new',
+    path: 'advert',
     component: CreateAdvertComponent,
   },
 ];

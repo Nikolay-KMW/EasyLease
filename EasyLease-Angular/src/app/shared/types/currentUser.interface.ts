@@ -1,10 +1,14 @@
 export interface CurrentUserInterface {
-  id: number;
+  id: string;
+  userName: string;
+  firstName: string;
+  secondName: string;
+  thirdName: string;
   email: string;
-  createdAt: string;
-  updatedAt: string;
-  username: string;
   bio: string | null;
+  createdUser: string;
+  updatedUser: string | null;
+  visitedUser: string;
+  token: string | null;
   image: string | null;
-  token: string;
 }

@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {faUserCog} from '@fortawesome/free-solid-svg-icons';
@@ -27,9 +28,18 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isCurrentUserProfile$: Observable<boolean>;
   apiUrl: string;
 
+  bypassSecurityTrust: (value: string) => SafeResourceUrl;
+
   faUserCog: IconDefinition = faUserCog;
 
-  constructor(private store: Store<AppStateInterface>, private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private store: Store<AppStateInterface>,
+    private route: ActivatedRoute,
+    private router: Router,
+    private sanitizer: DomSanitizer
+  ) {
+    this.bypassSecurityTrust = this.sanitizer.bypassSecurityTrustResourceUrl;
+
     this.slug = this.route.snapshot.paramMap.get('slug');
 
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
@@ -56,7 +66,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         select(userProfileSelector),
         filter((userProfile) => Boolean(userProfile))
       ),
-    ]).pipe(map(([currentUser, userProfile]) => currentUser?.username === userProfile?.username));
+    ]).pipe(map(([currentUser, userProfile]) => currentUser?.id === userProfile?.id));
   }
 
   ngOnInit(): void {
@@ -68,7 +78,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.store.dispatch(setTitleAction({title: `Профиль пользователя`}));
     this.store.dispatch(
       setDescriptionAction({
-        description: 'Вы можете просматривать объявления пользователя и и отзывы о нем',
+        description: 'Вы можете просматривать объявления пользователя и отзывы о нем',
       })
     );
   }
@@ -80,7 +90,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   getApiUrl(): string {
-    return `/articles?author=${this.slug}`;
+    return `/profile/${this.slug}/adverts`;
 
     // const isComments = this.router.url.includes('favorites');
     // return isComments ? `/articles?favorited=${this.slug}` : `/articles?author=${this.slug}`;

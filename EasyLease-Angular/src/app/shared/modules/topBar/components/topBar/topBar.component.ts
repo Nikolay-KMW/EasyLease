@@ -1,5 +1,6 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {faAsymmetrik} from '@fortawesome/free-brands-svg-icons';
 import {
   faBars,
@@ -38,6 +39,8 @@ export class TopBarComponent implements OnInit, OnDestroy {
   currentUser$: Observable<CurrentUserInterface | null>;
   isOpenedSidenav$: Observable<boolean>;
 
+  bypassSecurityTrust: (value: string) => SafeResourceUrl;
+
   subscribeToIsOpenedSidenav$: Subscription;
 
   isOpenedNav: boolean = false;
@@ -54,11 +57,13 @@ export class TopBarComponent implements OnInit, OnDestroy {
   faSignOutAlt: IconDefinition = faSignOutAlt;
   faList: IconDefinition = faList;
 
-  constructor(private store: Store<AppStateInterface>) {
+  constructor(private store: Store<AppStateInterface>, private sanitizer: DomSanitizer) {
     this.isLoggedIn$ = this.store.pipe(select(isLoggedInSelector));
     this.isAnonymous$ = this.store.pipe(select(isAnonymousSelector));
     this.currentUser$ = this.store.pipe(select(currentUserSelector));
     this.isOpenedSidenav$ = this.store.pipe(select(isOpenedSidenavSelector));
+
+    this.bypassSecurityTrust = this.sanitizer.bypassSecurityTrustResourceUrl;
 
     this.subscribeToIsOpenedSidenav$ = this.isOpenedSidenav$.subscribe((isOpen) => (this.isOpenedNav = isOpen));
   }

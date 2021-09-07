@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TagType} from 'src/app/shared/types/Tag.type';
+import {TagType} from 'src/app/shared/types/tag.type';
 
 @Component({
   selector: 'el-tag-list',

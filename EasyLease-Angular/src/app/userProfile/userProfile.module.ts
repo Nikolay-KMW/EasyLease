@@ -13,10 +13,11 @@ import {ErrorMessageModule} from '../shared/modules/errorMessage/errorMessage.mo
 import {LoadingModule} from '../shared/modules/loading/loading.module';
 import {FeedModule} from '../shared/modules/feed/feed.module';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatDividerModule} from '@angular/material/divider';
 
 const routes = [
   {
-    path: 'profiles/:slug',
+    path: 'profile/:slug',
     component: UserProfileComponent,
   },
 ];
@@ -30,6 +31,7 @@ const routes = [
     StoreModule.forFeature('userProfile', reducers),
     MatButtonModule,
     MatTabsModule,
+    MatDividerModule,
     ErrorMessageModule,
     LoadingModule,
     FeedModule,

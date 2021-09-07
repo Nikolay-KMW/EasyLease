@@ -21,7 +21,7 @@ import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 
 import {AdvertInputInterface} from 'src/app/shared/types/advertInput.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
-import {TagType} from 'src/app/shared/types/Tag.type';
+import {TagType} from 'src/app/shared/types/tag.type';
 
 @Component({
   selector: 'el-advert-form',
@@ -97,7 +97,6 @@ export class AdvertFormComponent implements OnInit {
     if (this.initialValuesProps) {
       this.title.setValue(this.initialValuesProps.title);
       this.description.setValue(this.initialValuesProps.description);
-      this.body.setValue(this.initialValuesProps.body);
 
       if (this.initialValuesProps.tagList) {
         this.tags = this.initialValuesProps.tagList.slice();

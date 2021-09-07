@@ -17,12 +17,14 @@ namespace EasyLease.WebAPI.Services {
 
         public UserIsOwnerAdvertAuthorizationHandler(IHttpContextAccessor httpContextAccessor, IRepositoryManager repository, ILoggerManager logger) {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _logger = logger ?? throw new ArgumentNullException(nameof(repository));
-            _repository = repository ?? throw new ArgumentNullException(nameof(logger));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserIsOwnerAdvertRequirement requirement) {
-            var trackChanges = _httpContextAccessor.HttpContext.Request.Method.Equals("PUT");
+            var method = _httpContextAccessor.HttpContext.Request.Method;
+            var namePhoto = _httpContextAccessor.HttpContext.Request.Query["namePhoto"].ToString();
+            var trackChanges = method.Equals("PUT") || (method.Equals("DELETE") && !String.IsNullOrWhiteSpace(namePhoto));
             var isParsedAdvertId = Guid.TryParse(_httpContextAccessor.HttpContext.GetRouteValue("advertId").ToString(), out Guid advertId);
 
             Advert advert = null;

@@ -1,6 +1,8 @@
 export interface ProfileInterface {
-  username: string;
+  id: string;
+  userName: string;
   bio: string | null;
-  image: string;
-  following: boolean;
+  createdUser: string;
+  visitedUser: string;
+  image: string | null;
 }

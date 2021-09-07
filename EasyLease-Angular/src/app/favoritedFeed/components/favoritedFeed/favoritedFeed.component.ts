@@ -12,16 +12,15 @@ import {AppStateInterface} from 'src/app/shared/types/appState.interface';
   styleUrls: ['./favoritedFeed.component.scss'],
 })
 export class FavoritedFeedComponent implements OnInit, OnDestroy {
-  apiUrl: string = '/';
-  userName: string | null = null;
+  //apiUrl: string = '/';
+  apiUrl: string = '/profile/favorite-adverts';
 
-  routeParamsSubscription: Subscription;
+  //routeParamsSubscription: Subscription;
 
   constructor(private store: Store<AppStateInterface>, private route: ActivatedRoute) {
-    this.routeParamsSubscription = this.route.params.subscribe((params: Params) => {
-      this.userName = params.slug;
-      this.apiUrl = `/articles?favorited=${this.userName}`;
-    });
+    // this.routeParamsSubscription = this.route.params.subscribe((params: Params) => {
+    //   this.apiUrl = '/profile/favorite-adverts';
+    // });
   }
 
   ngOnInit(): void {
@@ -38,6 +37,6 @@ export class FavoritedFeedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.routeParamsSubscription.unsubscribe();
+    //this.routeParamsSubscription.unsubscribe();
   }
 }

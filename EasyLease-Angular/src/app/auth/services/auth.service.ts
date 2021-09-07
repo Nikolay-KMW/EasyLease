@@ -19,25 +19,26 @@ export class AuthService {
   }
 
   register(data: RegisterRequestInterface): Observable<CurrentUserInterface> {
-    const url = environment.apiUrl + '/users';
+    const url = environment.apiUrl + '/authentication/register';
 
     return this.http.post<AuthResponseInterface>(url, data).pipe(map(this.getUser));
   }
 
   login(data: LoginRequestInterface): Observable<CurrentUserInterface> {
-    const url = environment.apiUrl + '/users/login';
+    const url = environment.apiUrl + '/authentication/login';
 
     return this.http.post<AuthResponseInterface>(url, data).pipe(map(this.getUser));
   }
 
   getCurrentUser(): Observable<CurrentUserInterface> {
-    const url = environment.apiUrl + '/user';
+    const url = environment.apiUrl + '/authentication/user';
 
     return this.http.get<AuthResponseInterface>(url).pipe(map(this.getUser));
   }
 
+  // TODO: implement the user update on server side
   updateCurrentUser(currentUserInput: CurrentUserInputInterface): Observable<CurrentUserInterface> {
-    const url = environment.apiUrl + '/user';
+    const url = environment.apiUrl + '/authentication/user';
     return this.http.put<AuthResponseInterface>(url, currentUserInput).pipe(map(this.getUser));
   }
 }

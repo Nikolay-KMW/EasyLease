@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using EasyLease.Contracts;
 using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
 using EasyLease.WebAPI.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +27,16 @@ namespace EasyLease.WebAPI.Controllers {
             _logger = logger;
             _mapper = mapper;
             _authManager = authManager;
+        }
+
+        [HttpGet("user"), Authorize(Policy = "UserVisit")]
+        //===============================================================================
+        public async Task<IActionResult> GetAuthorizedUser() {
+            var user = await _authManager.GetAuthorizedUserAsync(HttpContext.User).ConfigureAwait(false);
+
+            var userDTO = _mapper.Map<UserDTO>(user);
+
+            return Ok(new { user = userDTO });
         }
 
         [HttpPost("register")]
@@ -44,7 +57,7 @@ namespace EasyLease.WebAPI.Controllers {
             var userDTO = _mapper.Map<UserDTO>(user);
             userDTO.Token = await _authManager.CreateTokenAsync(user).ConfigureAwait(false);
 
-            return StatusCode(201, userDTO);
+            return StatusCode(201, new { user = userDTO });
         }
 
         [HttpPost("login")]
@@ -79,7 +92,7 @@ namespace EasyLease.WebAPI.Controllers {
             var userDTO = _mapper.Map<UserDTO>(user);
             userDTO.Token = await _authManager.CreateTokenAsync(user).ConfigureAwait(false);
 
-            return Ok(userDTO);
+            return Ok(new { user = userDTO });
         }
     }
 }

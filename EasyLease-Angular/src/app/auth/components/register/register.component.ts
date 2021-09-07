@@ -70,9 +70,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const request: RegisterRequestInterface = {
-      user: this.form.value,
-    };
+    const request: RegisterRequestInterface = this.form.value;
     this.store.dispatch(registerAction({request}));
   }
 

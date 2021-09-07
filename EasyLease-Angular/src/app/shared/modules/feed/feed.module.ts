@@ -15,6 +15,7 @@ import {LoadingModule} from '../loading/loading.module';
 import {PaginationModule} from '../pagination/pagination.module';
 import {TagListModule} from '../tagList/tagList.module';
 import {AddToFavoritesModule} from '../addToFavorites/addToFavorites.module';
+import {ComfortListModule} from '../comfortList/comfortList.module';
 
 @NgModule({
   declarations: [FeedComponent],
@@ -28,7 +29,7 @@ import {AddToFavoritesModule} from '../addToFavorites/addToFavorites.module';
     ErrorMessageModule,
     LoadingModule,
     PaginationModule,
-    TagListModule,
+    ComfortListModule,
     AddToFavoritesModule,
   ],
   exports: [FeedComponent],

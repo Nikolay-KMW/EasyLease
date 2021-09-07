@@ -5,7 +5,7 @@ import {of} from 'rxjs';
 
 import {TagsService} from '../../services/tags.service';
 import {getTagsAction, getTagsFailureAction, getTagsSuccessAction} from '../actions/getTags.action';
-import {TagType} from 'src/app/shared/types/Tag.type';
+import {TagType} from 'src/app/shared/types/tag.type';
 
 @Injectable()
 export class GetTagsEffect {

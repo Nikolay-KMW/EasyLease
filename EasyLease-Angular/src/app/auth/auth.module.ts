@@ -8,8 +8,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {EffectsModule} from '@ngrx/effects';
 import {MatButtonModule} from '@angular/material/button';
 
-//import {RegisterComponent} from './components/register/register.component';
-import {RegisterComponent} from 'src/app/auth/components/register/register.component';
+import {RegisterComponent} from './components/register/register.component';
 import {reducers} from './store/reducers';
 import {AuthService} from './services/auth.service';
 import {RegisterEffect} from './store/effects/register.effect';
@@ -22,8 +21,8 @@ import {UpdateCurrentUserEffect} from './store/effects/updateCurrentUser.effect'
 import {LogoutEffects} from './store/effects/logout.effect';
 
 const routes: Routes = [
-  {path: 'register', component: RegisterComponent},
-  {path: 'login', component: LoginComponent},
+  {path: 'authentication/register', component: RegisterComponent},
+  {path: 'authentication/login', component: LoginComponent},
 ];
 
 @NgModule({

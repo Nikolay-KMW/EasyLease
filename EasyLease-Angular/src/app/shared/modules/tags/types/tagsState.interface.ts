@@ -1,4 +1,4 @@
-import {TagType} from 'src/app/shared/types/Tag.type';
+import {TagType} from 'src/app/shared/types/tag.type';
 
 export interface TagsStateInterface {
   isLoading: boolean;
