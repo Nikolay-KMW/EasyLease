@@ -13,7 +13,7 @@ import {reducers} from './store/reducers';
 import {AuthService} from './services/auth.service';
 import {RegisterEffect} from './store/effects/register.effect';
 import {BackendErrorMessageModule} from '../shared/modules/backendErrorMessage/backendErrorMessage.module';
-import {PersistanceService} from '../shared/services/persistance.service';
+import {PersistenceService} from '../shared/services/persistence.service';
 import {LoginEffect} from './store/effects/login.effect';
 import {LoginComponent} from './components/login/login.component';
 import {GetCurrentUserEffect} from './store/effects/getCurrentUser.effect';
@@ -44,6 +44,6 @@ const routes: Routes = [
     BackendErrorMessageModule,
   ],
   declarations: [RegisterComponent, LoginComponent],
-  providers: [AuthService, PersistanceService],
+  providers: [AuthService, PersistenceService],
 })
 export class AuthModule {}

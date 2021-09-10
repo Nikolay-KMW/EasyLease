@@ -19,18 +19,44 @@
 
 .content {
   min-height: 240px;
+
+  @media only screen and (min-width: 768px) {
+    min-height: 240px;
+  }
+
+  @media only screen and (min-width: 992px) {
+    min-height: 240px;
+    max-height: 260px;
+  }
+  @media only screen and (min-width: 1200px) {
+    min-height: 240px;
+    max-height: 260px;
+  }
 }
 
 .desc {
   @media only screen and (min-width: 768px) {
-    min-width: 82%;
+    flex: 0 0 50%;
+    min-width: 73%;
+  }
+
+  @media only screen and (min-width: 780px) {
+    flex: 0 0 50%;
+    min-width: 74%;
+  }
+
+  @media only screen and (min-width: 880px) {
+    flex: 0 0 50%;
+    min-width: 78%;
   }
 
   @media only screen and (min-width: 992px) {
-    min-width: 53%;
+    flex: 0 0 49%;
+    min-width: 48%;
   }
   @media only screen and (min-width: 1200px) {
-    min-width: 55.5%;
+    flex: 0 0 50%;
+    min-width: 53%;
   }
 }
 

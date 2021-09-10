@@ -7,14 +7,14 @@ import {Router} from '@angular/router';
 
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {AuthService} from '../../services/auth.service';
-import {PersistanceService} from 'src/app/shared/services/persistance.service';
+import {PersistenceService} from 'src/app/shared/services/persistence.service';
 import {loginAction, loginFailureAction, loginSuccessAction} from '../actions/login.action';
 @Injectable()
 export class LoginEffect {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
-    private persistanceService: PersistanceService,
+    private persistenceService: PersistenceService,
     private router: Router
   ) {}
 
@@ -25,7 +25,7 @@ export class LoginEffect {
         return this.authService.login(request).pipe(
           map((currentUser: CurrentUserInterface) => {
             //window.localStorage.setItem('accessToken', currentUser.token);
-            this.persistanceService.set('accessToken', currentUser.token);
+            this.persistenceService.set('accessToken', currentUser.token);
             return loginSuccessAction({currentUser});
           }),
           catchError((errorResponse: HttpErrorResponse) => {

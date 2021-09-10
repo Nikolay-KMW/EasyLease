@@ -5,7 +5,7 @@ import {of} from 'rxjs';
 
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {AuthService} from '../../services/auth.service';
-import {PersistanceService} from 'src/app/shared/services/persistance.service';
+import {PersistenceService} from 'src/app/shared/services/persistence.service';
 import {
   getCurrentUserFailureAction,
   getCurrentUserSuccessAction,
@@ -17,14 +17,14 @@ export class GetCurrentUserEffect {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
-    private persistanceService: PersistanceService
+    private persistenceService: PersistenceService
   ) {}
 
   getCurrentUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getCurrentUserAction),
       switchMap(() => {
-        const token = this.persistanceService.get('accessToken');
+        const token = this.persistenceService.get('accessToken');
         if (!token) {
           return of(getCurrentUserFailureAction());
         }

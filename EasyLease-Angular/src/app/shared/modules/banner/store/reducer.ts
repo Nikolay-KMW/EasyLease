@@ -24,8 +24,8 @@ const bannerReducer = createReducer(
       ...state,
       description: action.description,
     })
-  ),
-  on(routerNavigatedAction, (): BannerStateInterface => initialState)
+  )
+  //on(routerNavigatedAction, (): BannerStateInterface => initialState)
 );
 
 export function reducers(state: BannerStateInterface, action: Action) {

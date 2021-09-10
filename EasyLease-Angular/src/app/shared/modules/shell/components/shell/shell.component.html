@@ -4,20 +4,12 @@
         [opened]="(isOpenedSidenav$ | async)" (closed)="closeSidenav()">
         <mat-nav-list>
             <mat-divider class="m-2"></mat-divider>
-            <button mat-list-item class="el-btn-side-nav" [routerLink]="['/advert']" (click)="closeSidenav()">
+            <button mat-list-item class="el-btn-side-nav" [routerLink]="['/advert']" (click)="goTo()">
                 <fa-icon [icon]="faEdit" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true" transform="grow-2">
                 </fa-icon> <span class="px-2">Создать объявление</span>
             </button>
-            <button mat-list-item class="el-btn-side-nav">
-                <fa-icon [icon]="faEdit" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true" transform="grow-2">
-                </fa-icon> <span class="px-2">Мои объявления</span>
-            </button>
-            <button mat-list-item class="el-btn-side-nav">
-                <fa-icon [icon]="faEdit" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true" transform="grow-2">
-                </fa-icon> <span class="px-2">Избранные</span>
-            </button>
             <mat-divider class="m-2"></mat-divider>
-            <button mat-list-item class="el-btn-side-nav" (click)="closeSidenav()">
+            <button mat-list-item class="el-btn-side-nav" (click)="scrollToFooter('el-footer')">
                 <fa-icon [icon]="faStar" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true" transform="grow-2">
                 </fa-icon> <span class="px-2">О нас</span>
             </button>

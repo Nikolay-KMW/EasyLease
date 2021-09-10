@@ -1,7 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {descriptionSelector, titleSelector} from '../../store/selectors';
 

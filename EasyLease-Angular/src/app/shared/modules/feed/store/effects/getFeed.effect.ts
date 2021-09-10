@@ -19,8 +19,8 @@ export class GetFeedEffect {
         return this.feedService.getFeed(url).pipe(
           map((httpResponse: HttpResponse<GetFeedResponseInterface>) => {
             let pagination = httpResponse.headers.get('X-Pagination');
-            if (pagination != null) {
-              httpResponse.body!.advertCount = JSON.parse(pagination)?.TotalCount;
+            if (pagination && httpResponse.body) {
+              httpResponse.body.advertCount = JSON.parse(pagination)?.TotalCount;
             }
             return getFeedSuccessAction({feed: httpResponse.body!});
           }),

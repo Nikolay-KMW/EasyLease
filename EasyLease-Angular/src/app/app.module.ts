@@ -12,7 +12,7 @@ import {AuthModule} from 'src/app/auth/auth.module';
 import {environment} from 'src/environments/environment';
 import {TopBarModule} from './shared/modules/topBar/topBar.module';
 import {ExampleOfExperimentsModule} from './shared/modules/exampleOfExperiments/exampleOfExperiments.module';
-import {PersistanceService} from './shared/services/persistance.service';
+import {PersistenceService} from './shared/services/persistence.service';
 import {AuthInterceptor} from './shared/services/authInterceptor.service';
 import {GlobalFeedModule} from './globalFeed/globalFeed.module';
 import {ShellModule} from './shared/modules/shell/shell.module';
@@ -29,6 +29,7 @@ import {UserFeedModule} from './userFeed/userFeed.module';
 import {FavoritedFeedModule} from './favoritedFeed/favoritedFeed.module';
 import {UserProfileModule} from './userProfile/userProfile.module';
 import {FooterModule} from './shared/modules/footer/footer.module';
+import {UtilsService} from './shared/services/utils.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -56,15 +57,16 @@ import {FooterModule} from './shared/modules/footer/footer.module';
     SettingsModule,
     UserProfileModule,
     FooterModule,
-    ExampleOfExperimentsModule,
+    //ExampleOfExperimentsModule,
   ],
   providers: [
-    PersistanceService,
+    PersistenceService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     },
+    UtilsService,
   ],
   bootstrap: [AppComponent],
 })

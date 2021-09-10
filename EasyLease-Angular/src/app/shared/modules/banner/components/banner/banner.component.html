@@ -1,7 +1,7 @@
-<div class="banner shadow-lg">
+<div class="el-banner shadow-lg">
     <div class="container">
-        <h2 class="el-title font-italic font-weight-bolder pt-3 mb-1" *ngIf="title$ | async">{{(title$ |
-            async)}}</h2>
+        <h2 class="el-title font-italic font-weight-bolder pt-3 mb-1" *ngIf="title$ | async">
+            {{(title$ | async)}}</h2>
         <div *ngIf="description$ | async">
             <mat-divider></mat-divider>
             <p class="py-2">{{description$ | async}}</p>

@@ -8,6 +8,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule} from '@angular/router';
+import {UtilsService} from '../../services/utils.service';
 
 @NgModule({
   declarations: [ShellComponent],
@@ -21,6 +22,6 @@ import {RouterModule} from '@angular/router';
     MatButtonModule,
   ],
   exports: [ShellComponent],
-  providers: [],
+  providers: [UtilsService],
 })
 export class ShellModule {}
