@@ -12,22 +12,22 @@
                         <form [formGroup]="form" (ngSubmit)="onSubmit()">
                             <fieldset>
                                 <fieldset class="form-group">
-                                    <mat-form-field [color]="username.valid && 'accent'">
+                                    <mat-form-field [color]="userName.valid && 'accent'">
                                         <mat-label>Имя</mat-label>
-                                        <input type="text" matInput [formControl]="username"
-                                            placeholder="Имя пользователя">
+                                        <input type="text" matInput [formControl]="userName"
+                                            placeholder="Имя пользователя" autocomplete="username">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
-                                                namePropertyBackendError="username"
-                                                [formControlForBackendError]="username">
+                                                namePropertyBackendError="UserName"
+                                                [formControlForBackendError]="userName">
                                             </el-backend-error-message>
                                         </mat-error>
                                         <mat-error
-                                            *ngIf="!username.hasError('minLength', 'maxLength') && !username.hasError('required') && !username.hasError('backendErrorMessage')">
+                                            *ngIf="!userName.hasError('minLength', 'maxLength') && !userName.hasError('required') && !userName.hasError('backendErrorMessage')">
                                             Имя должно быть от {{minName}} до {{maxName}} символов
                                         </mat-error>
-                                        <mat-error *ngIf="username.hasError('required')">
+                                        <mat-error *ngIf="userName.hasError('required')">
                                             Имя <strong>обязательное</strong>
                                         </mat-error>
                                     </mat-form-field>
@@ -36,11 +36,12 @@
                                     <mat-form-field [color]="email.valid && 'accent'">
                                         <mat-label>Электронная почта</mat-label>
                                         <input type="email" matInput [formControl]="email"
-                                            placeholder="Электронная почта">
+                                            placeholder="Электронная почта" value="me@example.test"
+                                            autocomplete="username">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
-                                                namePropertyBackendError="email" [formControlForBackendError]="email">
+                                                namePropertyBackendError="Email" [formControlForBackendError]="email">
                                             </el-backend-error-message>
                                         </mat-error>
                                         <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
@@ -54,11 +55,12 @@
                                 <fieldset class="form-group">
                                     <mat-form-field [color]="password.valid && 'accent'">
                                         <mat-label>Пароль</mat-label>
-                                        <input type="password" matInput [formControl]="password" placeholder="Пароль">
+                                        <input type="password" matInput [formControl]="password" placeholder="Пароль"
+                                            autocomplete="new-password">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
-                                                namePropertyBackendError="password"
+                                                namePropertyBackendError="Password"
                                                 [formControlForBackendError]="password">
                                             </el-backend-error-message>
                                         </mat-error>
@@ -75,11 +77,11 @@
                                     <mat-form-field [color]="confirmPassword.valid && 'accent'">
                                         <mat-label>Пароль</mat-label>
                                         <input type="password" matInput [formControl]="confirmPassword"
-                                            placeholder="Пароль">
+                                            placeholder="Пароль" autocomplete="new-password">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
-                                                namePropertyBackendError="confirmPassword"
+                                                namePropertyBackendError="ConfirmPassword"
                                                 [formControlForBackendError]="confirmPassword">
                                             </el-backend-error-message>
                                         </mat-error>
@@ -93,7 +95,7 @@
                                     </mat-form-field>
                                 </fieldset>
                             </fieldset>
-                            <div class="row justify-content-between m-1">
+                            <div class="row justify-content-between m-1 mt-2">
                                 <button class="btn-text order-sm-1 order-md-2 col-12 col-md-auto my-1 py-1"
                                     type="submit" mat-raised-button [disabled]="(isSubmitting$ | async) || form.invalid"
                                     color="info">

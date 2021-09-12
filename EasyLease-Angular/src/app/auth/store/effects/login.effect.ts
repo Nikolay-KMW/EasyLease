@@ -29,7 +29,7 @@ export class LoginEffect {
             return loginSuccessAction({currentUser});
           }),
           catchError((errorResponse: HttpErrorResponse) => {
-            return of(loginFailureAction({errors: errorResponse.error.errors}));
+            return of(loginFailureAction({errors: errorResponse.error}));
           })
         );
       })

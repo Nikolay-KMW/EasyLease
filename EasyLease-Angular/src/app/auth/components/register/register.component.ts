@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
 
   form: FormGroup;
 
-  username: FormControl;
+  userName: FormControl;
   email: FormControl;
   password: FormControl;
   confirmPassword: FormControl;
@@ -40,14 +40,14 @@ export class RegisterComponent implements OnInit {
   constructor(private fb: FormBuilder, private store: Store<AppStateInterface>, private authService: AuthService) {
     // Initialize form
     this.form = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
+      userName: ['', [Validators.required, Validators.minLength(this.minName), Validators.maxLength(this.maxName)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(this.minPassword)]],
       confirmPassword: ['', [Validators.required, (control: AbstractControl) => this.confirm(control, 'password')]],
     });
 
     // Initialize values
-    this.username = this.form.controls['username'] as FormControl;
+    this.userName = this.form.controls['userName'] as FormControl;
     this.email = this.form.controls['email'] as FormControl;
     this.password = this.form.controls['password'] as FormControl;
     this.confirmPassword = this.form.controls['confirmPassword'] as FormControl;

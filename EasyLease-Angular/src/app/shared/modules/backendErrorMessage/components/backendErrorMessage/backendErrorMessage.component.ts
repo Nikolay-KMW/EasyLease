@@ -11,7 +11,7 @@ import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface
 })
 export class BackendErrorMessageComponent implements OnInit {
   @Input('backendErrors') backendErrorsProps?: BackendErrorInterface;
-  @Input('namePropertyBackendError') namePropertyProps!: string;
+  @Input('namePropertyBackendError') namePropertyProps?: string;
   @Input('formControlForBackendError') formControlProps?: FormControl;
 
   errorMessage: string | undefined;
@@ -19,7 +19,7 @@ export class BackendErrorMessageComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    if (this.backendErrorsProps) {
+    if (this.backendErrorsProps && this.namePropertyProps) {
       this.errorMessage = this.backendErrorsProps[this.namePropertyProps]?.join(', ');
     }
 

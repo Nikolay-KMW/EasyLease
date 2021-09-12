@@ -12,13 +12,12 @@
                                 <fieldset class="form-group">
                                     <mat-form-field [color]="email.valid && 'accent'">
                                         <mat-label>Электронная почта</mat-label>
-                                        <input type="email" matInput [formControl]="email"
-                                            placeholder="Электронная почта">
+                                        <input type="email" matInput [formControl]="email" value="me@example.test"
+                                            autocomplete="username" placeholder="Электронная почта">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
-                                                namePropertyBackendError="email or password"
-                                                [formControlForBackendError]="email">
+                                                namePropertyBackendError="Email" [formControlForBackendError]="email">
                                             </el-backend-error-message>
                                         </mat-error>
                                         <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
@@ -32,11 +31,12 @@
                                 <fieldset class="form-group">
                                     <mat-form-field [color]="password.valid && 'accent'">
                                         <mat-label>Пароль</mat-label>
-                                        <input type="password" matInput [formControl]="password" placeholder="Пароль">
+                                        <input type="password" matInput [formControl]="password" placeholder="Пароль"
+                                            autocomplete="current-password">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
-                                                namePropertyBackendError="email or password"
+                                                namePropertyBackendError="Password"
                                                 [formControlForBackendError]="password">
                                             </el-backend-error-message>
                                         </mat-error>
@@ -50,7 +50,7 @@
                                     </mat-form-field>
                                 </fieldset>
                             </fieldset>
-                            <div class="row justify-content-between m-1">
+                            <div class="row justify-content-between m-1 mt-2">
                                 <button class="btn-text order-sm-1 order-md-2 col-12 col-md-auto my-1 py-1"
                                     color="primary" type="submit" mat-raised-button
                                     [disabled]="(isSubmitting$ | async) || form.invalid">
