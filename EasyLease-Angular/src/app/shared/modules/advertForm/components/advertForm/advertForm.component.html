@@ -1,5 +1,8 @@
 <div class="container">
-    <div class="row">
+    <el-loading *ngIf="isLoading$ | async"></el-loading>
+    <el-error-message *ngIf="isFalling$ | async"></el-error-message>
+
+    <div class="row" *ngIf="!(isLoading$ | async) && additionalData">
         <div class="col-12">
             <div class="card">
                 <div class="card-header card-header-secondary">
@@ -7,52 +10,204 @@
                 </div>
                 <div class="card-body">
                     <mat-vertical-stepper [linear]="false" #stepper>
+
+                        <mat-step [stepControl]="advertTypeForm" state="titleStep">
+                            <form [formGroup]="advertTypeForm">
+                                <ng-template matStepLabel>Тип недвижимости</ng-template>
+                                <fieldset>
+                                    <fieldset class="form-group mx-md-5 px-md-5">
+                                        <mat-form-field [color]="advertTypeControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Тип сдаваемой недвижимости</mat-label>
+                                            <mat-select [formControl]="advertTypeControl" required>
+                                                <mat-option *ngFor="let advertType of advertTypes" [value]="advertType">
+                                                    {{advertType}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="AdvertType"
+                                                    [formControlForBackendError]="advertTypeControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error *ngIf="advertTypeControl.hasError('required')">Выберете тип
+                                                сдаваемой недвижимости
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
+                                        color="secondary" matStepperNext>
+                                        Далее
+                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                        </fa-icon>
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
                         <mat-step [stepControl]="descriptionForm" state="titleStep">
                             <form [formGroup]="descriptionForm">
                                 <ng-template matStepLabel>Описание объявления</ng-template>
                                 <fieldset>
                                     <fieldset class="form-group">
-                                        <mat-form-field [color]="title.valid && 'accent'" appearance="fill">
+                                        <mat-form-field [color]="titleControl.valid && 'accent'" appearance="fill">
                                             <mat-label>Оглавление объявления</mat-label>
-                                            <input type="text" matInput [formControl]="title"
+                                            <input type="text" matInput [formControl]="titleControl"
                                                 placeholder="Введите оглавление" required>
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
-                                                    [backendErrors]="errorsProps" namePropertyBackendError="title"
-                                                    [formControlForBackendError]="title">
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="Title"
+                                                    [formControlForBackendError]="titleControl">
                                                 </el-backend-error-message>
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="!title.hasError('maxTitle') && !title.hasError('required') && !title.hasError('backendErrorMessage')">
+                                                *ngIf="!titleControl.hasError('maxTitle') && !titleControl.hasError('required') && !titleControl.hasError('backendErrorMessage')">
                                                 Оглавление должно быть не более {{maxTitle}} символов
                                             </mat-error>
-                                            <mat-error *ngIf="title.hasError('required')">
+                                            <mat-error *ngIf="titleControl.hasError('required')">
                                                 Оглавление <strong>обязательное</strong>
                                             </mat-error>
                                         </mat-form-field>
                                     </fieldset>
                                     <fieldset class="form-group">
-                                        <mat-form-field [color]="description.valid && 'accent'" appearance="fill">
+                                        <mat-form-field [color]="descriptionControl.valid && 'accent'"
+                                            appearance="fill">
                                             <mat-label>Краткое описание</mat-label>
-                                            <textarea rows="4" matInput [formControl]="description"
+                                            <textarea rows="15" matInput [formControl]="descriptionControl"
                                                 placeholder="Введите краткое описание" required></textarea>
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
-                                                    [backendErrors]="errorsProps" namePropertyBackendError="description"
-                                                    [formControlForBackendError]="description">
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="Description"
+                                                    [formControlForBackendError]="descriptionControl">
                                                 </el-backend-error-message>
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="!description.hasError('maxDescription') && !description.hasError('required') && !description.hasError('backendErrorMessage')">
+                                                *ngIf="!descriptionControl.hasError('maxDescription') && !descriptionControl.hasError('required') && !descriptionControl.hasError('backendErrorMessage')">
                                                 Краткое описание должно быть не более {{maxDescription}} символов
                                             </mat-error>
-                                            <mat-error *ngIf="description.hasError('required')">
+                                            <mat-error *ngIf="descriptionControl.hasError('required')">
                                                 Краткое описание <strong>обязательное</strong>
                                             </mat-error>
                                         </mat-form-field>
                                     </fieldset>
                                 </fieldset>
                                 <div>
+                                    <button class="my-1 py-1 col-sm-auto" mat-raised-button color="elegant"
+                                        matStepperPrevious>
+                                        <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Назад
+                                    </button>
+                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
+                                        color="secondary" matStepperNext>
+                                        Далее
+                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                        </fa-icon>
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="apartmentParametersForm" state="titleStep">
+                            <form [formGroup]="apartmentParametersForm">
+                                <ng-template matStepLabel>Характеристики сдаваемой недвижимости</ng-template>
+                                <fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="areaControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Площадь</mat-label>
+                                            <input type="number" matInput [formControl]="areaControl"
+                                                placeholder="Введите площадь" required>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="Area"
+                                                    [formControlForBackendError]="areaControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!areaControl.hasError('min', 'max') && !areaControl.hasError('required') && !areaControl.hasError('backendErrorMessage')">
+                                                Площадь должна быть не меньше {{minArea}} м2 и не больше {{maxArea}} м2
+                                            </mat-error>
+                                            <mat-error *ngIf="areaControl.hasError('required')">
+                                                Указание площади <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="numberOfRoomsControl.valid && 'accent'"
+                                            appearance="fill">
+                                            <mat-label>Количество комнат</mat-label>
+                                            <input type="number" matInput [formControl]="numberOfRoomsControl"
+                                                placeholder="Введите количество комнат" required>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps"
+                                                    namePropertyBackendError="NumberOfRooms"
+                                                    [formControlForBackendError]="numberOfRoomsControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!numberOfRoomsControl.hasError('min', 'max') && !numberOfRoomsControl.hasError('required') && !numberOfRoomsControl.hasError('backendErrorMessage')">
+                                                Количество комнат должна быть не меньше {{minNumberOfRooms}} и не больше
+                                                {{maxNumberOfRooms}}
+                                            </mat-error>
+                                            <mat-error *ngIf="numberOfRoomsControl.hasError('required')">
+                                                Указание количество комнат <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="numberOfStoreysControl.valid && 'accent'"
+                                            appearance="fill">
+                                            <mat-label>Количество этажей в доме</mat-label>
+                                            <input type="number" matInput [formControl]="numberOfStoreysControl"
+                                                placeholder="Введите количество этажей" required>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps"
+                                                    namePropertyBackendError="NumberOfStoreys"
+                                                    [formControlForBackendError]="numberOfStoreysControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!numberOfStoreysControl.hasError('min', 'max') && !numberOfStoreysControl.hasError('required') && !numberOfStoreysControl.hasError('backendErrorMessage')">
+                                                Количество этажей должна быть не меньше {{minNumberOfStoreys}} и не
+                                                больше {{maxNumberOfStoreys}}
+                                            </mat-error>
+                                            <mat-error *ngIf="numberOfStoreysControl.hasError('required')">
+                                                Указание количество этажей <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="storeyControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Этаж</mat-label>
+                                            <input type="number" matInput [formControl]="storeyControl"
+                                                placeholder="Введите этаж" required>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="Storey"
+                                                    [formControlForBackendError]="storeyControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!storeyControl.hasError('min', 'max') && !storeyControl.hasError('required') && !storeyControl.hasError('backendErrorMessage')">
+                                                Этажей должна быть не меньше {{minStorey}} и не больше {{maxStorey}}
+                                            </mat-error>
+                                            <mat-error *ngIf="storeyControl.hasError('required')">
+                                                Указание этажа <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 col-sm-auto" mat-raised-button color="elegant"
+                                        matStepperPrevious>
+                                        <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Назад
+                                    </button>
                                     <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
                                         color="secondary" matStepperNext>
                                         Далее
@@ -70,7 +225,7 @@
                                     <fieldset class="form-group">
                                         <mat-form-field [color]="body.valid && 'accent'" appearance="fill">
                                             <mat-label>Текст объявления</mat-label>
-                                            <textarea rows="10" matInput [formControl]="body"
+                                            <textarea rows="20" matInput [formControl]="body"
                                                 placeholder="Введите текст объявления" required></textarea>
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"

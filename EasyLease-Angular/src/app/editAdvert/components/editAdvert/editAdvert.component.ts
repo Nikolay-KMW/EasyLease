@@ -32,7 +32,7 @@ export class EditAdvertComponent implements OnInit {
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
     this.initialValues$ = this.store.pipe(select(advertSelector));
 
-    // Fetch date
+    // Fetch data
     if (this.slug) {
       this.store.dispatch(getAdvertAction({slug: this.slug}));
     }

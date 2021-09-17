@@ -37,11 +37,11 @@ export class TopBarComponent implements OnInit, OnDestroy {
   isLoggedIn$: Observable<boolean | null>;
   isAnonymous$: Observable<boolean>;
   currentUser$: Observable<CurrentUserInterface | null>;
-  isOpenedSidenav$: Observable<boolean>;
+  //isOpenedSidenav$: Observable<boolean>;
 
   bypassSecurityTrust: (value: string) => SafeResourceUrl;
 
-  subscribeToIsOpenedSidenav$: Subscription;
+  isOpenedSidenavSubscription: Subscription;
 
   isOpenedNav: boolean = false;
   isOpenedMenu: boolean = false;
@@ -61,11 +61,13 @@ export class TopBarComponent implements OnInit, OnDestroy {
     this.isLoggedIn$ = this.store.pipe(select(isLoggedInSelector));
     this.isAnonymous$ = this.store.pipe(select(isAnonymousSelector));
     this.currentUser$ = this.store.pipe(select(currentUserSelector));
-    this.isOpenedSidenav$ = this.store.pipe(select(isOpenedSidenavSelector));
+    //this.isOpenedSidenav$ = this.store.pipe(select(isOpenedSidenavSelector));
+
+    this.isOpenedSidenavSubscription = this.store
+      .pipe(select(isOpenedSidenavSelector))
+      .subscribe((isOpen) => (this.isOpenedNav = isOpen));
 
     this.bypassSecurityTrust = this.sanitizer.bypassSecurityTrustResourceUrl;
-
-    this.subscribeToIsOpenedSidenav$ = this.isOpenedSidenav$.subscribe((isOpen) => (this.isOpenedNav = isOpen));
   }
 
   ngOnInit(): void {}
@@ -97,6 +99,6 @@ export class TopBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscribeToIsOpenedSidenav$.unsubscribe();
+    this.isOpenedSidenavSubscription.unsubscribe();
   }
 }

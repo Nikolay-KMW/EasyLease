@@ -14,8 +14,8 @@
                                 <fieldset class="form-group">
                                     <mat-form-field [color]="userName.valid && 'accent'">
                                         <mat-label>Имя</mat-label>
-                                        <input type="text" matInput [formControl]="userName"
-                                            placeholder="Имя пользователя" autocomplete="username">
+                                        <input type="text" matInput [formControl]="userName" placeholder="Ваше имя"
+                                            autocomplete="username">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
@@ -36,7 +36,7 @@
                                     <mat-form-field [color]="email.valid && 'accent'">
                                         <mat-label>Электронная почта</mat-label>
                                         <input type="email" matInput [formControl]="email"
-                                            placeholder="Электронная почта" value="me@example.test"
+                                            placeholder="моя@почта.пример" value="me@example.test"
                                             autocomplete="username">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
@@ -75,9 +75,9 @@
                                 </fieldset>
                                 <fieldset class="form-group">
                                     <mat-form-field [color]="confirmPassword.valid && 'accent'">
-                                        <mat-label>Пароль</mat-label>
+                                        <mat-label>Подтверждение Пароля</mat-label>
                                         <input type="password" matInput [formControl]="confirmPassword"
-                                            placeholder="Пароль" autocomplete="new-password">
+                                            placeholder="Введите пароль еще раз" autocomplete="new-password">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"

@@ -13,7 +13,7 @@
                                     <mat-form-field [color]="email.valid && 'accent'">
                                         <mat-label>Электронная почта</mat-label>
                                         <input type="email" matInput [formControl]="email" value="me@example.test"
-                                            autocomplete="username" placeholder="Электронная почта">
+                                            autocomplete="username" placeholder="моя@почта.пример">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"
@@ -31,8 +31,8 @@
                                 <fieldset class="form-group">
                                     <mat-form-field [color]="password.valid && 'accent'">
                                         <mat-label>Пароль</mat-label>
-                                        <input type="password" matInput [formControl]="password" placeholder="Пароль"
-                                            autocomplete="current-password">
+                                        <input type="password" matInput [formControl]="password"
+                                            placeholder="Ваш пароль" autocomplete="current-password">
                                         <mat-error>
                                             <el-backend-error-message *ngIf="(backendErrors$ | async)!"
                                                 [backendErrors]="(backendErrors$ | async)!"

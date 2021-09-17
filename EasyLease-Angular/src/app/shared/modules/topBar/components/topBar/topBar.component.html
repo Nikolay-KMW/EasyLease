@@ -1,11 +1,9 @@
 <mat-toolbar class="navbar fixed-top" color="primary">
     <div class="container px-0">
         <button mat-fab class="el-btn-menu btn-lg" color="" type="button" aria-label="Toggle sidenav"
-            (click)="toggleSidenav(); menuClosed()" [class.active]=" (isOpenedSidenav$ | async)"
-            [class.default]="!(isOpenedSidenav$ | async)">
-            <fa-icon [icon]="faBars" class="el-icon-btn-drop-shadow faBars-icon"
-                [class.active]="(isOpenedSidenav$ | async)" size="lg" transform="grow-2"
-                aria-label="Side nav toggle icon">
+            (click)="toggleSidenav(); menuClosed()" [class.active]="isOpenedNav" [class.default]="!isOpenedNav">
+            <fa-icon [icon]="faBars" class="el-icon-btn-drop-shadow faBars-icon" [class.active]="isOpenedNav" size="lg"
+                transform="grow-2" aria-label="Side nav toggle icon">
             </fa-icon>
         </button>
         &nbsp;&nbsp;

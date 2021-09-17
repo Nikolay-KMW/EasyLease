@@ -4,6 +4,7 @@ import {CreateAdvertStateInterface} from 'src/app/createAdvert/types/createAdver
 import {EditAdvertStateInterface} from 'src/app/editAdvert/types/editAdvertState.interface';
 import {SettingsStateInterface} from 'src/app/settings/types/settingsState.interface';
 import {UserProfileStateInterface} from 'src/app/userProfile/types/userProfileState.interface';
+import {AdvertFormStateInterface} from '../modules/advertForm/types/advertFormState.interface';
 import {BannerStateInterface} from '../modules/banner/types/bannerState.interface';
 import {FeedStateInterface} from '../modules/feed/types/feedState.interface';
 import {TagsStateInterface} from '../modules/tags/types/tagsState.interface';
@@ -16,6 +17,7 @@ export interface AppStateInterface {
   feed: FeedStateInterface;
   tags: TagsStateInterface;
   advert: AdvertStateInterface;
+  advertForm: AdvertFormStateInterface;
   createAdvert: CreateAdvertStateInterface;
   editAdvert: EditAdvertStateInterface;
   settings: SettingsStateInterface;

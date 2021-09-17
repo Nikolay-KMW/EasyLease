@@ -22,7 +22,7 @@ export class UpdateAdvertEffect {
             return updateAdvertSuccessAction({advert});
           }),
           catchError((errorResponse: HttpErrorResponse) => {
-            return of(updateAdvertFailureAction({errors: errorResponse.error.errors}));
+            return of(updateAdvertFailureAction({errors: errorResponse.error}));
           })
         );
       })
@@ -33,7 +33,7 @@ export class UpdateAdvertEffect {
     () =>
       this.actions$.pipe(
         ofType(updateAdvertSuccessAction),
-        tap(({advert}) => this.router.navigate(['/articles', advert.slug]))
+        tap(({advert}) => this.router.navigate(['/advert', advert.slug]))
       ),
     {dispatch: false}
   );
