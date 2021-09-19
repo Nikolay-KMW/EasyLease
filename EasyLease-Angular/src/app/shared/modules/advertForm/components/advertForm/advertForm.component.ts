@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {
@@ -29,6 +29,9 @@ import {Observable, Subscription} from 'rxjs';
 import {getAdditionalDataAction} from '../../store/actions/getAdditionalData.action';
 import {AdvertAdditionalData} from '../../types/advertAdditionalData.interface';
 import {AdvertLocation} from '../../types/advertLocation.interface';
+import {map, startWith} from 'rxjs/operators';
+import {PriceTypeExtended} from '../../types/priceTypeExtended.interface';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 @Component({
   selector: 'el-advert-form',
@@ -80,26 +83,32 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
   addressForm: FormGroup;
   regionControl: FormControl;
+  filteredRegions: Observable<string[]>;
   districtControl: FormControl;
+  filteredDistrict: Observable<string[]>;
   settlementTypeControl: FormControl;
+  settlementTypes: string[] = [];
   settlementNameControl: FormControl;
   minSettlementName: number = 1;
   maxSettlementName: number = 100;
   streetTypeControl: FormControl;
+  streetTypes: string[] = [];
   streetNameControl: FormControl;
   minStreetName: number = 1;
   maxStreetName: number = 150;
   houseNumberControl: FormControl;
-  minHouseNumber: number = 1;
   maxHouseNumber: number = 50;
   apartmentNumberControl: FormControl;
-  minApartmentNumber: number = 1;
   maxApartmentNumber: number = 10000;
 
-  bodyForm: FormGroup;
-  tagListForm: FormGroup;
+  PriceForm: FormGroup;
+  priceTypeControl: FormControl;
+  priceTypes: PriceTypeExtended[] = [];
+  priceControl: FormControl;
+  minPrice: number = 0;
+  maxPrice: number = 1000000;
 
-  body: FormControl;
+  tagListForm: FormGroup;
   tagList: FormControl;
 
   tags: TagType[] = [];
@@ -122,6 +131,13 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   faTradeMark: IconDefinition = faTrademark;
   faFileAlt: IconDefinition = faFileAlt;
   faHashTag: IconDefinition = faHashtag;
+
+  DatepickerForm: FormGroup;
+  startOfLeaseControl: FormControl;
+  endOfLeaseControl: FormControl;
+  currentDate = new Date();
+  // currentMonth = this.currentDate.getMonth();
+  // currentYear = this.currentDate.getFullYear();
 
   constructor(private store: Store<AppStateInterface>, private fb: FormBuilder) {
     // Initialize values
@@ -179,7 +195,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     this.addressForm = this.fb.group({
       region: ['', [Validators.required, (control: AbstractControl) => this.corresponds(control)]],
       district: ['', [Validators.required, (control: AbstractControl) => this.correspondsToRegion(control, 'region')]],
-      settlementType: ['', [Validators.required]],
+      settlementType: [[], [Validators.required]],
       settlementName: [
         '',
         [
@@ -188,17 +204,37 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
           Validators.maxLength(this.maxSettlementName),
         ],
       ],
-      streetType: ['', [Validators.required]],
+      streetType: [[], [Validators.required]],
       streetName: [
         '',
         [Validators.required, Validators.minLength(this.minStreetName), Validators.maxLength(this.maxStreetName)],
       ],
-      houseNumber: ['', [Validators.minLength(this.minHouseNumber), Validators.maxLength(this.maxHouseNumber)]],
-      apartmentNumber: [null, [Validators.min(this.minApartmentNumber), Validators.max(this.maxApartmentNumber)]],
+      houseNumber: ['', [Validators.maxLength(this.maxHouseNumber)]],
+      apartmentNumber: ['', [Validators.max(this.maxApartmentNumber)]],
     });
 
     this.regionControl = this.addressForm.controls['region'] as FormControl;
+    this.filteredRegions = this.regionControl.valueChanges.pipe(
+      startWith(''),
+      map((value) =>
+        this.filter(
+          this.additionalData?.locations.map((location) => location.region),
+          value
+        )
+      )
+    );
+
     this.districtControl = this.addressForm.controls['district'] as FormControl;
+    this.filteredDistrict = this.districtControl.valueChanges.pipe(
+      startWith(''),
+      map((value) =>
+        this.filter(
+          this.additionalData?.locations.find((location) => location.region === this.regionControl.value)?.district,
+          value
+        )
+      )
+    );
+
     this.settlementTypeControl = this.addressForm.controls['settlementType'] as FormControl;
     this.settlementNameControl = this.addressForm.controls['settlementName'] as FormControl;
     this.streetTypeControl = this.addressForm.controls['streetType'] as FormControl;
@@ -207,15 +243,32 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     this.apartmentNumberControl = this.addressForm.controls['apartmentNumber'] as FormControl;
 
     //--------------------------------------------------------------------------------
-    this.bodyForm = this.fb.group({
-      body: ['', [Validators.required]],
+    this.PriceForm = this.fb.group({
+      priceType: [[], [Validators.required]],
+      price: ['', [Validators.required, Validators.min(this.minPrice), Validators.max(this.maxPrice)]],
     });
+
+    this.priceTypeControl = this.PriceForm.controls['priceType'] as FormControl;
+    this.priceControl = this.PriceForm.controls['price'] as FormControl;
+
+    //--------------------------------------------------------------------------------
+    this.DatepickerForm = this.fb.group({
+      startOfLease: [this.currentDate, [Validators.required]],
+      endOfLease: [''],
+    });
+
+    this.startOfLeaseControl = this.DatepickerForm.controls['startOfLease'] as FormControl;
+    this.endOfLeaseControl = this.DatepickerForm.controls['endOfLease'] as FormControl;
+
+    this.startOfLeaseControl.valueChanges.subscribe(() => {
+      const date = this.startOfLeaseControl.value as Date;
+      console.log(date.toJSON());
+    });
+    //--------------------------------------------------------------------------------
     this.tagListForm = this.fb.group({
       tagList: [this.tags],
     });
 
-    // Initialize Form Values
-    this.body = this.bodyForm.controls['body'] as FormControl;
     this.tagList = this.tagListForm.controls['tagList'] as FormControl;
   }
 
@@ -235,6 +288,9 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.additionalData) {
       this.advertTypes = this.additionalData.advertType;
+      this.settlementTypes = this.additionalData.settlementType;
+      this.streetTypes = this.additionalData.streetType;
+      this.priceTypes = this.additionalData.priceType;
     }
 
     if (this.initialValuesProps) {
@@ -245,6 +301,15 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
         this.tags = this.initialValuesProps.tagList.slice();
       }
     }
+  }
+
+  private filter(options: string[] | undefined | null, value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    if (options) {
+      return options.filter((option) => option.toLowerCase().includes(filterValue));
+    }
+    return [];
   }
 
   add(event: MatChipInputEvent): void {
@@ -273,7 +338,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     const advertInput: AdvertInputInterface = {
       ...this.descriptionForm.value,
-      ...this.bodyForm.value,
+      ...this.PriceForm.value,
       tagList: this.tags.slice(),
     };
 

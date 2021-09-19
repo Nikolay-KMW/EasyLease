@@ -18,7 +18,7 @@
                                     <fieldset class="form-group mx-md-5 px-md-5">
                                         <mat-form-field [color]="advertTypeControl.valid && 'accent'" appearance="fill">
                                             <mat-label>Тип сдаваемой недвижимости</mat-label>
-                                            <mat-select [formControl]="advertTypeControl" required>
+                                            <mat-select [formControl]="advertTypeControl">
                                                 <mat-option *ngFor="let advertType of advertTypes" [value]="advertType">
                                                     {{advertType}}
                                                 </mat-option>
@@ -54,7 +54,7 @@
                                         <mat-form-field [color]="titleControl.valid && 'accent'" appearance="fill">
                                             <mat-label>Оглавление объявления</mat-label>
                                             <input type="text" matInput [formControl]="titleControl"
-                                                placeholder="Введите оглавление" required>
+                                                placeholder="Введите оглавление">
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
                                                     [backendErrors]="errorsProps" namePropertyBackendError="Title"
@@ -62,7 +62,7 @@
                                                 </el-backend-error-message>
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="!titleControl.hasError('maxTitle') && !titleControl.hasError('required') && !titleControl.hasError('backendErrorMessage')">
+                                                *ngIf="!titleControl.hasError('maxLength') && !titleControl.hasError('required') && !titleControl.hasError('backendErrorMessage')">
                                                 Оглавление должно быть не более {{maxTitle}} символов
                                             </mat-error>
                                             <mat-error *ngIf="titleControl.hasError('required')">
@@ -75,7 +75,7 @@
                                             appearance="fill">
                                             <mat-label>Краткое описание</mat-label>
                                             <textarea rows="15" matInput [formControl]="descriptionControl"
-                                                placeholder="Введите краткое описание" required></textarea>
+                                                placeholder="Введите краткое описание"></textarea>
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
                                                     [backendErrors]="errorsProps" namePropertyBackendError="Description"
@@ -83,7 +83,7 @@
                                                 </el-backend-error-message>
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="!descriptionControl.hasError('maxDescription') && !descriptionControl.hasError('required') && !descriptionControl.hasError('backendErrorMessage')">
+                                                *ngIf="!descriptionControl.hasError('maxLength') && !descriptionControl.hasError('required') && !descriptionControl.hasError('backendErrorMessage')">
                                                 Краткое описание должно быть не более {{maxDescription}} символов
                                             </mat-error>
                                             <mat-error *ngIf="descriptionControl.hasError('required')">
@@ -117,7 +117,7 @@
                                         <mat-form-field [color]="areaControl.valid && 'accent'" appearance="fill">
                                             <mat-label>Площадь</mat-label>
                                             <input type="number" matInput [formControl]="areaControl"
-                                                placeholder="Введите площадь" required>
+                                                placeholder="Введите площадь">
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
                                                     [backendErrors]="errorsProps" namePropertyBackendError="Area"
@@ -138,7 +138,7 @@
                                             appearance="fill">
                                             <mat-label>Количество комнат</mat-label>
                                             <input type="number" matInput [formControl]="numberOfRoomsControl"
-                                                placeholder="Введите количество комнат" required>
+                                                placeholder="Введите количество комнат">
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
                                                     [backendErrors]="errorsProps"
@@ -161,7 +161,7 @@
                                             appearance="fill">
                                             <mat-label>Количество этажей в доме</mat-label>
                                             <input type="number" matInput [formControl]="numberOfStoreysControl"
-                                                placeholder="Введите количество этажей" required>
+                                                placeholder="Введите количество этажей">
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
                                                     [backendErrors]="errorsProps"
@@ -183,7 +183,7 @@
                                         <mat-form-field [color]="storeyControl.valid && 'accent'" appearance="fill">
                                             <mat-label>Этаж</mat-label>
                                             <input type="number" matInput [formControl]="storeyControl"
-                                                placeholder="Введите этаж" required>
+                                                placeholder="Введите этаж">
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
                                                     [backendErrors]="errorsProps" namePropertyBackendError="Storey"
@@ -218,23 +218,319 @@
                             </form>
                         </mat-step>
 
-                        <mat-step [stepControl]="bodyForm" state="bodyStep">
-                            <form [formGroup]="bodyForm">
-                                <ng-template matStepLabel>Текст объявления</ng-template>
+                        <mat-step [stepControl]="addressForm" state="titleStep">
+                            <form [formGroup]="addressForm">
+                                <ng-template matStepLabel>Адрес</ng-template>
                                 <fieldset>
                                     <fieldset class="form-group">
-                                        <mat-form-field [color]="body.valid && 'accent'" appearance="fill">
-                                            <mat-label>Текст объявления</mat-label>
-                                            <textarea rows="20" matInput [formControl]="body"
-                                                placeholder="Введите текст объявления" required></textarea>
+                                        <mat-form-field [color]="regionControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Область</mat-label>
+                                            <input type="text" matInput [formControl]="regionControl"
+                                                placeholder="Введите название области" [matAutocomplete]="region">
+                                            <mat-autocomplete #region="matAutocomplete">
+                                                <mat-option *ngFor="let region of filteredRegions | async"
+                                                    [value]="region">
+                                                    {{region}}
+                                                </mat-option>
+                                            </mat-autocomplete>
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
-                                                    [backendErrors]="errorsProps" namePropertyBackendError="body"
-                                                    [formControlForBackendError]="body">
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="Region"
+                                                    [formControlForBackendError]="regionControl">
                                                 </el-backend-error-message>
                                             </mat-error>
-                                            <mat-error *ngIf="body.hasError('required')">
-                                                Текст объявления <strong>обязательный</strong>
+                                            <mat-error
+                                                *ngIf="!regionControl.hasError('required') && !regionControl.hasError('backendErrorMessage') && regionControl.hasError('mismatch')">
+                                                Введите правильное название области
+                                            </mat-error>
+                                            <mat-error *ngIf="regionControl.hasError('required')">
+                                                Указание области <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="districtControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Район</mat-label>
+                                            <input type="text" matInput [formControl]="districtControl"
+                                                placeholder="Введите название района" [matAutocomplete]="district">
+                                            <mat-autocomplete #district="matAutocomplete">
+                                                <mat-option *ngFor="let district of filteredDistrict | async"
+                                                    [value]="district">
+                                                    {{district}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="District"
+                                                    [formControlForBackendError]="districtControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!districtControl.hasError('required') && !districtControl.hasError('backendErrorMessage') && districtControl.hasError('mismatch')">
+                                                Название района не соответствует указанной области
+                                            </mat-error>
+                                            <mat-error *ngIf="districtControl.hasError('required')">
+                                                Указание района <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="settlementTypeControl.valid && 'accent'"
+                                            appearance="fill">
+                                            <mat-label>Тип населенного пункта</mat-label>
+                                            <mat-select [formControl]="settlementTypeControl">
+                                                <mat-option *ngFor="let settlementType of settlementTypes"
+                                                    [value]="settlementType">
+                                                    {{settlementType}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps"
+                                                    namePropertyBackendError="SettlementType"
+                                                    [formControlForBackendError]="settlementTypeControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error *ngIf="settlementTypeControl.hasError('required')">
+                                                Выберете тип населенного пункта
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="settlementNameControl.valid && 'accent'"
+                                            appearance="fill">
+                                            <mat-label>Название населенного пункта</mat-label>
+                                            <input type="text" matInput [formControl]="settlementNameControl"
+                                                placeholder="Введите название населенного пункта">
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps"
+                                                    namePropertyBackendError="SettlementName"
+                                                    [formControlForBackendError]="settlementNameControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!settlementNameControl.hasError('minLength', 'maxLength') && !settlementNameControl.hasError('required') && !settlementNameControl.hasError('backendErrorMessage')">
+                                                Название должно быть от {{minSettlementName}} до {{maxSettlementName}}
+                                                символов
+                                            </mat-error>
+                                            <mat-error *ngIf="settlementNameControl.hasError('required')">
+                                                Название населенного пункта <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="streetTypeControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Тип улицы</mat-label>
+                                            <mat-select [formControl]="streetTypeControl">
+                                                <mat-option *ngFor="let streetType of streetTypes" [value]="streetType">
+                                                    {{streetType}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="StreetType"
+                                                    [formControlForBackendError]="streetTypeControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error *ngIf="streetTypeControl.hasError('required')">
+                                                Выберете тип улицы
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="streetNameControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Название улицы</mat-label>
+                                            <input type="text" matInput [formControl]="streetNameControl"
+                                                placeholder="Введите название улицы">
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps"
+                                                    namePropertyBackendError="SettlementName"
+                                                    [formControlForBackendError]="streetNameControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!streetNameControl.hasError('minLength', 'maxLength') && !streetNameControl.hasError('required') && !streetNameControl.hasError('backendErrorMessage')">
+                                                Название должно быть от {{minSettlementName}} до {{maxSettlementName}}
+                                                символов
+                                            </mat-error>
+                                            <mat-error *ngIf="streetNameControl.hasError('required')">
+                                                Название улицы <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="houseNumberControl.valid && 'accent'"
+                                            appearance="fill">
+                                            <mat-label>Номер дома</mat-label>
+                                            <input type="text" matInput [formControl]="houseNumberControl"
+                                                placeholder="Введите номер дома">
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="HouseNumber"
+                                                    [formControlForBackendError]="houseNumberControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!houseNumberControl.hasError('maxLength') && !houseNumberControl.hasError('backendErrorMessage')">
+                                                Номер дома должен быть не более {{maxHouseNumber}} символов
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="apartmentNumberControl.valid && 'accent'"
+                                            appearance="fill">
+                                            <mat-label>Номер квартиры</mat-label>
+                                            <input type="number" matInput [formControl]="apartmentNumberControl"
+                                                placeholder="Введите номер квартиры">
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps"
+                                                    namePropertyBackendError="ApartmentNumber"
+                                                    [formControlForBackendError]="apartmentNumberControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="apartmentNumberControl.hasError('max') && !apartmentNumberControl.hasError('backendErrorMessage')">
+                                                Номер квартиры должен быть не более {{maxApartmentNumber}} символов
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 col-sm-auto" mat-raised-button color="elegant"
+                                        matStepperPrevious>
+                                        <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Назад
+                                    </button>
+                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
+                                        color="secondary" matStepperNext>
+                                        Далее
+                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                        </fa-icon>
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="PriceForm" state="titleStep">
+                            <form [formGroup]="PriceForm">
+                                <ng-template matStepLabel>Цена</ng-template>
+                                <fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="priceTypeControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Тип оплаты</mat-label>
+                                            <mat-select [formControl]="priceTypeControl">
+                                                <mat-option *ngFor="let priceType of priceTypes"
+                                                    [value]="priceType.name">
+                                                    {{priceType.display}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="PriceType"
+                                                    [formControlForBackendError]="priceTypeControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error *ngIf="priceTypeControl.hasError('required')">
+                                                Выберете тип оплаты
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="priceControl.valid && 'accent'" appearance="fill">
+                                            <mat-label>Цена</mat-label>
+                                            <input type="number" matInput [formControl]="priceControl"
+                                                placeholder="Введите цену">
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="Price"
+                                                    [formControlForBackendError]="priceControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!priceControl.hasError('min', 'max') && !priceControl.hasError('required') && !priceControl.hasError('backendErrorMessage')">
+                                                Цена должна быть в диапазоне от {{minPrice}} до {{maxPrice}}
+                                            </mat-error>
+                                            <mat-error *ngIf="priceControl.hasError('required')">
+                                                Указание цены <strong>обязательное</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 col-sm-auto" mat-raised-button color="elegant"
+                                        matStepperPrevious>
+                                        <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Назад
+                                    </button>
+                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
+                                        color="secondary" matStepperNext>
+                                        Далее
+                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                        </fa-icon>
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="DatepickerForm" state="titleStep">
+                            <form [formGroup]="DatepickerForm">
+                                <ng-template matStepLabel>Дата аренды</ng-template>
+                                <fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field [color]="startOfLeaseControl.valid && 'accent'"
+                                            appearance="fill">
+                                            <mat-label>Дата начала аренды</mat-label>
+                                            <input matInput [matDatepicker]="startOfLease"
+                                                [formControl]="startOfLeaseControl" [min]="currentDate">
+                                            <mat-datepicker-toggle matSuffix [for]="startOfLease">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #startOfLease></mat-datepicker>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps"
+                                                    namePropertyBackendError="StartOfLease"
+                                                    [formControlForBackendError]="startOfLeaseControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!startOfLeaseControl.hasError('matDatepickerMin') && startOfLeaseControl.hasError('matDatepickerParse')">
+                                                Не верный формат даты
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!startOfLeaseControl.hasError('required') && startOfLeaseControl.hasError('matDatepickerMin')">
+                                                Дата начала аренды не может быть в прошлом
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="startOfLeaseControl.hasError('required') && !startOfLeaseControl.hasError('matDatepickerParse')">
+                                                Укажите дату начала аренды
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Дата окончание аренды</mat-label>
+                                            <input matInput [matDatepicker]="endOfLease"
+                                                [formControl]="endOfLeaseControl" [min]="startOfLeaseControl.value">
+                                            <mat-datepicker-toggle matSuffix [for]="endOfLease"></mat-datepicker-toggle>
+                                            <mat-datepicker #endOfLease></mat-datepicker>
+                                            <mat-error>
+                                                <el-backend-error-message *ngIf="errorsProps"
+                                                    [backendErrors]="errorsProps" namePropertyBackendError="EndOfLease"
+                                                    [formControlForBackendError]="endOfLeaseControl">
+                                                </el-backend-error-message>
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!endOfLeaseControl.hasError('matDatepickerMin') && endOfLeaseControl.hasError('matDatepickerParse')">
+                                                Не верный формат даты
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="!endOfLeaseControl.hasError('required') && endOfLeaseControl.hasError('matDatepickerMin')">
+                                                Дата окончания аренды не может быть позже начала аренды
                                             </mat-error>
                                         </mat-form-field>
                                     </fieldset>
@@ -299,8 +595,7 @@
                                         Сбросить все
                                     </button>
                                     <button class="my-1 py-1 col-md-auto float-right" type="submit" mat-raised-button
-                                        (click)="onSubmit()"
-                                        [disabled]="isSubmittingProps || descriptionForm.invalid || bodyForm.invalid "
+                                        (click)="onSubmit()" [disabled]="isSubmittingProps || descriptionForm.invalid"
                                         color="success">
                                         <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
                                             *ngIf="isSubmittingProps">
