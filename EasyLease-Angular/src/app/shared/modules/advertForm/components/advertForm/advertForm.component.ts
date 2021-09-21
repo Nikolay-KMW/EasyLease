@@ -15,23 +15,46 @@ import {
   faTimesCircle,
   faTrademark,
 } from '@fortawesome/free-solid-svg-icons';
+import {select, Store} from '@ngrx/store';
+import {map, shareReplay, startWith} from 'rxjs/operators';
+import {Observable, Subscription} from 'rxjs';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
+import {DateAdapter, MatDateFormats, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {Moment} from 'moment';
+import * as moment from 'moment';
+import 'moment/locale/ru';
 
 import {AdvertInputInterface} from 'src/app/shared/types/advertInput.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
 import {TagType} from 'src/app/shared/types/tag.type';
 import {additionalDataSelector, isFallingSelector, isLoadingSelector} from '../../store/selectors';
-import {select, Store} from '@ngrx/store';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
-import {Observable, Subscription} from 'rxjs';
 import {getAdditionalDataAction} from '../../store/actions/getAdditionalData.action';
 import {AdvertAdditionalData} from '../../types/advertAdditionalData.interface';
 import {AdvertLocation} from '../../types/advertLocation.interface';
-import {map, startWith} from 'rxjs/operators';
 import {PriceTypeExtended} from '../../types/priceTypeExtended.interface';
-import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+  MAT_MOMENT_DATE_FORMATS,
+  MomentDateAdapter,
+} from '@angular/material-moment-adapter';
+import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
+import {ComfortType} from 'src/app/shared/types/comfort.type';
+import {MatSelectionList} from '@angular/material/list';
+
+export const DATE_FORMATS: MatDateFormats = {
+  parse: {
+    dateInput: 'DD.MM.YYYY',
+  },
+  display: {
+    dateInput: 'DD.MM.YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'L',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'el-advert-form',
@@ -42,6 +65,15 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: {displayDefaultIndicatorType: false, showError: true},
     },
+    {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    {provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS},
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {strict: true}},
   ],
 })
 export class AdvertFormComponent implements OnInit, OnDestroy {
@@ -51,6 +83,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
   @Output('advertSubmit') advertSubmitEvent = new EventEmitter<AdvertInputInterface>();
 
+  isHandset$: Observable<boolean>;
   isLoading$: Observable<boolean>;
   isFalling$: Observable<boolean>;
   additionalData: AdvertAdditionalData | null = null;
@@ -108,9 +141,18 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   minPrice: number = 0;
   maxPrice: number = 1000000;
 
-  tagListForm: FormGroup;
-  tagList: FormControl;
+  DatepickerForm: FormGroup;
+  startOfLeaseControl: FormControl;
+  endOfLeaseControl: FormControl;
+  currentDate = new Date();
 
+  ComfortForm: FormGroup;
+  comfortListControl: FormControl;
+  comforts: ComfortType[] = [];
+  selectedComfortList: ComfortType[] = [];
+
+  tagForm: FormGroup;
+  tagListControl: FormControl;
   tags: TagType[] = [];
 
   visible: boolean = true;
@@ -132,15 +174,16 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   faFileAlt: IconDefinition = faFileAlt;
   faHashTag: IconDefinition = faHashtag;
 
-  DatepickerForm: FormGroup;
-  startOfLeaseControl: FormControl;
-  endOfLeaseControl: FormControl;
-  currentDate = new Date();
-  // currentMonth = this.currentDate.getMonth();
-  // currentYear = this.currentDate.getFullYear();
-
-  constructor(private store: Store<AppStateInterface>, private fb: FormBuilder) {
+  constructor(
+    private store: Store<AppStateInterface>,
+    private fb: FormBuilder,
+    private breakpointObserver: BreakpointObserver
+  ) {
     // Initialize values
+    this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.TabletPortrait]).pipe(
+      map((result: BreakpointState) => result.matches),
+      shareReplay()
+    );
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
     this.isFalling$ = this.store.pipe(select(isFallingSelector));
 
@@ -158,10 +201,10 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     // TODO: rename advertType to immovablesType !!!!!!!!!!!
     //--------------------------------------------------------------------------------
     this.advertTypeForm = this.fb.group({
-      advertTypes: [[], [Validators.required]],
+      advertType: [[], [Validators.required]],
     });
 
-    this.advertTypeControl = this.advertTypeForm.controls['advertTypes'] as FormControl;
+    this.advertTypeControl = this.advertTypeForm.controls['advertType'] as FormControl;
 
     //--------------------------------------------------------------------------------
     this.descriptionForm = this.fb.group({
@@ -260,29 +303,57 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     this.startOfLeaseControl = this.DatepickerForm.controls['startOfLease'] as FormControl;
     this.endOfLeaseControl = this.DatepickerForm.controls['endOfLease'] as FormControl;
 
-    this.startOfLeaseControl.valueChanges.subscribe(() => {
-      const date = this.startOfLeaseControl.value as Date;
-      console.log(date.toJSON());
-    });
+    // this.startOfLeaseControl.valueChanges.subscribe(() => {
+    //   const date = this.startOfLeaseControl.value as Date;
+    //   console.log(moment.parseZone(date.toJSON()).local(false).format());
+    // });
+
+    // this.endOfLeaseControl.valueChanges.subscribe(() => {
+    //   const date = this.endOfLeaseControl.value as Date;
+    //   console.log(moment.parseZone(date.toJSON()).local(false).format());
+    // });
+
     //--------------------------------------------------------------------------------
-    this.tagListForm = this.fb.group({
+    this.ComfortForm = this.fb.group({
+      comfortList: [this.comforts],
+    });
+
+    this.comfortListControl = this.ComfortForm.controls['comfortList'] as FormControl;
+
+    this.comfortListControl.valueChanges.subscribe(() => {
+      const data = this.comfortListControl.value as MatSelectionList;
+      console.log(data);
+    });
+
+    //--------------------------------------------------------------------------------
+    this.tagForm = this.fb.group({
       tagList: [this.tags],
     });
 
-    this.tagList = this.tagListForm.controls['tagList'] as FormControl;
+    this.tagListControl = this.tagForm.controls['tagList'] as FormControl;
+    //--------------------------------------------------------------------------------
   }
 
-  corresponds(control: AbstractControl): ValidationErrors | null {
+  private corresponds(control: AbstractControl): ValidationErrors | null {
     return this.additionalData?.locations.find((location) => location.region === control.value)
       ? null
       : {mismatch: true};
   }
 
-  correspondsToRegion(control: AbstractControl, regionControl: string): ValidationErrors | null {
+  private correspondsToRegion(control: AbstractControl, regionControl: string): ValidationErrors | null {
     const region: string = control.parent?.get(regionControl)?.value;
     const location = this.additionalData?.locations.find((location) => location.region === region);
 
     return location?.district.find((district) => district === control.value) ? null : {mismatch: true};
+  }
+
+  private filter(options: string[] | undefined | null, value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    if (options) {
+      return options.filter((option) => option.toLowerCase().includes(filterValue));
+    }
+    return [];
   }
 
   ngOnInit(): void {
@@ -291,6 +362,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
       this.settlementTypes = this.additionalData.settlementType;
       this.streetTypes = this.additionalData.streetType;
       this.priceTypes = this.additionalData.priceType;
+      this.comforts = this.additionalData.comforts;
     }
 
     if (this.initialValuesProps) {
@@ -303,16 +375,11 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  private filter(options: string[] | undefined | null, value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    if (options) {
-      return options.filter((option) => option.toLowerCase().includes(filterValue));
-    }
-    return [];
+  minDateEndOfLease(date: Date): Date {
+    return moment.parseZone(date.toJSON()).local(false).add(1, 'days').toDate();
   }
 
-  add(event: MatChipInputEvent): void {
+  addTag(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
@@ -327,7 +394,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  remove(tag: TagType): void {
+  removeTag(tag: TagType): void {
     const index = this.tags.indexOf(tag);
 
     if (index >= 0) {
@@ -337,12 +404,17 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const advertInput: AdvertInputInterface = {
+      ...this.advertTypeForm.value,
       ...this.descriptionForm.value,
+      ...this.apartmentParametersForm.value,
+      ...this.addressForm.value,
       ...this.PriceForm.value,
+      ...this.DatepickerForm.value,
+      comfortList: this.selectedComfortList.slice(),
       tagList: this.tags.slice(),
     };
 
-    //console.log(advertInput);
+    console.log(advertInput);
 
     this.advertSubmitEvent.emit(advertInput);
   }

@@ -33,7 +33,7 @@ export class ShellComponent implements OnInit {
     private router: Router,
     private utilService: UtilsService
   ) {
-    this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset]).pipe(
+    this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.TabletPortrait]).pipe(
       map((result: BreakpointState) => result.matches),
       shareReplay()
     );

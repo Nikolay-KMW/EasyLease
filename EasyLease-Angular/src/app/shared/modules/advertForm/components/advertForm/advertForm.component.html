@@ -479,7 +479,7 @@
 
                         <mat-step [stepControl]="DatepickerForm" state="titleStep">
                             <form [formGroup]="DatepickerForm">
-                                <ng-template matStepLabel>Дата аренды</ng-template>
+                                <ng-template matStepLabel>Дата сдачи в аренду</ng-template>
                                 <fieldset>
                                     <fieldset class="form-group">
                                         <mat-form-field [color]="startOfLeaseControl.valid && 'accent'"
@@ -489,7 +489,8 @@
                                                 [formControl]="startOfLeaseControl" [min]="currentDate">
                                             <mat-datepicker-toggle matSuffix [for]="startOfLease">
                                             </mat-datepicker-toggle>
-                                            <mat-datepicker #startOfLease></mat-datepicker>
+                                            <mat-datepicker [touchUi]="(isHandset$ | async)" #startOfLease>
+                                            </mat-datepicker>
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
                                                     [backendErrors]="errorsProps"
@@ -515,9 +516,11 @@
                                         <mat-form-field appearance="fill">
                                             <mat-label>Дата окончание аренды</mat-label>
                                             <input matInput [matDatepicker]="endOfLease"
-                                                [formControl]="endOfLeaseControl" [min]="startOfLeaseControl.value">
+                                                [formControl]="endOfLeaseControl"
+                                                [min]="minDateEndOfLease(startOfLeaseControl.value)">
                                             <mat-datepicker-toggle matSuffix [for]="endOfLease"></mat-datepicker-toggle>
-                                            <mat-datepicker #endOfLease></mat-datepicker>
+                                            <mat-datepicker [touchUi]="(isHandset$ | async)" #endOfLease>
+                                            </mat-datepicker>
                                             <mat-error>
                                                 <el-backend-error-message *ngIf="errorsProps"
                                                     [backendErrors]="errorsProps" namePropertyBackendError="EndOfLease"
@@ -552,16 +555,54 @@
                             </form>
                         </mat-step>
 
-                        <mat-step [stepControl]="tagListForm" state="tagStep">
-                            <form [formGroup]="tagListForm">
+                        <mat-step [stepControl]="ComfortForm" state="titleStep">
+                            <form [formGroup]="ComfortForm">
+                                <ng-template matStepLabel>Список удобств</ng-template>
+                                <fieldset>
+                                    <fieldset class="form-group">
+                                        <mat-label>Выберите имеющиеся удобства из списка</mat-label>
+                                        <mat-selection-list [formControl]="comfortListControl"
+                                            [(ngModel)]="selectedComfortList">
+                                            <mat-list-option [checkboxPosition]="'before'"
+                                                *ngFor="let comfort of comforts" [value]="comfort" [selected]="false">
+                                                {{comfort}}
+                                            </mat-list-option>
+                                        </mat-selection-list>
+                                        <mat-error>
+                                            <el-backend-error-message *ngIf="errorsProps" [backendErrors]="errorsProps"
+                                                namePropertyBackendError="ComfortList"
+                                                [formControlForBackendError]="comfortListControl">
+                                            </el-backend-error-message>
+                                        </mat-error>
+                                    </fieldset>
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 col-sm-auto" mat-raised-button color="elegant"
+                                        matStepperPrevious>
+                                        <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Назад
+                                    </button>
+                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
+                                        color="secondary" matStepperNext>
+                                        Далее
+                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                        </fa-icon>
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="tagForm" state="tagStep">
+                            <form [formGroup]="tagForm">
                                 <ng-template matStepLabel>Список тегов</ng-template>
                                 <fieldset>
                                     <fieldset class="form-group">
-                                        <mat-form-field [color]="tagList.valid && 'accent'" appearance="fill">
+                                        <mat-form-field [color]="tagListControl.valid && 'accent'" appearance="fill">
                                             <mat-label>Теги</mat-label>
                                             <mat-chip-list #chipList aria-label="Tags selection">
                                                 <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
-                                                    [removable]="removable" (removed)="remove(tag)">
+                                                    [removable]="removable" (removed)="removeTag(tag)">
                                                     {{tag}}
                                                     <fa-icon [icon]="faTimes" matChipRemove *ngIf="removable" size="lg"
                                                         class="">
@@ -569,12 +610,12 @@
                                                 </mat-chip>
                                                 <input placeholder="Введите теги..." [matChipInputFor]="chipList"
                                                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                                    [matChipInputAddOnBlur]="addOnBlur" [formControl]="tagList"
-                                                    (matChipInputTokenEnd)="add($event)">
+                                                    [matChipInputAddOnBlur]="addOnBlur" [formControl]="tagListControl"
+                                                    (matChipInputTokenEnd)="addTag($event)">
                                                 <mat-error>
                                                     <el-backend-error-message *ngIf="errorsProps"
-                                                        [backendErrors]="errorsProps" namePropertyBackendError="tagList"
-                                                        [formControlForBackendError]="tagList">
+                                                        [backendErrors]="errorsProps" namePropertyBackendError="TagList"
+                                                        [formControlForBackendError]="tagListControl">
                                                     </el-backend-error-message>
                                                 </mat-error>
                                             </mat-chip-list>

@@ -37,12 +37,12 @@
 .desc {
   @media only screen and (min-width: 768px) {
     flex: 0 0 50%;
-    min-width: 73%;
+    min-width: 80%; //73%
   }
 
   @media only screen and (min-width: 780px) {
     flex: 0 0 50%;
-    min-width: 74%;
+    min-width: 77%; //74%
   }
 
   @media only screen and (min-width: 880px) {
