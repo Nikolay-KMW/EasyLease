@@ -22,6 +22,11 @@ import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import {DateAdapter, MatDateFormats, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatSelectionList} from '@angular/material/list';
+import {NgxDropzoneChangeEvent} from 'ngx-dropzone';
+import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {Moment} from 'moment';
 import * as moment from 'moment';
 import 'moment/locale/ru';
@@ -33,16 +38,10 @@ import {additionalDataSelector, isFallingSelector, isLoadingSelector} from '../.
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {getAdditionalDataAction} from '../../store/actions/getAdditionalData.action';
 import {AdvertAdditionalData} from '../../types/advertAdditionalData.interface';
-import {AdvertLocation} from '../../types/advertLocation.interface';
 import {PriceTypeExtended} from '../../types/priceTypeExtended.interface';
-import {
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  MAT_MOMENT_DATE_FORMATS,
-  MomentDateAdapter,
-} from '@angular/material-moment-adapter';
-import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {ComfortType} from 'src/app/shared/types/comfort.type';
-import {MatSelectionList} from '@angular/material/list';
+import {RejectedFille} from '../../types/rejectedFille.interfase';
+import {environment} from 'src/environments/environment';
 
 export const DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -55,6 +54,9 @@ export const DATE_FORMATS: MatDateFormats = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
+
+const timeShowErrorPhoto: number = 10000;
+const timeDisappearanceErrorPhoto: number = 1000;
 
 @Component({
   selector: 'el-advert-form',
@@ -74,6 +76,24 @@ export const DATE_FORMATS: MatDateFormats = {
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS},
     {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
     {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {strict: true}},
+  ],
+  animations: [
+    trigger('errorPhotoAnimate', [
+      state(
+        'true',
+        style({
+          opacity: 0,
+        })
+      ),
+      state(
+        'false',
+        style({
+          opacity: 1,
+        })
+      ),
+      //transition('true => false', animate(`0ms ease-in`)),
+      transition('false => true', animate(`${timeDisappearanceErrorPhoto}ms ease-out`)),
+    ]),
   ],
 })
 export class AdvertFormComponent implements OnInit, OnDestroy {
@@ -154,12 +174,27 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   tagForm: FormGroup;
   tagListControl: FormControl;
   tags: TagType[] = [];
-
-  visible: boolean = true;
-  selectable: boolean = true;
-  removable: boolean = true;
-  addOnBlur: boolean = true;
+  visibleTag: boolean = true;
+  selectableTag: boolean = true;
+  removableTag: boolean = true;
+  addOnBlurForTag: boolean = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  imageForm: FormGroup;
+  photosControl: FormControl;
+  photos: File[] = [];
+  rejectedPhotos: RejectedFille[] = [];
+  fileSizeLimit: number = environment.fileSizeLimit;
+  photoLimit: number = environment.numberOfFilesLimit;
+  photoLimitExceeded: boolean = false;
+  errorPhotoAnimate: boolean = false;
+
+  allowedExtensions: string[] = environment.allowedExtensions;
+
+  acceptExtensions: string = environment.allowedExtensions
+    .map((ext) => ext.substring(1))
+    .map((ext) => (ext = `image/${ext}`))
+    .toString();
 
   faStepForward: IconDefinition = faStepForward;
   faStepBackward: IconDefinition = faStepBackward;
@@ -331,6 +366,19 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     });
 
     this.tagListControl = this.tagForm.controls['tagList'] as FormControl;
+
+    //--------------------------------------------------------------------------------
+    this.imageForm = this.fb.group({
+      photos: [this.photos],
+    });
+
+    this.photosControl = this.imageForm.controls['photos'] as FormControl;
+
+    this.photosControl.valueChanges.subscribe(() => {
+      const photos = this.photosControl.value;
+      console.log(photos);
+    });
+
     //--------------------------------------------------------------------------------
   }
 
@@ -417,6 +465,38 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     console.log(advertInput);
 
     this.advertSubmitEvent.emit(advertInput);
+  }
+
+  addPhoto(event: NgxDropzoneChangeEvent): void {
+    console.log(event);
+
+    for (const file of event.addedFiles) {
+      if (this.photos.length < this.photoLimit) {
+        this.photos.push(file);
+      } else {
+        this.photoLimitExceeded = true;
+        break;
+      }
+    }
+
+    this.rejectedPhotos = event.rejectedFiles as Array<RejectedFille>;
+    this.clearPhotoError();
+  }
+
+  clearPhotoError(): void {
+    setTimeout(() => {
+      this.errorPhotoAnimate = true;
+      setTimeout(() => {
+        this.rejectedPhotos = [];
+        this.photoLimitExceeded = false;
+        this.errorPhotoAnimate = false;
+      }, timeDisappearanceErrorPhoto);
+    }, timeShowErrorPhoto);
+  }
+
+  removePhoto(file: File): void {
+    //console.log(file);
+    this.photos.splice(this.photos.indexOf(file), 1);
   }
 
   ngOnDestroy(): void {

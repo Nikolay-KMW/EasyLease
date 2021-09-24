@@ -601,16 +601,17 @@
                                         <mat-form-field [color]="tagListControl.valid && 'accent'" appearance="fill">
                                             <mat-label>Теги</mat-label>
                                             <mat-chip-list #chipList aria-label="Tags selection">
-                                                <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
-                                                    [removable]="removable" (removed)="removeTag(tag)">
+                                                <mat-chip *ngFor="let tag of tags" [selectable]="selectableTag"
+                                                    [removable]="removableTag" (removed)="removeTag(tag)">
                                                     {{tag}}
-                                                    <fa-icon [icon]="faTimes" matChipRemove *ngIf="removable" size="lg"
-                                                        class="">
+                                                    <fa-icon [icon]="faTimes" matChipRemove *ngIf="removableTag"
+                                                        size="lg" class="">
                                                     </fa-icon>
                                                 </mat-chip>
                                                 <input placeholder="Введите теги..." [matChipInputFor]="chipList"
                                                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                                    [matChipInputAddOnBlur]="addOnBlur" [formControl]="tagListControl"
+                                                    [matChipInputAddOnBlur]="addOnBlurForTag"
+                                                    [formControl]="tagListControl"
                                                     (matChipInputTokenEnd)="addTag($event)">
                                                 <mat-error>
                                                     <el-backend-error-message *ngIf="errorsProps"
@@ -621,6 +622,77 @@
                                             </mat-chip-list>
                                         </mat-form-field>
                                     </fieldset>
+                                </fieldset>
+                                <div>
+                                    <button class="my-1 py-1 col-sm-auto" mat-raised-button color="elegant"
+                                        matStepperPrevious>
+                                        <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
+                                        </fa-icon>
+                                        Назад
+                                    </button>
+                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
+                                        color="secondary" matStepperNext>
+                                        Далее
+                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                        </fa-icon>
+                                    </button>
+                                </div>
+                            </form>
+                        </mat-step>
+
+                        <mat-step [stepControl]="imageForm" state="tagStep">
+                            <form [formGroup]="imageForm">
+                                <ng-template matStepLabel>Добавить фото</ng-template>
+                                <fieldset class="form-group px-0">
+                                    <ngx-dropzone class="custom-dropzone" [maxFileSize]="fileSizeLimit"
+                                        [accept]="acceptExtensions" (change)="addPhoto($event)"
+                                        [expandable]="!(isHandset$ | async)!">
+                                        <ngx-dropzone-label>
+                                            <div>
+                                                <h3 class="mb-0"> <strong>Выберите фотографии и переместите их
+                                                        сюда</strong></h3>
+                                                <h4 class="mb-0">(Максимальный размер одного фото - {{fileSizeLimit /
+                                                    (1024*1024)}}Mб.)
+                                                </h4>
+                                                <h4>(Допустимые расширения файлов: {{allowedExtensions.join(" ")}})
+                                                </h4>
+                                            </div>
+                                        </ngx-dropzone-label>
+                                        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview"
+                                            *ngFor="let photo of photos" [file]="photo" [removable]="true"
+                                            (removed)="removePhoto(photo)">
+                                            <!-- <ngx-dropzone-label>{{ photo.size/1024 }}kb ({{ photo.type }})
+                                                </ngx-dropzone-label> -->
+                                        </ngx-dropzone-image-preview>
+                                    </ngx-dropzone>
+                                    <div class="error-photo m-2"
+                                        [@errorPhotoAnimate]="(errorPhotoAnimate)?'true':'false'">
+                                        <mat-error>
+                                            <el-backend-error-message *ngIf="errorsProps" [backendErrors]="errorsProps"
+                                                namePropertyBackendError="Photos"
+                                                [formControlForBackendError]="photosControl">
+                                            </el-backend-error-message>
+                                        </mat-error>
+                                        <mat-error *ngFor="let rejectedPhoto of rejectedPhotos">
+                                            <container-element [ngSwitch]="rejectedPhoto.reason">
+                                                <div *ngSwitchCase="'size'">
+                                                    Файл
+                                                    <strong>"{{rejectedPhoto.name}}"</strong>
+                                                    был отклонен, он имеет размер
+                                                    больше
+                                                    чем {{fileSizeLimit / (1024*1024)}}Mb.
+                                                </div>
+                                                <div *ngSwitchCase="'type'">Файл
+                                                    <strong>"{{rejectedPhoto.name}}"</strong>
+                                                    был отклонен, он имеет недопустимое
+                                                    расширение.
+                                                </div>
+                                            </container-element>
+                                        </mat-error>
+                                        <mat-error *ngIf="photoLimitExceeded">
+                                            Количество фото не может быть больше {{photoLimit}} шт.
+                                        </mat-error>
+                                    </div>
                                 </fieldset>
                                 <div>
                                     <button class="my-1 py-1 mr-md-1 col-md-auto" mat-raised-button color="elegant"

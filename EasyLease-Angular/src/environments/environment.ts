@@ -10,6 +10,10 @@ export const environment = {
   minUserName: 1,
   maxUserName: 10,
   minUserPassword: 5,
+
+  fileSizeLimit: 2097152,
+  numberOfFilesLimit: 6,
+  allowedExtensions: ['.jpg', '.jpeg', '.png', '.gif'],
 };
 
 /*

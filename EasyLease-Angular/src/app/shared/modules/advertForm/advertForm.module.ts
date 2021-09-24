@@ -21,6 +21,7 @@ import {GetAdditionalDataEffect} from './store/effects/getAdditionalData.effect'
 import {reducers} from './store/reducers';
 import {AdditionalDataService} from './services/AdditionalData.service';
 import {MatListModule} from '@angular/material/list';
+import {NgxDropzoneModule} from 'ngx-dropzone';
 
 @NgModule({
   declarations: [AdvertFormComponent],
@@ -41,6 +42,7 @@ import {MatListModule} from '@angular/material/list';
     MatListModule,
     FontAwesomeModule,
     MatChipsModule,
+    NgxDropzoneModule,
     BackendErrorMessageModule,
   ],
   exports: [AdvertFormComponent],
