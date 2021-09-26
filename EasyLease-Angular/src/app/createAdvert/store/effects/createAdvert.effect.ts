@@ -33,7 +33,7 @@ export class CreateAdvertEffect {
     () =>
       this.actions$.pipe(
         ofType(createAdvertSuccessAction),
-        tap(({advert}) => this.router.navigate(['/advert', advert.slug]))
+        tap(({advert}) => this.router.navigate(['/adverts', advert.slug, 'photos']))
       ),
     {dispatch: false}
   );

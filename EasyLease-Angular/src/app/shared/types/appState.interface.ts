@@ -3,6 +3,7 @@ import {AuthStateInterface} from 'src/app/auth/types/authState.interface';
 import {CreateAdvertStateInterface} from 'src/app/createAdvert/types/createAdvertState.interface';
 import {EditAdvertStateInterface} from 'src/app/editAdvert/types/editAdvertState.interface';
 import {SettingsStateInterface} from 'src/app/settings/types/settingsState.interface';
+import {UploadAdvertPhotoStateInterface} from 'src/app/uploadAdvertPhoto/types/createAdvertState.interface';
 import {UserProfileStateInterface} from 'src/app/userProfile/types/userProfileState.interface';
 import {AdvertFormStateInterface} from '../modules/advertForm/types/advertFormState.interface';
 import {BannerStateInterface} from '../modules/banner/types/bannerState.interface';
@@ -20,6 +21,7 @@ export interface AppStateInterface {
   advertForm: AdvertFormStateInterface;
   createAdvert: CreateAdvertStateInterface;
   editAdvert: EditAdvertStateInterface;
+  uploadAdvertPhoto: UploadAdvertPhotoStateInterface;
   settings: SettingsStateInterface;
   userProfile: UserProfileStateInterface;
 }

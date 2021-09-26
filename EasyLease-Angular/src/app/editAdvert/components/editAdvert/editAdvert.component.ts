@@ -4,6 +4,7 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
 
+import {AdvertInterface} from 'src/app/shared/types/advert.interface';
 import {AdvertInputInterface} from 'src/app/shared/types/advertInput.interface';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
@@ -17,7 +18,7 @@ import {advertSelector, isLoadingSelector, isSubmittingSelector, validationError
   styleUrls: ['./editAdvert.component.scss'],
 })
 export class EditAdvertComponent implements OnInit {
-  initialValues$!: Observable<AdvertInputInterface | null>;
+  initialValues$: Observable<AdvertInterface | null>;
   isLoading$: Observable<boolean>;
   isSubmitting$: Observable<boolean>;
   backendErrors$: Observable<BackendErrorInterface | null>;

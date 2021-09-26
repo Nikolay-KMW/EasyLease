@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {
@@ -18,12 +18,18 @@ import {
 import {select, Store} from '@ngrx/store';
 import {map, shareReplay, startWith} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
-import {MatChipInputEvent} from '@angular/material/chips';
+import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import {DateAdapter, MatDateFormats, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatSelectionList} from '@angular/material/list';
-import {NgxDropzoneChangeEvent} from 'ngx-dropzone';
+import {
+  NgxDropzoneChangeEvent,
+  NgxDropzoneComponent,
+  NgxDropzoneImagePreviewComponent,
+  NgxDropzonePreviewComponent,
+  NgxDropzoneRemoveBadgeComponent,
+} from 'ngx-dropzone';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
@@ -40,8 +46,9 @@ import {getAdditionalDataAction} from '../../store/actions/getAdditionalData.act
 import {AdvertAdditionalData} from '../../types/advertAdditionalData.interface';
 import {PriceTypeExtended} from '../../types/priceTypeExtended.interface';
 import {ComfortType} from 'src/app/shared/types/comfort.type';
-import {RejectedFille} from '../../types/rejectedFille.interfase';
+import {RejectedFille} from '../../types/rejectedFille.interface';
 import {environment} from 'src/environments/environment';
+import {AdvertInterface} from 'src/app/shared/types/advert.interface';
 
 export const DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -97,7 +104,7 @@ const timeDisappearanceErrorPhoto: number = 1000;
   ],
 })
 export class AdvertFormComponent implements OnInit, OnDestroy {
-  @Input('initialValues') initialValuesProps: AdvertInputInterface | null = null;
+  @Input('initialValues') initialValuesProps: AdvertInterface | null = null;
   @Input('isSubmitting') isSubmittingProps: boolean = false;
   @Input('errors') errorsProps: BackendErrorInterface | null = null;
 
@@ -171,8 +178,11 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   comforts: ComfortType[] = [];
   selectedComfortList: ComfortType[] = [];
 
+  @ViewChild('tagList') tagList: MatChipList | null = null;
   tagForm: FormGroup;
   tagListControl: FormControl;
+  maxTag: number = 30;
+  tagListLimit: number = 5;
   tags: TagType[] = [];
   visibleTag: boolean = true;
   selectableTag: boolean = true;
@@ -180,17 +190,15 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   addOnBlurForTag: boolean = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  imageForm: FormGroup;
-  photosControl: FormControl;
   photos: File[] = [];
   rejectedPhotos: RejectedFille[] = [];
   fileSizeLimit: number = environment.fileSizeLimit;
   photoLimit: number = environment.numberOfFilesLimit;
   photoLimitExceeded: boolean = false;
   errorPhotoAnimate: boolean = false;
+  private errorPhotoTimeoutId: NodeJS.Timeout | null = null;
 
   allowedExtensions: string[] = environment.allowedExtensions;
-
   acceptExtensions: string = environment.allowedExtensions
     .map((ext) => ext.substring(1))
     .map((ext) => (ext = `image/${ext}`))
@@ -355,29 +363,23 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
     this.comfortListControl = this.ComfortForm.controls['comfortList'] as FormControl;
 
-    this.comfortListControl.valueChanges.subscribe(() => {
-      const data = this.comfortListControl.value as MatSelectionList;
-      console.log(data);
-    });
+    // this.comfortListControl.valueChanges.subscribe(() => {
+    //   const data = this.comfortListControl.value as MatSelectionList;
+    //   console.log(data);
+    // });
 
     //--------------------------------------------------------------------------------
     this.tagForm = this.fb.group({
-      tagList: [this.tags],
+      tagList: [
+        this.tags,
+        [
+          (control: AbstractControl) => this.maxTagLength(control, this.maxTag),
+          (control: AbstractControl) => this.backendErrorForTags(control),
+        ],
+      ],
     });
 
     this.tagListControl = this.tagForm.controls['tagList'] as FormControl;
-
-    //--------------------------------------------------------------------------------
-    this.imageForm = this.fb.group({
-      photos: [this.photos],
-    });
-
-    this.photosControl = this.imageForm.controls['photos'] as FormControl;
-
-    this.photosControl.valueChanges.subscribe(() => {
-      const photos = this.photosControl.value;
-      console.log(photos);
-    });
 
     //--------------------------------------------------------------------------------
   }
@@ -402,6 +404,28 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
       return options.filter((option) => option.toLowerCase().includes(filterValue));
     }
     return [];
+  }
+
+  private maxTagLength(control: AbstractControl, maxLength: number): ValidationErrors | null {
+    if (this.tagList?.errorState != undefined) {
+      this.tagList.errorState = false;
+
+      if ((control.value as string).length > maxLength) {
+        this.tagList.errorState = true;
+        return {maxLength: true};
+      }
+    }
+    return null;
+  }
+
+  private backendErrorForTags(control: AbstractControl): ValidationErrors | null {
+    if (this.tagList?.errorState != undefined) {
+      if (this.errorsProps != null && this.errorsProps['TagList']) {
+        this.tagList.errorState = true;
+        return {backendErrorForTags: true};
+      }
+    }
+    return null;
   }
 
   ngOnInit(): void {
@@ -432,7 +456,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     const value = event.value;
 
     // Add our tag
-    if ((value || '').trim()) {
+    if ((value || '').trim() && this.tags.length < this.tagListLimit) {
       this.tags.push(value.trim());
     }
 
@@ -445,9 +469,53 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   removeTag(tag: TagType): void {
     const index = this.tags.indexOf(tag);
 
+    if (this.tagList?.errorState != undefined) {
+      this.tagList.errorState = false;
+    }
+
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
+  }
+
+  addPhoto(event: NgxDropzoneChangeEvent): void {
+    //console.log(event);
+
+    this.clearPhotoError();
+
+    for (const file of event.addedFiles) {
+      if (this.photos.length < this.photoLimit) {
+        this.photos.push(file);
+      } else {
+        this.photoLimitExceeded = true;
+        break;
+      }
+    }
+
+    this.rejectedPhotos = event.rejectedFiles as Array<RejectedFille>;
+  }
+
+  private clearPhotoError(): void {
+    if (this.errorPhotoTimeoutId) {
+      this.rejectedPhotos = [];
+      this.photoLimitExceeded = false;
+      this.errorPhotoAnimate = false;
+      clearTimeout(this.errorPhotoTimeoutId);
+    }
+
+    this.errorPhotoTimeoutId = setTimeout(() => {
+      this.errorPhotoAnimate = true;
+      setTimeout(() => {
+        this.rejectedPhotos = [];
+        this.photoLimitExceeded = false;
+        this.errorPhotoAnimate = false;
+      }, timeDisappearanceErrorPhoto);
+    }, timeShowErrorPhoto);
+  }
+
+  removePhoto(file: File): void {
+    //console.log(file);
+    this.photos.splice(this.photos.indexOf(file), 1);
   }
 
   onSubmit(): void {
@@ -465,38 +533,6 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     console.log(advertInput);
 
     this.advertSubmitEvent.emit(advertInput);
-  }
-
-  addPhoto(event: NgxDropzoneChangeEvent): void {
-    console.log(event);
-
-    for (const file of event.addedFiles) {
-      if (this.photos.length < this.photoLimit) {
-        this.photos.push(file);
-      } else {
-        this.photoLimitExceeded = true;
-        break;
-      }
-    }
-
-    this.rejectedPhotos = event.rejectedFiles as Array<RejectedFille>;
-    this.clearPhotoError();
-  }
-
-  clearPhotoError(): void {
-    setTimeout(() => {
-      this.errorPhotoAnimate = true;
-      setTimeout(() => {
-        this.rejectedPhotos = [];
-        this.photoLimitExceeded = false;
-        this.errorPhotoAnimate = false;
-      }, timeDisappearanceErrorPhoto);
-    }, timeShowErrorPhoto);
-  }
-
-  removePhoto(file: File): void {
-    //console.log(file);
-    this.photos.splice(this.photos.indexOf(file), 1);
   }
 
   ngOnDestroy(): void {

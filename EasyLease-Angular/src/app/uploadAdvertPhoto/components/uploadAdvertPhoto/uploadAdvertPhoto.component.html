@@ -1,0 +1,17 @@
+<div class="container">
+    <el-loading *ngIf="isLoading$ | async"></el-loading>
+    <!-- <el-error-message *ngIf="isFalling$ | async"></el-error-message> -->
+
+    <div class="row" *ngIf="!(isLoading$ | async)">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header card-header-secondary">
+                    <h1 class="card-title el-title text-center">Добавить фото</h1>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

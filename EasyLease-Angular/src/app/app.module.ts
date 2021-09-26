@@ -30,6 +30,7 @@ import {FavoritedFeedModule} from './favoritedFeed/favoritedFeed.module';
 import {UserProfileModule} from './userProfile/userProfile.module';
 import {FooterModule} from './shared/modules/footer/footer.module';
 import {UtilsService} from './shared/services/utils.service';
+import {UploadAdvertPhotoModule} from './uploadAdvertPhoto/uploadAdvertPhoto.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,9 +52,10 @@ import {UtilsService} from './shared/services/utils.service';
     UserFeedModule,
     BannerModule,
     FeedTogglerModule,
-    CreateAdvertModule,
     AdvertModule,
+    CreateAdvertModule,
     EditAdvertModule,
+    UploadAdvertPhotoModule,
     SettingsModule,
     UserProfileModule,
     FooterModule,
