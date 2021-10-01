@@ -1,12 +1,8 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NgxDropzoneChangeEvent} from 'ngx-dropzone';
-import {Observable} from 'rxjs';
-import {map, shareReplay} from 'rxjs/operators';
 
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
-import {environment} from 'src/environments/environment';
 import {RejectedFille} from '../../types/rejectedFille.interface';
 
 const timeShowErrorPhoto: number = 10000;
@@ -37,33 +33,31 @@ const timeDisappearanceErrorPhoto: number = 1000;
 })
 export class PhotoDropzoneComponent implements OnInit {
   @Input('initialValues') initialValuesProps: File[] | null = null;
-  @Input('isSubmitting') isSubmittingProps: boolean = false;
-  @Input('errors') errorsProps: BackendErrorInterface | null = null;
+  @Input('backendErrors') backendErrorsProps: BackendErrorInterface | null = null;
+  @Input('namePropertyBackendError') namePropertyBackendErrorProps: string | null = null;
+  @Input('expandVertically') expandVerticallyProps: boolean = false;
+  @Input('maxFileSize') maxFileSizeProps: number = 1048576;
+  @Input('maxNumberPhoto') maxNumberPhotoProps: number = 2;
+  @Input('AllowMultipleFiles') allowMultipleFilesProps: boolean = true;
+  @Input('allowedExtensions') allowedExtensionsProps: string[] = ['.jpg', '.jpeg'];
 
   @Output('dropzoneChange') dropzoneChangeEvent = new EventEmitter<File[]>();
 
   photos: File[] = [];
   rejectedPhotos: RejectedFille[] = [];
-  fileSizeLimit: number = environment.fileSizeLimit;
-  photoLimit: number = environment.numberOfFilesLimit;
   photoLimitExceeded: boolean = false;
   errorPhotoAnimate: boolean = false;
   private errorPhotoTimeoutId: NodeJS.Timeout | null = null;
 
-  allowedExtensions: string[] = environment.allowedExtensions;
-  acceptExtensions: string = environment.allowedExtensions
-    .map((ext) => ext.substring(1))
-    .map((ext) => (ext = `image/${ext}`))
-    .toString();
+  acceptExtensions: string = this.initializeAcceptExtensions();
 
-  isHandset$: Observable<boolean>;
+  constructor() {}
 
-  constructor(private breakpointObserver: BreakpointObserver) {
-    // Initialize values
-    this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.TabletPortrait]).pipe(
-      map((result: BreakpointState) => result.matches),
-      shareReplay()
-    );
+  private initializeAcceptExtensions(): string {
+    return this.allowedExtensionsProps
+      .map((ext) => ext.substring(1))
+      .map((ext) => (ext = `image/${ext}`))
+      .toString();
   }
 
   addPhoto(event: NgxDropzoneChangeEvent): void {
@@ -72,8 +66,9 @@ export class PhotoDropzoneComponent implements OnInit {
     this.clearPhotoError();
 
     for (const file of event.addedFiles) {
-      if (this.photos.length < this.photoLimit) {
+      if (this.photos.length < this.maxNumberPhotoProps) {
         this.photos.push(file);
+        this.dropzoneChangeEvent.emit(Object.assign([], this.photos));
       } else {
         this.photoLimitExceeded = true;
         break;
@@ -86,6 +81,7 @@ export class PhotoDropzoneComponent implements OnInit {
   private clearPhotoError(): void {
     if (this.errorPhotoTimeoutId) {
       this.rejectedPhotos = [];
+      this.backendErrorsProps = null;
       this.photoLimitExceeded = false;
       this.errorPhotoAnimate = false;
       clearTimeout(this.errorPhotoTimeoutId);
@@ -95,6 +91,7 @@ export class PhotoDropzoneComponent implements OnInit {
       this.errorPhotoAnimate = true;
       setTimeout(() => {
         this.rejectedPhotos = [];
+        this.backendErrorsProps = null;
         this.photoLimitExceeded = false;
         this.errorPhotoAnimate = false;
       }, timeDisappearanceErrorPhoto);
@@ -103,8 +100,13 @@ export class PhotoDropzoneComponent implements OnInit {
 
   removePhoto(file: File): void {
     //console.log(file);
+
     this.photos.splice(this.photos.indexOf(file), 1);
+    this.dropzoneChangeEvent.emit(Object.assign([], this.photos));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.acceptExtensions = this.initializeAcceptExtensions();
+    this.photos = this.initialValuesProps ? Object.assign([], this.initialValuesProps) : [];
+  }
 }

@@ -19,7 +19,7 @@ namespace EasyLease.Repository {
             if (tags != null) {
                 var existingTags = await AllTagsAsync(trackChanges: false).ConfigureAwait(false);
 
-                var idsOfExistingTag = existingTags != null ? existingTags.Select(tag => tag.Id) : new List<string>();
+                var idsOfExistingTag = existingTags != null ? existingTags.Select(tag => tag.Id).ToList() : new List<string>();
 
                 foreach (var tag in tags) {
                     if (!idsOfExistingTag.Contains(tag.TagId)) {

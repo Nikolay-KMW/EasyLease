@@ -1,6 +1,6 @@
 <div class="container">
     <el-loading *ngIf="isLoading$ | async"></el-loading>
-    <!-- <el-error-message *ngIf="isFalling$ | async"></el-error-message> -->
+    <el-error-message *ngIf="isFalling$ | async"></el-error-message>
 
     <div class="row" *ngIf="!(isLoading$ | async)">
         <div class="col-12">
@@ -8,8 +8,24 @@
                 <div class="card-header card-header-secondary">
                     <h1 class="card-title el-title text-center">Добавить фото</h1>
                 </div>
-                <div class="card-body">
-
+                <div class="card-body mt-4">
+                    <el-photo-dropzone [initialValues]="(initialValues$ | async)"
+                        [backendErrors]="(backendErrors$ | async)" [namePropertyBackendError]="'photos'"
+                        [AllowMultipleFiles]="true" [allowedExtensions]="allowedExtensions"
+                        [maxNumberPhoto]="maxNumberPhoto" (dropzoneChange)="putPhoto($event)"
+                        [expandVertically]="!(isHandset$ | async)!" [maxFileSize]="maxFileSize">
+                    </el-photo-dropzone>
+                </div>
+                <div class="card-header mb-2 mt-0">
+                    <button class="py-1 col-sm-auto float-right" type="submit" mat-raised-button (click)="onSubmit()"
+                        [disabled]="(isSubmitting$ | async)" color="success">
+                        <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
+                            *ngIf="(isSubmitting$ | async)">
+                        </fa-icon>
+                        <fa-icon [icon]="faFlagCheckered" size="lg" class="pr-2" transform="grow-2">
+                        </fa-icon>
+                        Опубликовать
+                    </button>
                 </div>
             </div>
         </div>

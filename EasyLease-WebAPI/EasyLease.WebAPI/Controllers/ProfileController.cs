@@ -87,7 +87,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var profileToReturn = _mapper.Map<ProfileDTO>(user);
 
-            return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
+            return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, new { profile = profileToReturn });
         }
 
         [HttpDelete("settings/avatar"), Authorize(Policy = "UserVisit")]
@@ -101,7 +101,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var profileToReturn = _mapper.Map<ProfileDTO>(user);
 
-            return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
+            return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, new { profile = profileToReturn });
         }
 
         [HttpPut("settings"), Authorize(Policy = "UserVisit")]
@@ -117,7 +117,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var profileToReturn = _mapper.Map<ProfileDTO>(user);
 
-            return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, profileToReturn);
+            return CreatedAtRoute("GetProfileById", new { userId = profileToReturn.Id }, new { profile = profileToReturn });
         }
 
         // [HttpDelete("{id}")]

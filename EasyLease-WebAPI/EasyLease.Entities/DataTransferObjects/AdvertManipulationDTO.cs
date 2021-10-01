@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using EasyLease.Entities.Models;
 
 namespace EasyLease.Entities.DataTransferObjects {
@@ -89,6 +90,16 @@ namespace EasyLease.Entities.DataTransferObjects {
                         new[] { nameof(TagList) });
                 }
             }
+
+            ICollection<string> tagsWithoutDuplicates = new List<string>();
+
+            foreach (var tag in TagList) {
+                if (!tagsWithoutDuplicates.Contains(tag)) {
+                    tagsWithoutDuplicates.Add(tag);
+                }
+            }
+
+            TagList = tagsWithoutDuplicates.ToArray();
         }
     }
 

@@ -30,7 +30,8 @@ namespace EasyLease.WebAPI.ActionFilters {
 
             if (avatar == null) {
                 _logger.LogError($"Photo sent from client is null. Controller: {controller}, action: { action}");
-                context.Result = new BadRequestObjectResult($"Photo is empty. Controller: {controller}, action: {action}");
+                context.ModelState.AddModelError(nameof(avatar), $"Photo is empty. Controller: {controller}, action: {action}");
+                context.Result = new BadRequestObjectResult(context.ModelState);
                 return;
             }
 
@@ -39,7 +40,8 @@ namespace EasyLease.WebAPI.ActionFilters {
 
             if (!_userProfileSettings.AllowedExtensions.Any(ext => ext == fileExtension)) {
                 _logger.LogError($"Photo sent from client has extension {fileExtension}");
-                context.Result = new BadRequestObjectResult($"Photo {trustedFileNameForDisplay} must has one of the extensions: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
+                context.ModelState.AddModelError(nameof(avatar), $"Photo < {trustedFileNameForDisplay} > must has one of the extensions: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
+                context.Result = new BadRequestObjectResult(context.ModelState);
                 return;
             }
 
@@ -48,7 +50,8 @@ namespace EasyLease.WebAPI.ActionFilters {
 
                 if (memoryStream.Length > _userProfileSettings.FileSizeLimitForAvatar) {
                     _logger.LogError($"Photo sent from client is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
-                    context.Result = new BadRequestObjectResult($"Photo {trustedFileNameForDisplay} is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
+                    context.ModelState.AddModelError(nameof(avatar), $"Photo < {trustedFileNameForDisplay} > is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
+                    context.Result = new BadRequestObjectResult(context.ModelState);
                     return;
                 }
 
@@ -62,7 +65,8 @@ namespace EasyLease.WebAPI.ActionFilters {
 
                     if (!isValidSignature) {
                         _logger.LogError($"Photo sent from client has not valid signature: {fileExtension}");
-                        context.Result = new BadRequestObjectResult($"Photo {trustedFileNameForDisplay} must has one of the extensions.: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
+                        context.ModelState.AddModelError(nameof(avatar), $"Photo < {trustedFileNameForDisplay} > must has one of the extensions.: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
+                        context.Result = new BadRequestObjectResult(context.ModelState);
                         return;
                     }
                 }

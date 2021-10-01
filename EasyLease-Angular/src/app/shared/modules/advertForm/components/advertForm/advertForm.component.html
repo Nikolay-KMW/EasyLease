@@ -627,97 +627,30 @@
                                     </fieldset>
                                 </fieldset>
                                 <div>
-                                    <button class="my-1 py-1 col-sm-auto" mat-raised-button color="elegant"
+                                    <button class="my-1 py-1 mr-md-1 col-md-auto" mat-raised-button color="elegant"
                                         matStepperPrevious>
                                         <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
                                         </fa-icon>
                                         Назад
                                     </button>
-                                    <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
-                                        color="secondary" matStepperNext>
-                                        Далее
-                                        <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
+                                    <button class="my-1 py-1 col-md-auto" mat-raised-button color="warn"
+                                        (click)="stepper.reset()">
+                                        <fa-icon [icon]="faTimesCircle" size="lg" class="pr-2" transform="grow-1">
                                         </fa-icon>
+                                        Сбросить все
+                                    </button>
+                                    <button class="my-1 py-1 col-md-auto float-right" type="submit" mat-raised-button
+                                        (click)="onSubmit()" [disabled]="(isSubmittingProps || descriptionForm.invalid)"
+                                        color="success">
+                                        <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
+                                            *ngIf="isSubmittingProps">
+                                        </fa-icon>
+                                        <fa-icon [icon]="faFlagCheckered" size="lg" class="pr-2" transform="grow-2">
+                                        </fa-icon>
+                                        Опубликовать
                                     </button>
                                 </div>
                             </form>
-                        </mat-step>
-
-                        <mat-step state="tagStep">
-                            <ng-template matStepLabel>Добавить фото</ng-template>
-                            <div class="form-group px-0">
-                                <ngx-dropzone class="custom-dropzone" [maxFileSize]="fileSizeLimit"
-                                    [accept]="acceptExtensions" (change)="addPhoto($event)"
-                                    [expandable]="!(isHandset$ | async)!">
-                                    <ngx-dropzone-label>
-                                        <div>
-                                            <h3 class="mb-0"> <strong>Выберите фотографии и переместите их
-                                                    сюда</strong></h3>
-                                            <h4 class="mb-0">(Максимальный размер одного фото - {{fileSizeLimit /
-                                                (1024*1024)}}Mb.)
-                                            </h4>
-                                            <h4>(Допустимые расширения файлов: {{allowedExtensions.join(" ")}})
-                                            </h4>
-                                        </div>
-                                    </ngx-dropzone-label>
-                                    <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview"
-                                        *ngFor="let photo of photos" [file]="photo" [removable]="true"
-                                        (removed)="removePhoto(photo)">
-                                        <!-- <ngx-dropzone-label>{{ photo.size/1024 }}kb ({{ photo.type }})
-                                                </ngx-dropzone-label> -->
-                                    </ngx-dropzone-image-preview>
-                                </ngx-dropzone>
-                                <div class="error-photo m-2" [@errorPhotoAnimate]="(errorPhotoAnimate)?'true':'false'">
-                                    <mat-error *ngIf="(errorsProps != null)">
-                                        <div *ngFor="let error of errorsProps['Photos']">
-                                            {{error}}
-                                        </div>
-                                    </mat-error>
-                                    <mat-error *ngFor="let rejectedPhoto of rejectedPhotos">
-                                        <container-element [ngSwitch]="rejectedPhoto.reason">
-                                            <div *ngSwitchCase="'size'">
-                                                Файл
-                                                <strong>"{{rejectedPhoto.name}}"</strong>
-                                                был отклонен, он имеет размер
-                                                больше
-                                                чем {{fileSizeLimit / (1024*1024)}}Mb.
-                                            </div>
-                                            <div *ngSwitchCase="'type'">Файл
-                                                <strong>"{{rejectedPhoto.name}}"</strong>
-                                                был отклонен, он имеет недопустимое
-                                                расширение.
-                                            </div>
-                                        </container-element>
-                                    </mat-error>
-                                    <mat-error *ngIf="photoLimitExceeded">
-                                        Количество фото не может быть больше {{photoLimit}} шт.
-                                    </mat-error>
-                                </div>
-                            </div>
-                            <div>
-                                <button class="my-1 py-1 mr-md-1 col-md-auto" mat-raised-button color="elegant"
-                                    matStepperPrevious>
-                                    <fa-icon [icon]="faStepBackward" size="lg" class="pr-2" transform="grow-1">
-                                    </fa-icon>
-                                    Назад
-                                </button>
-                                <button class="my-1 py-1 col-md-auto" mat-raised-button color="warn"
-                                    (click)="stepper.reset()">
-                                    <fa-icon [icon]="faTimesCircle" size="lg" class="pr-2" transform="grow-1">
-                                    </fa-icon>
-                                    Сбросить все
-                                </button>
-                                <button class="my-1 py-1 col-md-auto float-right" type="submit" mat-raised-button
-                                    (click)="onSubmit()" [disabled]="isSubmittingProps || descriptionForm.invalid"
-                                    color="success">
-                                    <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
-                                        *ngIf="isSubmittingProps">
-                                    </fa-icon>
-                                    <fa-icon [icon]="faFlagCheckered" size="lg" class="pr-2" transform="grow-2">
-                                    </fa-icon>
-                                    Опубликовать
-                                </button>
-                            </div>
                         </mat-step>
 
                         <!-- Icon overrides. -->

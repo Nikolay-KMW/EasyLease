@@ -1,13 +1,15 @@
-<ngx-dropzone class="custom-dropzone" [maxFileSize]="fileSizeLimit" [accept]="acceptExtensions"
-    (change)="addPhoto($event)" [expandable]="!(isHandset$ | async)!">
+<ngx-dropzone class="custom-dropzone" [maxFileSize]="maxFileSizeProps" [accept]="acceptExtensions"
+    (change)="addPhoto($event)" [expandable]="expandVerticallyProps" [multiple]="allowMultipleFilesProps">
     <ngx-dropzone-label>
         <div>
-            <h3 class="mb-0"> <strong>Выберите фотографии и переместите их
+            <h3 class="mb-0" *ngIf="!allowMultipleFilesProps"> <strong>Выберите фотографию и переместите её
                     сюда</strong></h3>
-            <h4 class="mb-0">(Максимальный размер одного фото - {{fileSizeLimit /
+            <h3 class="mb-0" *ngIf="allowMultipleFilesProps"> <strong>Выберите фотографии и переместите их
+                    сюда</strong></h3>
+            <h4 class="mb-0">(Максимальный размер одного фото - {{maxFileSizeProps /
                 (1024*1024)}}Mb.)
             </h4>
-            <h4>(Допустимые расширения файлов: {{allowedExtensions.join(" ")}})
+            <h4>(Допустимые расширения файлов: {{allowedExtensionsProps.join(" ")}})
             </h4>
         </div>
     </ngx-dropzone-label>
@@ -17,9 +19,9 @@
                     </ngx-dropzone-label> -->
     </ngx-dropzone-image-preview>
 </ngx-dropzone>
-<div class="error-photo m-2" [@errorPhotoAnimate]="(errorPhotoAnimate)?'true':'false'">
-    <mat-error *ngIf="(errorsProps != null)">
-        <div *ngFor="let error of errorsProps['Photos']">
+<div class="error-photo mx-2 mt-2" [@errorPhotoAnimate]="(errorPhotoAnimate)?'true':'false'">
+    <mat-error *ngIf="(backendErrorsProps && namePropertyBackendErrorProps)">
+        <div *ngFor="let error of backendErrorsProps[namePropertyBackendErrorProps]">
             {{error}}
         </div>
     </mat-error>
@@ -30,7 +32,7 @@
                 <strong>"{{rejectedPhoto.name}}"</strong>
                 был отклонен, он имеет размер
                 больше
-                чем {{fileSizeLimit / (1024*1024)}}Mb.
+                чем {{maxFileSizeProps / (1024*1024)}}Mb.
             </div>
             <div *ngSwitchCase="'type'">Файл
                 <strong>"{{rejectedPhoto.name}}"</strong>
@@ -40,6 +42,6 @@
         </container-element>
     </mat-error>
     <mat-error *ngIf="photoLimitExceeded">
-        Количество фото не может быть больше {{photoLimit}} шт.
+        Количество фото не может быть больше {{maxNumberPhotoProps}} шт.
     </mat-error>
 </div>

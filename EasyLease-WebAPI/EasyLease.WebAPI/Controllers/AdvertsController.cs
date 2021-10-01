@@ -90,7 +90,7 @@ namespace EasyLease.WebAPI.Controllers {
             var advertToReturn = BuildAdvertDTOToReturn(advert, user);
             advertToReturn.Author = _mapper.Map<ProfileDTO>(user);
 
-            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, new { advert = advertToReturn });
         }
 
         [HttpPut("{advertId}"), Authorize(Policy = "UserVisit"), Authorize(Policy = "UserIsOwnerAdvert")]
@@ -110,7 +110,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
-            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, new { advert = advertToReturn });
         }
 
         [HttpDelete("{advertId}"), Authorize(Policy = "UserVisit"), Authorize(Policy = "UserIsOwnerAdvert")]
@@ -146,7 +146,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
-            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, new { advert = advertToReturn });
         }
 
         [HttpDelete("{advertId}/photos"), Authorize(Policy = "UserVisit"), Authorize(Policy = "UserIsOwnerAdvert")]
@@ -167,7 +167,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
-            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, new { advert = advertToReturn });
         }
 
         [HttpPost("{advertId}/favorite"), Authorize]
@@ -182,7 +182,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
-            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+            return Ok(new { advert = advertToReturn });
         }
 
         [HttpDelete("{advertId}/favorite"), Authorize]
@@ -197,7 +197,7 @@ namespace EasyLease.WebAPI.Controllers {
 
             var advertToReturn = BuildAdvertDTOToReturn(advert, user);
 
-            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, advertToReturn);
+            return Ok(new { advert = advertToReturn });
         }
 
         private Task<User> GetAuthorizedUserWhitFavoriteAdsAsync(ClaimsPrincipal claimsPrincipal, bool trackChanges) {

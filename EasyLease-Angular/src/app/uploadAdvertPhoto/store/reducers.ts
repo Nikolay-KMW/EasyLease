@@ -1,18 +1,21 @@
 import {Action, createReducer, on} from '@ngrx/store';
 
-import {UploadAdvertPhotoStateInterface} from '../types/createAdvertState.interface';
+import {UploadAdvertPhotoStateInterface} from '../types/uploadAdvertPhotoState.interface';
 import {
   getPhotoForAdvertAction,
   getPhotoForAdvertFailureAction,
   getPhotoForAdvertSuccessAction,
+  quantityDownloadPhotoAction,
 } from './actions/getPhoto.action';
 import {uploadPhotoAction, uploadPhotoFailureAction, uploadPhotoSuccessAction} from './actions/uploadPhoto.action';
 
 const initialState: UploadAdvertPhotoStateInterface = {
-  photos: null,
+  photos: [],
+  quantityPhoto: 0,
   isLoading: false,
   isSubmitting: false,
   validationErrors: null,
+  isFalling: false,
 };
 
 const uploadAdvertPhotoReducer = createReducer(
@@ -25,10 +28,17 @@ const uploadAdvertPhotoReducer = createReducer(
     })
   ),
   on(
+    quantityDownloadPhotoAction,
+    (state, action): UploadAdvertPhotoStateInterface => ({
+      ...state,
+      quantityPhoto: action.quantity,
+    })
+  ),
+  on(
     getPhotoForAdvertSuccessAction,
     (state, action): UploadAdvertPhotoStateInterface => ({
       ...state,
-      photos: action.files,
+      photos: action.photos,
       isLoading: false,
     })
   ),
@@ -37,6 +47,7 @@ const uploadAdvertPhotoReducer = createReducer(
     (state): UploadAdvertPhotoStateInterface => ({
       ...state,
       isLoading: false,
+      isFalling: true,
     })
   ),
   on(

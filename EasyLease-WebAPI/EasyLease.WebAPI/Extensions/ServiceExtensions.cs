@@ -17,15 +17,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 
 namespace EasyLease.WebAPI.Extensions {
     public static class ServiceExtensions {
         public static void ConfigureCors(this IServiceCollection service) {
             service.AddCors(options => {
                 options.AddPolicy("CorsPolicy", builder =>
-                builder.AllowAnyOrigin()
+                builder
+                //.SetIsOriginAllowed(origin => true)
+                //.AllowAnyOrigin()
+                .WithOrigins("http://localhost:4200")
+                //.SetIsOriginAllowedToAllowWildcardSubdomains()
                 .AllowAnyMethod()
+                //.WithHeaders(HeaderNames.AccessControlAllowOrigin, "*")
                 .AllowAnyHeader()
+                //.AllowCredentials()
                 .WithExposedHeaders("X-Pagination"));
             });
         }

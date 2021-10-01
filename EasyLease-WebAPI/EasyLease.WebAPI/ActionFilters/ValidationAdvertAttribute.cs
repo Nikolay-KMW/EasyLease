@@ -31,7 +31,7 @@ namespace EasyLease.WebAPI.ActionFilters {
 
             if (advertDTO.StartOfLease < currenDateTime) {
                 _logger.LogError($"The date start of lease set {advertDTO.StartOfLease} is earlier than now {currenDateTime}.");
-                context.ModelState.AddModelError(nameof(advertDTO.StartOfLease), "The date start of lease is invalid");
+                context.ModelState.AddModelError(nameof(advertDTO.StartOfLease), "The date start of lease is invalid.");
             }
 
             if (advertDTO.EndOfLease != null) {
