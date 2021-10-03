@@ -13,14 +13,13 @@ import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 })
 export class UserFeedComponent implements OnInit, OnDestroy {
   apiUrl: string = '/';
-  // userId: string | null = null;
 
   routeParamsSubscription: Subscription;
 
   constructor(private store: Store<AppStateInterface>, private route: ActivatedRoute) {
     this.routeParamsSubscription = this.route.params.subscribe((params: Params) => {
-      let userId = params.slug as string;
-      this.apiUrl = `/profile/${userId}/adverts`;
+      let slug = params.slug as string;
+      this.apiUrl = `/profile/${slug}/realty`;
     });
   }
 

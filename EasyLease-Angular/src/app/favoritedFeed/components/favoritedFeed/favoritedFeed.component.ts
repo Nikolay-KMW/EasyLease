@@ -13,7 +13,7 @@ import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 })
 export class FavoritedFeedComponent implements OnInit, OnDestroy {
   //apiUrl: string = '/';
-  apiUrl: string = '/profile/favorite-adverts';
+  apiUrl: string = '/profile/favorite-realty';
 
   //routeParamsSubscription: Subscription;
 

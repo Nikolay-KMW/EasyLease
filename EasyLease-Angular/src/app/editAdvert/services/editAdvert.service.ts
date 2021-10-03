@@ -13,7 +13,7 @@ export class EditAdvertService {
   constructor(private http: HttpClient) {}
 
   updateAdvert(slug: string, advertInput: AdvertInputInterface): Observable<AdvertInterface> {
-    const fullUrl = `${environment.apiUrl}/adverts/${slug}`;
+    const fullUrl = `${environment.apiUrl}/realty/${slug}`;
 
     return this.http
       .put<SaveAdvertResponseInterface>(fullUrl, advertInput)

@@ -9,7 +9,7 @@ import {AppStateInterface} from 'src/app/shared/types/appState.interface';
   styleUrls: ['./globalFeed.component.scss'],
 })
 export class GlobalFeedComponent implements OnInit {
-  apiUrl = '/adverts';
+  apiUrl = '/realty';
 
   constructor(private store: Store<AppStateInterface>) {}
 

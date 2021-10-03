@@ -17,13 +17,13 @@ using Microsoft.IdentityModel.Tokens;
 namespace EasyLease.WebAPI.Utilities {
     public class AuthenticationManager : IAuthenticationManager {
         private readonly UserManager<User> _userManager;
-        private readonly IConfiguration _configuration;
+        private readonly JwtSettings _jwtSettings;
 
         public TimeSpan DefaultLockoutTimeSpan { get; }
 
-        public AuthenticationManager(UserManager<User> userManager, IConfiguration configuration) {
+        public AuthenticationManager(UserManager<User> userManager, JwtSettings jwtSettings) {
             _userManager = userManager;
-            _configuration = configuration;
+            _jwtSettings = jwtSettings;
             DefaultLockoutTimeSpan = _userManager.Options.Lockout.DefaultLockoutTimeSpan;
         }
 
@@ -97,14 +97,11 @@ namespace EasyLease.WebAPI.Utilities {
         }
 
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims) {
-            JwtSettings jwtSettings = new JwtSettings();
-            _configuration.GetSection("JwtSettings").Bind(jwtSettings);
-
             var tokenOptions = new JwtSecurityToken(
-                issuer: jwtSettings.ValidIssuer,
-                audience: jwtSettings.ValidAudience,
+                issuer: _jwtSettings.ValidIssuer,
+                audience: _jwtSettings.ValidAudience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(jwtSettings.Expires),
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.Expires),
                 signingCredentials: signingCredentials
             );
 

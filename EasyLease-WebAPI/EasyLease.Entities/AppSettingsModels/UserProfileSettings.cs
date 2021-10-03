@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 namespace EasyLease.Entities.AppSettingsModels {
     public class UserProfileSettings {
+        public const string UserProfile = "UserProfile";
+
         public bool RequireDigitForPassword { get; set; }
         public bool RequireLowercaseForPassword { get; set; }
         public bool RequireUppercaseForPassword { get; set; }

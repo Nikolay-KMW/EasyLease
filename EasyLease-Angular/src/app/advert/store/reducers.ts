@@ -6,6 +6,7 @@ import {getAdvertAction, getAdvertFailureAction, getAdvertSuccessAction} from '.
 
 const initialState: AdvertStateInterface = {
   isLoading: false,
+  isFalling: false,
   error: null,
   date: null,
 };
@@ -32,6 +33,7 @@ export const advertReducer = createReducer(
     (state): AdvertStateInterface => ({
       ...state,
       isLoading: false,
+      isFalling: true,
     })
   ),
   on(

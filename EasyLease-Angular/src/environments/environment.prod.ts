@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  originUrl: 'https://localhost:4200',
   apiUrl: 'https://localhost:5001/api',
   uploadUrl: 'https://localhost:5001',
   limit: 10,

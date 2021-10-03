@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace EasyLease.WebAPI.Controllers {
-    [Route("api/adverts")]
+    [Route("api/realty")]
     [ApiController]
     public class AdvertsController : ControllerBase {
         private readonly IRepositoryManager _repository;

@@ -90,7 +90,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   getApiUrl(): string {
-    return `/profile/${this.slug}/adverts`;
+    return `/profile/${this.slug}/realty`;
 
     // const isComments = this.router.url.includes('favorites');
     // return isComments ? `/articles?favorited=${this.slug}` : `/articles?author=${this.slug}`;

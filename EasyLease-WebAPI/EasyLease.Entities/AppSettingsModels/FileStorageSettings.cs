@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace EasyLease.Entities.AppSettingsModels {
     public class FileStorageSettings {
+        public const string FileStorage = "FileStorage";
+
         public string WebRootPath { get; set; }
         public string PathInWebRoot { get; set; }
         public long FileSizeLimit { get; set; }

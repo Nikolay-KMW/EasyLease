@@ -1,3 +1,4 @@
+import {routerNavigatedAction} from '@ngrx/router-store';
 import {Action, createReducer, on} from '@ngrx/store';
 
 import {UploadAdvertPhotoStateInterface} from '../types/uploadAdvertPhotoState.interface';
@@ -70,6 +71,15 @@ const uploadAdvertPhotoReducer = createReducer(
       ...state,
       isSubmitting: false,
       validationErrors: action.errors,
+    })
+  ),
+  on(
+    routerNavigatedAction,
+    (state): UploadAdvertPhotoStateInterface => ({
+      ...state,
+      isSubmitting: false,
+      validationErrors: null,
+      isFalling: false,
     })
   )
 );

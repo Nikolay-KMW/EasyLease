@@ -13,7 +13,7 @@ export class CreateAdvertService {
   constructor(private http: HttpClient) {}
 
   createAdvert(advertInput: AdvertInputInterface): Observable<AdvertInterface> {
-    const fullUrl = environment.apiUrl + '/adverts';
+    const fullUrl = environment.apiUrl + '/realty';
 
     return this.http
       .post<SaveAdvertResponseInterface>(fullUrl, advertInput)

@@ -8,7 +8,7 @@ export class AdvertService {
   constructor(private http: HttpClient) {}
 
   deletedAdvert(slug: string): Observable<{}> {
-    const url = `${environment.apiUrl}/adverts/${slug}`;
+    const url = `${environment.apiUrl}/realty/${slug}`;
 
     return this.http.delete<{}>(url);
   }

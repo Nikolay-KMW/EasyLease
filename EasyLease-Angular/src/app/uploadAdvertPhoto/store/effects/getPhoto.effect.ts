@@ -55,7 +55,9 @@ export class GetPhotoEffect {
                 this.fileBuffer.push(photo);
 
                 if (this.quantityFiles == this.fileBuffer.length) {
-                  return getPhotoForAdvertSuccessAction({photos: Object.assign([], this.fileBuffer)});
+                  const buffer = this.fileBuffer;
+                  this.fileBuffer = [];
+                  return getPhotoForAdvertSuccessAction({photos: Object.assign([], buffer)});
                 }
 
                 return quantityDownloadPhotoAction({quantity: this.fileBuffer.length});

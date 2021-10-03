@@ -21,7 +21,7 @@ export class UploadPhotoService {
   }
 
   uploadPhotoForAdvert(slag: string, files: File[]): Observable<AdvertInterface> {
-    const fullUrl = environment.apiUrl + `/adverts/${slag}/photos`;
+    const fullUrl = environment.apiUrl + `/realty/${slag}/photos`;
 
     return this.http
       .put<SaveAdvertResponseInterface>(fullUrl, this.toFormData('photos', files))

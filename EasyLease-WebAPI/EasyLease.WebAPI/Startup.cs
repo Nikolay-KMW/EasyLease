@@ -41,9 +41,13 @@ namespace EasyLease.WebAPI {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            Policy = new CorsPolicy();
-            Policy.Origins.Add("http://localhost:4200");
+            // services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+            // //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            // Policy = new CorsPolicy();
+            // Policy.Origins.Add("http://localhost:4200");
+
+            services.ConfigureGeneralSettings(Configuration);
 
             services.ConfigureCors();
             services.ConfigureIISIntegration();
@@ -53,7 +57,6 @@ namespace EasyLease.WebAPI {
             services.ConfigureRepositoryManager();
             services.ConfigureFileStorage(Configuration, WebHostEnv);
             services.ConfigureUserProfile(Configuration);
-            services.ConfigureGeneralSettings(Configuration);
 
             services.AddAutoMapper(typeof(Startup));
             services.ConfigureAutoMapperProfile();
@@ -72,13 +75,7 @@ namespace EasyLease.WebAPI {
             services.AddHttpContextAccessor();
 
             services.AddAuthentication();
-
-            services.AddAuthorization(options => {
-                options.AddPolicy("UserIsOwnerAdvert",
-                    policy => policy.Requirements.Add(new UserIsOwnerAdvertRequirement()));
-                options.AddPolicy("UserVisit",
-                    policy => policy.Requirements.Add(new UserVisitRequirement()));
-            });
+            services.ConfigureAuthorization();
 
             services.ConfigureIdentity(Configuration);
             services.ConfigureJWT(Configuration);
@@ -87,40 +84,45 @@ namespace EasyLease.WebAPI {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, ILoggerManager logger, ICorsService corsService, ICorsPolicyProvider corsPolicyProvider) {
-
+        public void Configure(IApplicationBuilder app, ILoggerManager logger, ICorsService corsService, ICorsPolicyProvider corsPolicyProvider, IWebHostEnvironment env) {
 
             if (WebHostEnv.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
-
 
             app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();
 
             app.UseCors("CorsPolicy");
 
-            app.UseStaticFiles(new StaticFileOptions {
-                OnPrepareResponse = context => {
-                    if (context.File.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase)) {
-                        var origin = context.Context.Request.Headers[CorsConstants.Origin];
-                        var requestHeaders = context.Context.Request.Headers;
+            // app.UseStaticFiles(new StaticFileOptions {
+            //     OnPrepareResponse = context => {
+            //         if (context.File.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase)) {
+            //             var origin = context.Context.Request.Headers[CorsConstants.Origin];
+            //             var requestHeaders = context.Context.Request.Headers;
 
-                        var isOptionsRequest = string.Equals(context.Context.Request.Method, CorsConstants.PreflightHttpMethod, StringComparison.OrdinalIgnoreCase);
-                        var isPreflightRequest = isOptionsRequest && requestHeaders.ContainsKey(CorsConstants.AccessControlRequestMethod);
+            //             var isOptionsRequest = string.Equals(context.Context.Request.Method, CorsConstants.PreflightHttpMethod, StringComparison.OrdinalIgnoreCase);
+            //             var isPreflightRequest = isOptionsRequest && requestHeaders.ContainsKey(CorsConstants.AccessControlRequestMethod);
 
-                        var corsResult = new CorsResult {
-                            IsPreflightRequest = isPreflightRequest,
-                            IsOriginAllowed = IsOriginAllowed(Policy, origin),
-                        };
+            //             var corsResult = new CorsResult {
+            //                 IsPreflightRequest = isPreflightRequest,
+            //                 IsOriginAllowed = IsOriginAllowed(Policy, origin),
+            //             };
 
-                        if (!corsResult.IsOriginAllowed) {
-                            context.Context.Response.StatusCode = 204;
-                        }
-                    }
+            //             if (!corsResult.IsOriginAllowed) {
+            //                 context.Context.Response.StatusCode = 204;
+            //             }
+            //         }
 
-                }
-            });
+            //     }
+            // });
+
+            app.UseStaticFiles();
+
+            // app.UseStaticFiles(new StaticFileOptions {
+            //     FileProvider = new PhysicalFileProvider
+            //     (Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "upload")), RequestPath = "/StaticFiles"
+            // });
 
 
             //app.UseStaticFiles();
@@ -163,12 +165,6 @@ namespace EasyLease.WebAPI {
 
             //     },
 
-            //     // OnPrepareResponse = ctx => {
-            //     //     // using Microsoft.AspNetCore.Http;
-            //     //     ctx.Context.Response.Headers.Append(
-            //     //          "Cache-Control", $"public, max-age={500}");
-            //     // }
-
             //     // FileProvider = new PhysicalFileProvider(
             //     //         Path.Combine(Directory.GetCurrentDirectory(), "upload")),
             //     // RequestPath = new Microsoft.AspNetCore.Http.PathString("/upload")
@@ -208,11 +204,7 @@ namespace EasyLease.WebAPI {
                 return false;
             }
 
-            if (policy.AllowAnyOrigin || policy.IsOriginAllowed(origin)) {
-                return true;
-            }
-
-            return false;
+            return policy.AllowAnyOrigin || policy.IsOriginAllowed(origin);
         }
     }
 }

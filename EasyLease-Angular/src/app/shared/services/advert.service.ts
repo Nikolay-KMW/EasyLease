@@ -11,7 +11,7 @@ import {GetAdvertResponseInterface} from '../types/getAdvertResponse.interface';
 export class AdvertService {
   constructor(private http: HttpClient) {}
   getAdvert(slug: string): Observable<AdvertInterface> {
-    const fullUrl = `${environment.apiUrl}/adverts/${slug}`;
+    const fullUrl = `${environment.apiUrl}/realty/${slug}`;
 
     return this.http
       .get<GetAdvertResponseInterface>(fullUrl)

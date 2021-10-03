@@ -11,7 +11,7 @@ export class AddToFavoritesService {
   constructor(private http: HttpClient) {}
 
   getUrl(slug: string): string {
-    return `${environment.apiUrl}/adverts/${slug}/favorite`;
+    return `${environment.apiUrl}/realty/${slug}/favorite`;
   }
 
   getAdvert(response: GetAdvertResponseInterface): AdvertInterface {

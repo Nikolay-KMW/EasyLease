@@ -10,6 +10,11 @@ export const isLoadingSelector = createSelector(
   (advertState: AdvertStateInterface) => advertState.isLoading
 );
 
+export const isFallingSelector = createSelector(
+  advertFeatureSelector,
+  (advertState: AdvertStateInterface) => advertState.isFalling
+);
+
 export const errorSelector = createSelector(
   advertFeatureSelector,
   (advertState: AdvertStateInterface) => advertState.error

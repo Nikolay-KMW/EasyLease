@@ -11,7 +11,7 @@ export class AdditionalDataService {
   constructor(private http: HttpClient) {}
 
   getAdditionalDataForAdvert(): Observable<AdvertAdditionalData> {
-    const fullUrl = `${environment.apiUrl}/adverts/additional-data`;
+    const fullUrl = `${environment.apiUrl}/realty/additional-data`;
 
     return this.http.get<AdvertAdditionalData>(fullUrl).pipe(map((response: AdvertAdditionalData) => response));
   }

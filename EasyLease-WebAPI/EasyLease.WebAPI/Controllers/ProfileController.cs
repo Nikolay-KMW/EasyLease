@@ -42,7 +42,7 @@ namespace EasyLease.WebAPI.Controllers {
             return Ok(new { profile = profileToReturn });
         }
 
-        [HttpGet("{userId}/adverts")]
+        [HttpGet("{userId}/realty")]
         [ServiceFilter(typeof(ValidateProfileExistsAttribute))]
         //===============================================================================
         public async Task<IActionResult> GetAdvertsPostedUser(Guid userId, [FromQuery] AdvertParameters advertParameters) {
@@ -60,7 +60,7 @@ namespace EasyLease.WebAPI.Controllers {
             return Ok(new { adverts = advertsToReturn });
         }
 
-        [HttpGet("favorite-adverts"), Authorize]
+        [HttpGet("favorite-realty"), Authorize]
         //===============================================================================
         public async Task<IActionResult> GetFavoriteAdvertsForUser([FromQuery] AdvertParameters advertParameters) {
             var (advertsForUser, user) = _authManager.TryGetUserId(HttpContext.User, out Guid authUserId)

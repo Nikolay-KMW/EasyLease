@@ -14,7 +14,7 @@ import {AdvertInterface} from 'src/app/shared/types/advert.interface';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {getAdvertAction} from '../../store/actions/getAdvert.action';
-import {advertSelector, errorSelector, isLoadingSelector} from '../../store/selectors';
+import {advertSelector, errorSelector, isFallingSelector, isLoadingSelector} from '../../store/selectors';
 import {deleteAdvertAction} from '../../store/actions/deleteAdvert.action';
 import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
@@ -40,6 +40,7 @@ export class AdvertComponent implements OnInit, OnDestroy {
 
   isLoading$: Observable<boolean>;
   error$: Observable<string | null>;
+  isFalling$: Observable<boolean>;
   isAuthor$: Observable<boolean>;
 
   faTrash: IconDefinition = faTrash;
@@ -55,6 +56,7 @@ export class AdvertComponent implements OnInit, OnDestroy {
 
     // TODO: implements errors
     this.error$ = this.store.pipe(select(errorSelector));
+    this.isFalling$ = this.store.pipe(select(isFallingSelector));
 
     this.isAuthor$ = combineLatest([
       this.store.pipe(select(advertSelector)),
