@@ -42,14 +42,9 @@ namespace EasyLease.WebAPI.Extensions {
             service.AddCors(options => {
                 options.AddPolicy("CorsPolicy", builder =>
                 builder
-                //.SetIsOriginAllowed(origin => true)
-                //.AllowAnyOrigin()
                 .WithOrigins(_generalSettings.OriginUIUrl)
-                //.SetIsOriginAllowedToAllowWildcardSubdomains()
                 .AllowAnyMethod()
-                //.WithHeaders(HeaderNames.AccessControlAllowOrigin, "*")
                 .AllowAnyHeader()
-                //.AllowCredentials()
                 .WithExposedHeaders("X-Pagination", "Authorization"));
             });
         }

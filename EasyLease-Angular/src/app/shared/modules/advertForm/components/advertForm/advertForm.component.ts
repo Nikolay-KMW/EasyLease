@@ -2,21 +2,26 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {
+  faBuilding,
+  faCalendarAlt,
   faCheck,
+  faCouch,
   faExclamationTriangle,
   faFileAlt,
   faFlagCheckered,
   faHashtag,
+  faHryvnia,
+  faLayerGroup,
+  faMapMarkedAlt,
   faPenAlt,
   faSpinner,
   faStepBackward,
   faStepForward,
   faTimes,
   faTimesCircle,
-  faTrademark,
 } from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
-import {map, shareReplay, startWith} from 'rxjs/operators';
+import {filter, map, shareReplay, startWith} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -39,6 +44,7 @@ import {PriceTypeExtended} from '../../types/priceTypeExtended.interface';
 import {ComfortType} from 'src/app/shared/types/comfort.type';
 import {environment} from 'src/environments/environment';
 import {AdvertInterface} from 'src/app/shared/types/advert.interface';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 export const DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -75,7 +81,10 @@ export const DATE_FORMATS: MatDateFormats = {
 export class AdvertFormComponent implements OnInit, OnDestroy {
   @Input('initialValues') initialValuesProps: AdvertInterface | null = null;
   @Input('isSubmitting') isSubmittingProps: boolean = false;
-  @Input('errors') errorsProps: BackendErrorInterface | null = null;
+  @Input('backendErrors') backendErrorsProps: Observable<BackendErrorInterface | null> = new Observable<null>();
+  errorsProps: BackendErrorInterface | null = null;
+
+  backendErrorsPropsSubscription: Subscription | null = null;
 
   @Output('advertSubmit') advertSubmitEvent = new EventEmitter<AdvertInputInterface>();
 
@@ -92,23 +101,23 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
   descriptionForm: FormGroup;
   titleControl: FormControl;
-  maxTitle: number = 150;
+  maxTitle: number = environment.maxTitle;
   descriptionControl: FormControl;
-  maxDescription: number = 1000;
+  maxDescription: number = environment.maxDescription;
 
   apartmentParametersForm: FormGroup;
   areaControl: FormControl;
-  minArea: number = 1;
-  maxArea: number = 100000;
+  minArea: number = environment.minArea;
+  maxArea: number = environment.maxArea;
   numberOfRoomsControl: FormControl;
-  minNumberOfRooms: number = 1;
-  maxNumberOfRooms: number = 500;
+  minNumberOfRooms: number = environment.minNumberOfRooms;
+  maxNumberOfRooms: number = environment.maxNumberOfRooms;
   numberOfStoreysControl: FormControl;
-  minNumberOfStoreys: number = 1;
-  maxNumberOfStoreys: number = 1000;
+  minNumberOfStoreys: number = environment.minNumberOfStoreys;
+  maxNumberOfStoreys: number = environment.maxNumberOfStoreys;
   storeyControl: FormControl;
-  minStorey: number = 1;
-  maxStorey: number = 1000;
+  minStorey: number = environment.minStorey;
+  maxStorey: number = environment.maxStorey;
 
   addressForm: FormGroup;
   regionControl: FormControl;
@@ -118,34 +127,36 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   settlementTypeControl: FormControl;
   settlementTypes: string[] = [];
   settlementNameControl: FormControl;
-  minSettlementName: number = 1;
-  maxSettlementName: number = 100;
+  minSettlementName: number = environment.minSettlementName;
+  maxSettlementName: number = environment.maxSettlementName;
   streetTypeControl: FormControl;
   streetTypes: string[] = [];
   streetNameControl: FormControl;
-  minStreetName: number = 1;
-  maxStreetName: number = 150;
+  minStreetName: number = environment.minStreetName;
+  maxStreetName: number = environment.maxStreetName;
   houseNumberControl: FormControl;
-  maxHouseNumber: number = 50;
+  maxHouseNumber: number = environment.maxHouseNumber;
   apartmentNumberControl: FormControl;
-  maxApartmentNumber: number = 10000;
+  maxApartmentNumber: number = environment.maxApartmentNumber;
 
-  PriceForm: FormGroup;
+  priceForm: FormGroup;
   priceTypeControl: FormControl;
   priceTypes: PriceTypeExtended[] = [];
   priceControl: FormControl;
-  minPrice: number = 0;
-  maxPrice: number = 1000000;
+  minPrice: number = environment.minPrice;
+  maxPrice: number = environment.maxPrice;
 
-  DatepickerForm: FormGroup;
+  datepickerForm: FormGroup;
   startOfLeaseControl: FormControl;
   endOfLeaseControl: FormControl;
-  currentDate = moment(new Date()).add(
-    environment.hoursOffsetForUkraine + environment.additionalTimeOnExpenses,
-    'hours'
-  );
+  currentDate: Date = moment
+    .parseZone(new Date().toUTCString())
+    .add(1, 'days')
+    .add(environment.hoursOffsetForUkraine, 'hours')
+    .local(true)
+    .toDate();
 
-  ComfortForm: FormGroup;
+  comfortForm: FormGroup;
   comfortListControl: FormControl;
   comforts: ComfortType[] = [];
   selectedComfortList: ComfortType[] = [];
@@ -153,8 +164,8 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   @ViewChild('tagList') tagList: MatChipList | null = null;
   tagForm: FormGroup;
   tagListControl: FormControl;
-  maxTag: number = 30;
-  tagListLimit: number = 5;
+  maxTag: number = environment.maxTag;
+  tagListLimit: number = environment.tagListLimit;
   tags: TagType[] = [];
   visibleTag: boolean = true;
   selectableTag: boolean = true;
@@ -171,14 +182,21 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   faPenAlt: IconDefinition = faPenAlt;
   faCheck: IconDefinition = faCheck;
   faExclamationTriangle: IconDefinition = faExclamationTriangle;
-  faTradeMark: IconDefinition = faTrademark;
+
+  faBuilding: IconDefinition = faBuilding;
   faFileAlt: IconDefinition = faFileAlt;
+  faLayerGroup: IconDefinition = faLayerGroup;
+  faMapMarkedAlt: IconDefinition = faMapMarkedAlt;
+  faHryvnia: IconDefinition = faHryvnia;
+  faCalendarAlt: IconDefinition = faCalendarAlt;
+  faCouch: IconDefinition = faCouch;
   faHashTag: IconDefinition = faHashtag;
 
   constructor(
     private store: Store<AppStateInterface>,
     private fb: FormBuilder,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private snackBar: MatSnackBar
   ) {
     // Initialize values
     this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.TabletPortrait]).pipe(
@@ -287,49 +305,47 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     this.apartmentNumberControl = this.addressForm.controls['apartmentNumber'] as FormControl;
 
     //--------------------------------------------------------------------------------
-    this.PriceForm = this.fb.group({
+    this.priceForm = this.fb.group({
       priceType: [[], [Validators.required]],
       price: ['', [Validators.required, Validators.min(this.minPrice), Validators.max(this.maxPrice)]],
     });
 
-    this.priceTypeControl = this.PriceForm.controls['priceType'] as FormControl;
-    this.priceControl = this.PriceForm.controls['price'] as FormControl;
+    this.priceTypeControl = this.priceForm.controls['priceType'] as FormControl;
+    this.priceControl = this.priceForm.controls['price'] as FormControl;
 
     //--------------------------------------------------------------------------------
-    this.DatepickerForm = this.fb.group({
+    this.datepickerForm = this.fb.group({
       startOfLease: [this.currentDate, [Validators.required]],
       endOfLease: [null],
     });
 
-    this.startOfLeaseControl = this.DatepickerForm.controls['startOfLease'] as FormControl;
-    this.endOfLeaseControl = this.DatepickerForm.controls['endOfLease'] as FormControl;
+    this.startOfLeaseControl = this.datepickerForm.controls['startOfLease'] as FormControl;
+    this.endOfLeaseControl = this.datepickerForm.controls['endOfLease'] as FormControl;
+
+    // console.log('currentDate', this.currentDate);
 
     // this.startOfLeaseControl.valueChanges.subscribe(() => {
     //   const date = this.startOfLeaseControl.value as Date;
-    //   console.log(date);
-    //   console.log(moment.parseZone(date.toJSON()).local(false).format());
+    //   console.log(date.toString());
+
+    //   //console.log(moment.parseZone(date.toJSON()).local(false).format());
     // });
 
     // this.endOfLeaseControl.valueChanges.subscribe(() => {
     //   const date = this.endOfLeaseControl.value as Date;
 
     //   if (date) {
-    //     console.log(date);
-    //     console.log(moment.parseZone(date.toJSON()).local(false).format());
+    //     console.log(date.toString());
+    //     //console.log(moment.parseZone(date.toJSON()).local(false).format());
     //   }
     // });
 
     //--------------------------------------------------------------------------------
-    this.ComfortForm = this.fb.group({
+    this.comfortForm = this.fb.group({
       comfortList: [this.comforts],
     });
 
-    this.comfortListControl = this.ComfortForm.controls['comfortList'] as FormControl;
-
-    // this.comfortListControl.valueChanges.subscribe(() => {
-    //   const data = this.comfortListControl.value as MatSelectionList;
-    //   console.log(data);
-    // });
+    this.comfortListControl = this.comfortForm.controls['comfortList'] as FormControl;
 
     //--------------------------------------------------------------------------------
     this.tagForm = this.fb.group({
@@ -392,6 +408,19 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.backendErrorsPropsSubscription = this.backendErrorsProps
+      .pipe(filter((error) => error != null))
+      .subscribe((error) => {
+        this.errorsProps = error;
+
+        this.snackBar.open('Проверьте правильность заполнения полей!', 'X', {
+          panelClass: ['snackBar-warning'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom',
+          duration: 15000,
+        });
+      });
+
     if (this.additionalData) {
       this.advertTypes = this.additionalData.advertType;
       this.settlementTypes = this.additionalData.settlementType;
@@ -401,17 +430,61 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     }
 
     if (this.initialValuesProps) {
+      this.advertTypeControl.setValue(this.initialValuesProps.advertType);
+
       this.titleControl.setValue(this.initialValuesProps.title);
       this.descriptionControl.setValue(this.initialValuesProps.description);
 
-      if (this.initialValuesProps.tagList) {
-        this.tags = this.initialValuesProps.tagList.slice();
+      this.areaControl.setValue(this.initialValuesProps.area);
+      this.numberOfRoomsControl.setValue(this.initialValuesProps.numberOfRooms);
+      this.numberOfStoreysControl.setValue(this.initialValuesProps.numberOfStoreys);
+      this.storeyControl.setValue(this.initialValuesProps.storey);
+
+      this.regionControl.setValue(this.initialValuesProps.region);
+      this.districtControl.setValue(this.initialValuesProps.district);
+      this.settlementTypeControl.setValue(this.initialValuesProps.settlementType);
+      this.settlementNameControl.setValue(this.initialValuesProps.settlementName);
+      this.streetTypeControl.setValue(this.initialValuesProps.streetType);
+      this.streetNameControl.setValue(this.initialValuesProps.streetName);
+      this.houseNumberControl.setValue(this.initialValuesProps.houseNumber);
+      this.apartmentNumberControl.setValue(this.initialValuesProps.apartmentNumber);
+
+      this.priceTypeControl.setValue(this.initialValuesProps.priceType);
+      this.priceControl.setValue(this.initialValuesProps.price);
+
+      if (this.initialValuesProps.startOfLease) {
+        let startOfLease = moment(this.initialValuesProps.startOfLease);
+        let currentDate = moment(this.currentDate);
+
+        if (moment(startOfLease).isSameOrAfter(currentDate)) {
+          this.startOfLeaseControl.setValue(moment(this.initialValuesProps.startOfLease).toDate());
+        } else {
+          this.startOfLeaseControl.setValue(this.currentDate);
+        }
+      } else {
+        this.startOfLeaseControl.setValue(this.currentDate);
       }
+
+      if (this.initialValuesProps.endOfLease) {
+        let endOfLease = moment(this.initialValuesProps.endOfLease);
+        let minDateEndOfLease = moment(this.minDateEndOfLease(this.currentDate));
+
+        if (moment(endOfLease).isSameOrAfter(minDateEndOfLease)) {
+          this.endOfLeaseControl.setValue(moment(this.initialValuesProps.endOfLease).toDate());
+        } else {
+          this.endOfLeaseControl.setValue(null);
+        }
+      } else {
+        this.endOfLeaseControl.setValue(null);
+      }
+
+      this.selectedComfortList = this.initialValuesProps.comfortList.slice();
+      this.tags = this.initialValuesProps.tagList.slice();
     }
   }
 
   minDateEndOfLease(date: Date): Date {
-    return moment.parseZone(date.toJSON()).local(false).add(1, 'days').toDate();
+    return date ? moment(date).add(1, 'days').toDate() : moment(this.currentDate).add(1, 'days').toDate();
   }
 
   addTag(event: MatChipInputEvent): void {
@@ -441,24 +514,58 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  resetFormAdvert(): void {
+    this.initialValuesProps = {
+      id: '',
+      advertType: '',
+      title: '',
+      description: '',
+      numberOfRooms: null!,
+      area: null!,
+      storey: null,
+      numberOfStoreys: null,
+      region: '',
+      district: '',
+      settlementType: '',
+      settlementName: '',
+      streetType: '',
+      streetName: '',
+      houseNumber: null,
+      apartmentNumber: null,
+      images: [],
+      priceType: null!,
+      price: 0,
+      startOfLease: null!,
+      endOfLease: null,
+      createdAd: '',
+      updatedAd: null,
+      slug: '',
+      comfortList: [],
+      tagList: [],
+      favorited: false,
+      author: null!,
+    };
+
+    this.ngOnInit();
+  }
+
   onSubmit(): void {
     const advertInput: AdvertInputInterface = {
       ...this.advertTypeForm.value,
       ...this.descriptionForm.value,
       ...this.apartmentParametersForm.value,
       ...this.addressForm.value,
-      ...this.PriceForm.value,
-      ...this.DatepickerForm.value,
+      ...this.priceForm.value,
+      ...this.datepickerForm.value,
       comfortList: this.selectedComfortList.slice(),
       tagList: this.tags.slice(),
     };
-
-    //console.log(advertInput);
 
     this.advertSubmitEvent.emit(advertInput);
   }
 
   ngOnDestroy(): void {
+    this.backendErrorsPropsSubscription?.unsubscribe;
     this.additionalDataSubscription?.unsubscribe;
   }
 }

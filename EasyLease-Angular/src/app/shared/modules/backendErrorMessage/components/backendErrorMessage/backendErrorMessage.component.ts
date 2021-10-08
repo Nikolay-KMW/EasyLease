@@ -14,17 +14,27 @@ export class BackendErrorMessageComponent implements OnInit {
   @Input('namePropertyBackendError') namePropertyProps?: string;
   @Input('formControlForBackendError') formControlProps?: FormControl;
 
-  errorMessage: string | undefined;
+  errorMessage: string[] | undefined;
 
   constructor() {}
 
   ngOnInit(): void {
     if (this.backendErrorsProps && this.namePropertyProps) {
-      this.errorMessage = this.backendErrorsProps[this.namePropertyProps]?.join(', ');
+      //this.errorMessage = this.backendErrorsProps[this.namePropertyProps]?.join(', ');
+      this.errorMessage = this.backendErrorsProps[this.namePropertyProps];
     }
 
     if (this.errorMessage !== undefined) {
       setTimeout(() => this.formControlProps?.setErrors({backendErrorMessage: true}));
+
+      // setTimeout(() => {
+      //   this.formControlProps?.setErrors({backendErrorMessage: true});
+      //   let formGroup = this.formControlProps?.parent;
+
+      //   console.log(formGroup);
+
+      //   formGroup?.setErrors({backendErrorMessage: true});
+      // });
     }
 
     // Object.keys(this.backendErrorsProps as BackendErrorInterface).map((name: string) => {

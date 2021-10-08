@@ -31,7 +31,7 @@ export class CreateAdvertComponent implements OnInit {
   }
 
   setValueBannerModule(): void {
-    this.store.dispatch(setTitleAction({title: 'Создание объявление'}));
+    this.store.dispatch(setTitleAction({title: 'Создание объявления'}));
     this.store.dispatch(
       setDescriptionAction({
         description: 'Здесь Ви можете создать нужное Вам объявление',

@@ -12,6 +12,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreModule} from '@ngrx/store';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import {AdvertFormComponent} from './components/advertForm/advertForm.component';
 import {BackendErrorMessageModule} from '../backendErrorMessage/backendErrorMessage.module';
@@ -44,6 +45,7 @@ import {NgxDropzoneModule} from 'ngx-dropzone';
     MatChipsModule,
     NgxDropzoneModule,
     BackendErrorMessageModule,
+    MatSnackBarModule,
   ],
   exports: [AdvertFormComponent],
   providers: [AdditionalDataService],

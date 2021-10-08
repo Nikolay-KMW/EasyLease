@@ -34,6 +34,10 @@ export class GetPhotoEffect {
           map((advert: AdvertInterface) => {
             this.quantityFiles = advert.images.length;
 
+            if (this.quantityFiles === 0) {
+              return getPhotoForAdvertSuccessAction({photos: []});
+            }
+
             return downloadPhotoForAdvertAction({imagesPath: advert.images});
           }),
           catchError(() => {

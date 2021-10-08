@@ -543,6 +543,11 @@ $brand-default: mat-color(map-get($el-theme-colors, primary)) !default;
     width: 36px !important;
   }
 
+  .snackBar-warning {
+    background-color: $brand-danger;
+    color: $bg-color;
+  }
+
   //-----------------------------------------------------------------
 }
 //===========================================================================

@@ -69,7 +69,7 @@ export class UploadAdvertPhotoComponent implements OnInit {
     this.initialValues$ = this.store.pipe(select(photosSelector));
 
     // Fetch data
-    if (this.slug && this.type && this.type === TypeOperation.editing) {
+    if (this.slug && this.type === TypeOperation.editing) {
       this.store.dispatch(getPhotoForAdvertAction({slug: this.slug}));
     }
   }

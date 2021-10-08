@@ -4,5 +4,5 @@
 </div>
 
 <el-advert-form *ngIf="(initialValues$ | async)" [initialValues]="(initialValues$ | async)"
-    [isSubmitting]="(isSubmitting$ | async)!" [errors]="backendErrors$ | async" (advertSubmit)="onSubmit($event)">
+    [isSubmitting]="(isSubmitting$ | async)!" [backendErrors]="backendErrors$" (advertSubmit)="onSubmit($event)">
 </el-advert-form>

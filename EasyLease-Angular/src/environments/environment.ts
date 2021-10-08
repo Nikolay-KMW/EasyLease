@@ -14,7 +14,28 @@ export const environment = {
 
   minUserName: 1,
   maxUserName: 10,
-  minUserPassword: 5,
+  minUserPassword: 8,
+
+  maxTitle: 150,
+  maxDescription: 1000,
+  minArea: 1,
+  maxArea: 100000,
+  minNumberOfRooms: 1,
+  maxNumberOfRooms: 500,
+  minNumberOfStoreys: 1,
+  maxNumberOfStoreys: 1000,
+  minStorey: 1,
+  maxStorey: 1000,
+  minSettlementName: 1,
+  maxSettlementName: 100,
+  minStreetName: 1,
+  maxStreetName: 150,
+  maxHouseNumber: 50,
+  maxApartmentNumber: 10000,
+  minPrice: 0,
+  maxPrice: 1000000,
+  maxTag: 30,
+  tagListLimit: 5,
 
   fileSizeLimit: 2097152,
   numberOfFilesLimit: 6,
@@ -28,4 +49,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/dist/zone-error',  // Included with Angular CLI.

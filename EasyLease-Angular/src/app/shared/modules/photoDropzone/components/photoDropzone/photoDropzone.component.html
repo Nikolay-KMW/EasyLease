@@ -15,8 +15,8 @@
     </ngx-dropzone-label>
     <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let photo of photos" [file]="photo"
         [removable]="true" (removed)="removePhoto(photo)">
-        <ngx-dropzone-label class="label">({{ photo.name }})
-        </ngx-dropzone-label>
+        <!-- <ngx-dropzone-label class="label">({{ photo.name }})
+        </ngx-dropzone-label> -->
     </ngx-dropzone-image-preview>
 </ngx-dropzone>
 <div class="error-photo mx-2 mt-2" [@errorPhotoAnimate]="(errorPhotoAnimate)?'true':'false'">
