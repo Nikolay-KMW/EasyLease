@@ -9,9 +9,11 @@ using EasyLease.Entities.Configuration;
 using EasyLease.Entities.Models;
 using EasyLease.LoggerService;
 using EasyLease.Repository;
+using EasyLease.WebAPI.ActionFilters;
 using EasyLease.WebAPI.Services;
 using EasyLease.WebAPI.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -28,12 +30,16 @@ namespace EasyLease.WebAPI.Extensions {
         public static void ConfigureGeneralSettings(this IServiceCollection services, IConfiguration configuration) {
             var generalSection = configuration.GetSection(GeneralSettings.General);
 
-            var originUIUrl = generalSection.GetValue<string>("OriginUIUrl", string.Empty);
-            var hoursOffsetForUkraine = generalSection.GetValue<short>("HoursOffsetForUkraine", 3);
-            var pageSize = generalSection.GetValue<short>("PageSize", 10);
-            var maxPageSize = generalSection.GetValue<short>("MaxPageSize", 50);
+            if (generalSection.Exists()) {
+                var originUIUrl = generalSection.GetValue<string>("OriginUIUrl", string.Empty);
+                var hoursOffsetForUkraine = generalSection.GetValue<short>("HoursOffsetForUkraine", 3);
+                var pageSize = generalSection.GetValue<short>("PageSize", 10);
+                var maxPageSize = generalSection.GetValue<short>("MaxPageSize", 50);
 
-            _generalSettings = new GeneralSettings(originUIUrl, hoursOffsetForUkraine, pageSize, maxPageSize);
+                _generalSettings = new GeneralSettings(originUIUrl, hoursOffsetForUkraine, pageSize, maxPageSize);
+            } else {
+                ThrowAppSettingsException(GeneralSettings.General);
+            }
 
             services.AddSingleton<GeneralSettings>(_generalSettings);
         }
@@ -57,6 +63,11 @@ namespace EasyLease.WebAPI.Extensions {
             services.AddScoped<ILoggerManager, LoggerManager>();
         }
 
+        public static void ConfigureAutoMapperProfile(this IServiceCollection services) {
+            services.AddSingleton<IMapper>(provider => new MapperConfiguration(config =>
+                config.AddProfile(new MappingProfile(provider.GetService<GeneralSettings>()))).CreateMapper());
+        }
+
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) {
             services.AddDbContext<RepositoryContext>(opts => {
                 opts.EnableDetailedErrors();
@@ -72,6 +83,10 @@ namespace EasyLease.WebAPI.Extensions {
         public static void ConfigureFileStorage(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env) {
             FileStorageSettings fileStorageSettings = configuration.GetSection(FileStorageSettings.FileStorage).Get<FileStorageSettings>();
 
+            if (fileStorageSettings == null) {
+                ThrowAppSettingsException(FileStorageSettings.FileStorage);
+            }
+
             fileStorageSettings.WebRootPath = env.WebRootPath;
             fileStorageSettings.FileSignature = FileSignatureConfiguration.GetSignaturesFromExtensions(fileStorageSettings.AllowedExtensions);
 
@@ -82,17 +97,45 @@ namespace EasyLease.WebAPI.Extensions {
         public static void ConfigureUserProfile(this IServiceCollection services, IConfiguration configuration) {
             UserProfileSettings userProfileSettings = configuration.GetSection(UserProfileSettings.UserProfile).Get<UserProfileSettings>();
 
+            if (userProfileSettings == null) {
+                ThrowAppSettingsException(UserProfileSettings.UserProfile);
+            }
+
             userProfileSettings.FileSignature = FileSignatureConfiguration.GetSignaturesFromExtensions(userProfileSettings.AllowedExtensions);
 
             services.AddSingleton<UserProfileSettings>(userProfileSettings);
         }
 
-        public static void ConfigureAutoMapperProfile(this IServiceCollection services) {
-            services.AddSingleton<IMapper>(provider => new MapperConfiguration(config =>
-                config.AddProfile(new MappingProfile(provider.GetService<GeneralSettings>()))).CreateMapper());
+        public static void ConfigureAdvert(this IServiceCollection services, IConfiguration configuration) {
+            AdvertSettings advertSettings = configuration.GetSection(AdvertSettings.Advert).Get<AdvertSettings>();
+
+            if (advertSettings == null) {
+                ThrowAppSettingsException(AdvertSettings.Advert);
+            }
+
+            services.AddSingleton<AdvertSettings>(advertSettings);
+        }
+
+        public static void ConfigureValidation(this IServiceCollection services) {
+            services.AddScoped<ValidationAdvertAttribute>();
+            services.AddScoped<ValidationProfileAttribute>();
+            services.AddScoped<ValidateAdvertExistsAttribute>();
+            services.AddScoped<ValidateProfileExistsAttribute>();
+            services.AddScoped<ValidationPhotoForAdvertAttribute>();
+            services.AddScoped<ValidationPhotoForUserAttribute>();
+            services.AddScoped<ValidateImageExistsAttribute>();
+        }
+
+
+        public static void ConfigureAuthentication(this IServiceCollection services) {
+            services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+            services.AddAuthentication();
         }
 
         public static void ConfigureAuthorization(this IServiceCollection services) {
+            services.AddScoped<IAuthorizationHandler, UserIsOwnerAdvertAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, UserVisitAuthorizationHandler>();
+
             services.AddAuthorization(options => {
                 options.AddPolicy("UserIsOwnerAdvert",
                     policy => policy.Requirements.Add(new UserIsOwnerAdvertRequirement()));
@@ -103,6 +146,10 @@ namespace EasyLease.WebAPI.Extensions {
 
         public static void ConfigureIdentity(this IServiceCollection services, IConfiguration configuration) {
             UserProfileSettings userProfileSettings = configuration.GetSection(UserProfileSettings.UserProfile).Get<UserProfileSettings>();
+
+            if (userProfileSettings == null) {
+                ThrowAppSettingsException(UserProfileSettings.UserProfile);
+            }
 
             var builder = services.AddIdentityCore<User>(options => {
                 // Password settings.
@@ -129,6 +176,10 @@ namespace EasyLease.WebAPI.Extensions {
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration) {
             JwtSettings jwtSettings = configuration.GetSection(JwtSettings.JWT).Get<JwtSettings>();
 
+            if (jwtSettings == null) {
+                ThrowAppSettingsException(JwtSettings.JWT);
+            }
+
             services.AddSingleton<JwtSettings>(jwtSettings);
 
             var secretKey = Environment.GetEnvironmentVariable("SECRET");
@@ -148,6 +199,10 @@ namespace EasyLease.WebAPI.Extensions {
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
             });
+        }
+
+        private static void ThrowAppSettingsException(string sectionName) {
+            throw new ArgumentNullException($"{sectionName} in appsettings.json does not exist.");
         }
     }
 }

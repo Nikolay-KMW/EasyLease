@@ -1,21 +1,26 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EasyLease.Contracts;
 using EasyLease.Entities.AppSettingsModels;
 using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
+using EasyLease.WebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace EasyLease.WebAPI.ActionFilters {
-    public class ValidationAdvertAttribute : IActionFilter {
+    public class ValidationAdvertAttribute : IAsyncActionFilter {
         private readonly GeneralSettings _generalSettings;
         private readonly ILoggerManager _logger;
-        public ValidationAdvertAttribute(GeneralSettings generalSettings, ILoggerManager logger) {
+        private readonly AdditionalDataService _additionalDataService;
+
+        public ValidationAdvertAttribute(GeneralSettings generalSettings, AdditionalDataService additionalDataService, ILoggerManager logger) {
             _generalSettings = generalSettings;
             _logger = logger;
+            _additionalDataService = additionalDataService;
         }
-        public void OnActionExecuting(ActionExecutingContext context) {
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
             var action = context.RouteData.Values["action"];
             var controller = context.RouteData.Values["controller"];
 
@@ -25,6 +30,35 @@ namespace EasyLease.WebAPI.ActionFilters {
                 _logger.LogError($"Advert sent from client is null. Controller: {controller}, action: { action}");
                 context.Result = new BadRequestObjectResult($"Advert is null. Controller: {controller}, action: {action}");
                 return;
+            }
+
+            var additionalDataForAdvert = await _additionalDataService.GetAdditionalDataForAdvertAsync().ConfigureAwait(false);
+
+            if (!additionalDataForAdvert.AdvertType.Contains(advertDTO.AdvertType)) {
+                _logger.LogError($"The realty type ({advertDTO.AdvertType}) is invalid.");
+                context.ModelState.AddModelError(nameof(advertDTO.AdvertType), "The realty type is invalid.");
+            }
+
+            if (!additionalDataForAdvert.SettlementType.Contains(advertDTO.SettlementType)) {
+                _logger.LogError($"The Settlement type ({advertDTO.SettlementType}) is invalid.");
+                context.ModelState.AddModelError(nameof(advertDTO.SettlementType), "The Settlement type is invalid.");
+            }
+
+            if (!additionalDataForAdvert.StreetType.Contains(advertDTO.StreetType)) {
+                _logger.LogError($"The Street type ({advertDTO.StreetType}) is invalid.");
+                context.ModelState.AddModelError(nameof(advertDTO.StreetType), "The Street type is invalid.");
+            }
+
+            var region = Array.Find(additionalDataForAdvert.Locations, location => location.Region == advertDTO.Region);
+
+            if (region != null) {
+                if (!region.District.Contains(advertDTO.District)) {
+                    _logger.LogError($"The District ({advertDTO.District}) is invalid.");
+                    context.ModelState.AddModelError(nameof(advertDTO.District), "The District is invalid.");
+                }
+            } else {
+                _logger.LogError($"The Region ({advertDTO.Region}) is invalid.");
+                context.ModelState.AddModelError(nameof(advertDTO.Region), "The Region is invalid.");
             }
 
             DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
@@ -44,8 +78,9 @@ namespace EasyLease.WebAPI.ActionFilters {
             if (!context.ModelState.IsValid) {
                 _logger.LogError($"Invalid model state for the object. Controller: {controller}, action: {action}");
                 context.Result = new UnprocessableEntityObjectResult(context.ModelState);
+            } else {
+                await next().ConfigureAwait(false);
             }
         }
-        public void OnActionExecuted(ActionExecutedContext context) { }
     }
 }

@@ -9,6 +9,7 @@ using EasyLease.Entities.DataTransferObjects;
 using EasyLease.Entities.Models;
 using EasyLease.Entities.RequestFeatures;
 using EasyLease.WebAPI.ActionFilters;
+using EasyLease.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,15 +23,18 @@ namespace EasyLease.WebAPI.Controllers {
         private readonly IMapper _mapper;
         private readonly IFileStorageManager _fileStorageManager;
         private readonly IAuthenticationManager _authManager;
+        private readonly AdditionalDataService _additionalDataService;
 
         public AdvertsController(IRepositoryManager repository,
                                  IFileStorageManager fileStorageManager,
                                  IMapper mapper,
-                                 IAuthenticationManager authManager) {
+                                 IAuthenticationManager authManager,
+                                 AdditionalDataService additionalDataService) {
             _repository = repository;
             _mapper = mapper;
             _fileStorageManager = fileStorageManager;
             _authManager = authManager;
+            _additionalDataService = additionalDataService;
         }
 
         [HttpGet]
@@ -61,15 +65,16 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpGet("additional-data")]
         //===============================================================================
         public async Task<IActionResult> GetAdditionalDataForAdvert() {
-            AdvertAdditionalDataIDTO additionalDataIDTO = new AdvertAdditionalDataIDTO {
-                AdvertType = await _repository.AdvertType.GetAllAdvertTypeAsync(trackChanges: false).ConfigureAwait(false),
-                SettlementType = await _repository.SettlementType.GetAllSettlementTypeAsync(trackChanges: false).ConfigureAwait(false),
-                StreetType = await _repository.StreetType.GetAllStreetTypeAsync(trackChanges: false).ConfigureAwait(false),
-                Locations = await _repository.Location.GetAllLocationAsync(trackChanges: false).ConfigureAwait(false),
-                Comforts = await _repository.Comfort.GetAllComfortsAsync(trackChanges: false).ConfigureAwait(false)
-            };
+            // AdvertAdditionalDataIDTO additionalDataIDTO = new AdvertAdditionalDataIDTO {
+            //     AdvertType = await _repository.AdvertType.GetAllAdvertTypeAsync(trackChanges: false).ConfigureAwait(false),
+            //     SettlementType = await _repository.SettlementType.GetAllSettlementTypeAsync(trackChanges: false).ConfigureAwait(false),
+            //     StreetType = await _repository.StreetType.GetAllStreetTypeAsync(trackChanges: false).ConfigureAwait(false),
+            //     Locations = await _repository.Location.GetAllLocationAsync(trackChanges: false).ConfigureAwait(false),
+            //     Comforts = await _repository.Comfort.GetAllComfortsAsync(trackChanges: false).ConfigureAwait(false)
+            // };
 
-            var additionalDataToReturn = _mapper.Map<AdvertAdditionalDataDTO>(additionalDataIDTO);
+            // var additionalDataToReturn = _mapper.Map<AdvertAdditionalDataDTO>(additionalDataIDTO);
+            var additionalDataToReturn = await _additionalDataService.GetAdditionalDataForAdvertAsync().ConfigureAwait(false);
 
             return Ok(additionalDataToReturn);
         }

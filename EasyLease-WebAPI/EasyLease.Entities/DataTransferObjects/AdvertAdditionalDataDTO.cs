@@ -27,13 +27,4 @@ namespace EasyLease.Entities.DataTransferObjects {
         public string Name { get; set; }
         public string Display { get; set; }
     }
-
-    public class AdvertLocationDTO {
-        public AdvertLocationDTO() {
-            District = new List<string>();
-        }
-
-        public string Region { get; set; }
-        public List<string> District { get; set; }
-    }
 }

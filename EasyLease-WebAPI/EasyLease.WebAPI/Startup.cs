@@ -42,32 +42,29 @@ namespace EasyLease.WebAPI {
 
             services.ConfigureGeneralSettings(Configuration);
 
+            services.AddMemoryCache();
+
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
+
+            services.AddAutoMapper(typeof(Startup));
+            services.ConfigureAutoMapperProfile();
 
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
             services.ConfigureFileStorage(Configuration, WebHostEnv);
             services.ConfigureUserProfile(Configuration);
-
-            services.AddAutoMapper(typeof(Startup));
-            services.ConfigureAutoMapperProfile();
+            services.ConfigureAdvert(Configuration);
 
             services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
-            services.AddScoped<ValidationAdvertAttribute>();
-            services.AddScoped<ValidationProfileAttribute>();
-            services.AddScoped<ValidateAdvertExistsAttribute>();
-            services.AddScoped<ValidateProfileExistsAttribute>();
-            services.AddScoped<ValidationPhotoForAdvertAttribute>();
-            services.AddScoped<ValidationPhotoForUserAttribute>();
-            services.AddScoped<ValidateImageExistsAttribute>();
-            services.AddScoped<IAuthenticationManager, AuthenticationManager>();
-            services.AddScoped<IAuthorizationHandler, UserIsOwnerAdvertAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, UserVisitAuthorizationHandler>();
+            services.ConfigureValidation();
+
+            services.AddScoped<AdditionalDataService>();
+
             services.AddHttpContextAccessor();
 
-            services.AddAuthentication();
+            services.ConfigureAuthentication();
             services.ConfigureAuthorization();
 
             services.ConfigureIdentity(Configuration);
