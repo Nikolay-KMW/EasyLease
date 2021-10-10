@@ -11,29 +11,29 @@
                 <div class="card-body">
                     <mat-vertical-stepper [linear]="false" #stepper>
 
-                        <mat-step [stepControl]="advertTypeForm" state="realtyTypeStep">
-                            <form [formGroup]="advertTypeForm">
+                        <mat-step [stepControl]="realtyTypeForm" state="realtyTypeStep">
+                            <form [formGroup]="realtyTypeForm">
                                 <ng-template matStepLabel>Тип недвижимости</ng-template>
                                 <fieldset class="container">
                                     <div class="row row-cols-1 justify-content-center">
                                         <fieldset class="col col-md-6 form-group">
-                                            <mat-form-field [color]="advertTypeControl.valid && 'accent'"
+                                            <mat-form-field [color]="realtyTypeControl.valid && 'accent'"
                                                 appearance="fill">
                                                 <mat-label>Тип сдаваемой недвижимости</mat-label>
-                                                <mat-select [formControl]="advertTypeControl">
-                                                    <mat-option *ngFor="let advertType of advertTypes"
-                                                        [value]="advertType">
-                                                        {{advertType}}
+                                                <mat-select [formControl]="realtyTypeControl">
+                                                    <mat-option *ngFor="let realtyType of realtyTypes"
+                                                        [value]="realtyType">
+                                                        {{realtyType}}
                                                     </mat-option>
                                                 </mat-select>
                                                 <mat-error>
                                                     <el-backend-error-message *ngIf="errorsProps"
                                                         [backendErrors]="errorsProps"
-                                                        namePropertyBackendError="AdvertType"
-                                                        [formControlForBackendError]="advertTypeControl">
+                                                        namePropertyBackendError="RealtyType"
+                                                        [formControlForBackendError]="realtyTypeControl">
                                                     </el-backend-error-message>
                                                 </mat-error>
-                                                <mat-error *ngIf="advertTypeControl.hasError('required')">Выберете тип
+                                                <mat-error *ngIf="realtyTypeControl.hasError('required')">Выберете тип
                                                     сдаваемой недвижимости
                                                 </mat-error>
                                             </mat-form-field>
@@ -696,7 +696,7 @@
                                                 Опубликовать
                                             </button>
                                             <!-- <button class="my-1 py-1 col-md-auto float-right" type="submit" mat-raised-button
-                                            (click)="onSubmit()" [disabled]="(isSubmittingProps || advertTypeForm.invalid || descriptionForm.invalid 
+                                            (click)="onSubmit()" [disabled]="(isSubmittingProps || realtyTypeForm.invalid || descriptionForm.invalid 
                                             || apartmentParametersForm.invalid || addressForm.invalid || priceForm.invalid 
                                             || datepickerForm.invalid || comfortForm.invalid || tagForm.invalid)"
                                             color="success">

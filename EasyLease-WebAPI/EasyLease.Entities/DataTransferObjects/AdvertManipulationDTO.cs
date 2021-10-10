@@ -6,8 +6,8 @@ using EasyLease.Entities.Models;
 
 namespace EasyLease.Entities.DataTransferObjects {
     public abstract class AdvertManipulationDTO : IValidatableObject {
-        [Required(ErrorMessage = "Type of advert is a required field.")]
-        public string AdvertType { get; set; }
+        [Required(ErrorMessage = "Type of realty is a required field.")]
+        public string RealtyType { get; set; }
 
         [Required(ErrorMessage = "Title is a required field.")]
         [MaxLength(150, ErrorMessage = "Maximum length for the Title is 150 characters.")]

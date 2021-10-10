@@ -34,9 +34,9 @@ namespace EasyLease.WebAPI.ActionFilters {
 
             var additionalDataForAdvert = await _additionalDataService.GetAdditionalDataForAdvertAsync().ConfigureAwait(false);
 
-            if (!additionalDataForAdvert.AdvertType.Contains(advertDTO.AdvertType)) {
-                _logger.LogError($"The realty type ({advertDTO.AdvertType}) is invalid.");
-                context.ModelState.AddModelError(nameof(advertDTO.AdvertType), "The realty type is invalid.");
+            if (!additionalDataForAdvert.RealtyType.Contains(advertDTO.RealtyType)) {
+                _logger.LogError($"The realty type ({advertDTO.RealtyType}) is invalid.");
+                context.ModelState.AddModelError(nameof(advertDTO.RealtyType), "The realty type is invalid.");
             }
 
             if (!additionalDataForAdvert.SettlementType.Contains(advertDTO.SettlementType)) {

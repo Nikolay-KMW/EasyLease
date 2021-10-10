@@ -65,15 +65,6 @@ namespace EasyLease.WebAPI.Controllers {
         [HttpGet("additional-data")]
         //===============================================================================
         public async Task<IActionResult> GetAdditionalDataForAdvert() {
-            // AdvertAdditionalDataIDTO additionalDataIDTO = new AdvertAdditionalDataIDTO {
-            //     AdvertType = await _repository.AdvertType.GetAllAdvertTypeAsync(trackChanges: false).ConfigureAwait(false),
-            //     SettlementType = await _repository.SettlementType.GetAllSettlementTypeAsync(trackChanges: false).ConfigureAwait(false),
-            //     StreetType = await _repository.StreetType.GetAllStreetTypeAsync(trackChanges: false).ConfigureAwait(false),
-            //     Locations = await _repository.Location.GetAllLocationAsync(trackChanges: false).ConfigureAwait(false),
-            //     Comforts = await _repository.Comfort.GetAllComfortsAsync(trackChanges: false).ConfigureAwait(false)
-            // };
-
-            // var additionalDataToReturn = _mapper.Map<AdvertAdditionalDataDTO>(additionalDataIDTO);
             var additionalDataToReturn = await _additionalDataService.GetAdditionalDataForAdvertAsync().ConfigureAwait(false);
 
             return Ok(additionalDataToReturn);

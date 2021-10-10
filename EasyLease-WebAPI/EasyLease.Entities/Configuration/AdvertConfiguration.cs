@@ -9,7 +9,7 @@ namespace EasyLease.Entities.Configuration {
             builder.HasData(
                 new Advert {
                     Id = new Guid("a1d4c053-49b6-410c-bc78-2d54a9991870"),
-                    AdvertTypeId = "квартира",
+                    RealtyTypeId = "квартира",
                     Title = "Сдам 2-х комнатную квартиру",
                     Description = "Есть все необходимое",
 
@@ -39,7 +39,7 @@ namespace EasyLease.Entities.Configuration {
                 },
                  new Advert {
                      Id = new Guid("a2d4c053-49b6-410c-bc78-2d54a9991870"),
-                     AdvertTypeId = "дом",
+                     RealtyTypeId = "дом",
                      Title = "Сдам дом",
                      Description = "Дом 280 м2. Элитный дизайн.",
 
@@ -68,7 +68,7 @@ namespace EasyLease.Entities.Configuration {
                  },
                  new Advert {
                      Id = new Guid("a3d4c053-49b6-410c-bc78-2d54a9991870"),
-                     AdvertTypeId = "квартира",
+                     RealtyTypeId = "квартира",
                      Title = "Сдам 1 комнатную квартиру",
                      Description = "Есть все кроме холодильника",
 
@@ -98,7 +98,7 @@ namespace EasyLease.Entities.Configuration {
                  },
                 new Advert {
                     Id = new Guid("a4d4c053-49b6-410c-bc78-2d54a9991870"),
-                    AdvertTypeId = "квартира",
+                    RealtyTypeId = "квартира",
                     Title = "Сдам 5-х комнатную квартиру",
                     Description = "Сделанный свежий ремонт",
 
@@ -128,7 +128,7 @@ namespace EasyLease.Entities.Configuration {
                 },
                 new Advert {
                     Id = new Guid("a5d4c053-49b6-410c-bc78-2d54a9991870"),
-                    AdvertTypeId = "комната",
+                    RealtyTypeId = "комната",
                     Title = "Сдам комнату в общежитие",
                     Description = "Все уютненько.",
 
@@ -158,7 +158,7 @@ namespace EasyLease.Entities.Configuration {
                 },
                 new Advert {
                     Id = new Guid("a6d4c053-49b6-410c-bc78-2d54a9991870"),
-                    AdvertTypeId = "квартира",
+                    RealtyTypeId = "квартира",
                     Title = "Сдам 3-х комнатную квартиру",
                     Description = "Евро ремонт.",
 
@@ -188,7 +188,7 @@ namespace EasyLease.Entities.Configuration {
                 },
                  new Advert {
                      Id = new Guid("a7d4c053-49b6-410c-bc78-2d54a9991870"),
-                     AdvertTypeId = "квартира",
+                     RealtyTypeId = "квартира",
                      Title = "Сдам 4-х комнатную квартиру",
                      Description = "Сделан культурный ремонт",
 

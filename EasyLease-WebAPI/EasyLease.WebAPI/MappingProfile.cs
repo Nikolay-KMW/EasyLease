@@ -60,7 +60,7 @@ namespace EasyLease.WebAPI {
 
             CreateMap<Advert, AdvertsDTO>()
                 .ForMember(advertsDTO => advertsDTO.FullAddress, config => config.MapFrom(advert => BuildFullAddress(advert)))
-                .ForMember(advertsDTO => advertsDTO.AdvertType, config => config.MapFrom(advert => advert.AdvertTypeId))
+                .ForMember(advertsDTO => advertsDTO.RealtyType, config => config.MapFrom(advert => advert.RealtyTypeId))
                 .ForMember(advertsDTO => advertsDTO.CreatedAd, config => config.MapFrom(advert => ConvertToTimeZone(advert.CreatedAd)))
                 .ForMember(advertsDTO => advertsDTO.Image, config => config.MapFrom(advert => advert.Images.FirstOrDefault().Path.Replace("\\", "/")))
                 .ForMember(advertsDTO => advertsDTO.Slug, config => config.MapFrom(advert => advert.Id.ToString()))
@@ -69,7 +69,7 @@ namespace EasyLease.WebAPI {
                 .ForMember(advertsDTO => advertsDTO.Favorited, config => config.MapFrom((advert, advertsDTO, _, context) => SetFavorite(advert, context)));
 
             CreateMap<Advert, AdvertDTO>()
-                .ForMember(advertDTO => advertDTO.AdvertType, config => config.MapFrom(advert => advert.AdvertTypeId))
+                .ForMember(advertDTO => advertDTO.RealtyType, config => config.MapFrom(advert => advert.RealtyTypeId))
                 .ForMember(advertDTO => advertDTO.SettlementType, config => config.MapFrom(advert => advert.SettlementTypeId))
                 .ForMember(advertDTO => advertDTO.StreetType, config => config.MapFrom(advert => advert.StreetTypeId))
                 .ForMember(advertDTO => advertDTO.CreatedAd, config => config.MapFrom(advert => ConvertToTimeZone(advert.CreatedAd)))
@@ -85,8 +85,8 @@ namespace EasyLease.WebAPI {
             CreateMap<AdvertCreationDTO, Advert>()
                 .ForMember(advert => advert.StartOfLease, config => config.MapFrom(advertCreationDTO => ConvertToUTC(advertCreationDTO.StartOfLease)))
                 .ForMember(advert => advert.EndOfLease, config => config.MapFrom(advertCreationDTO => ConvertToUTC(advertCreationDTO.EndOfLease)))
-                .ForMember(advert => advert.AdvertTypeId, config => config.MapFrom(advertCreationDTO => advertCreationDTO.AdvertType))
-                .ForMember(advert => advert.AdvertType, config => config.Ignore())
+                .ForMember(advert => advert.RealtyTypeId, config => config.MapFrom(advertCreationDTO => advertCreationDTO.RealtyType))
+                .ForMember(advert => advert.RealtyType, config => config.Ignore())
                 .ForMember(advert => advert.SettlementTypeId, config => config.MapFrom(advertCreationDTO => advertCreationDTO.SettlementType))
                 .ForMember(advert => advert.SettlementType, config => config.Ignore())
                 .ForMember(advert => advert.StreetTypeId, config => config.MapFrom(advertCreationDTO => advertCreationDTO.StreetType))
@@ -98,8 +98,8 @@ namespace EasyLease.WebAPI {
             CreateMap<AdvertUpdateDTO, Advert>()
                 .ForMember(advert => advert.StartOfLease, config => config.MapFrom(advertUpdateDTO => ConvertToUTC(advertUpdateDTO.StartOfLease)))
                 .ForMember(advert => advert.EndOfLease, config => config.MapFrom(advertUpdateDTO => ConvertToUTC(advertUpdateDTO.EndOfLease)))
-                .ForMember(advert => advert.AdvertTypeId, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.AdvertType))
-                .ForMember(advert => advert.AdvertType, config => config.Ignore())
+                .ForMember(advert => advert.RealtyTypeId, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.RealtyType))
+                .ForMember(advert => advert.RealtyType, config => config.Ignore())
                 .ForMember(advert => advert.SettlementTypeId, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.SettlementType))
                 .ForMember(advert => advert.SettlementType, config => config.Ignore())
                 .ForMember(advert => advert.StreetTypeId, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.StreetType))
@@ -109,7 +109,7 @@ namespace EasyLease.WebAPI {
                 .ForMember(advert => advert.AdvertTags, config => config.MapFrom(advertUpdateDTO => advertUpdateDTO.TagList.Select(tag => new AdvertTag() { TagId = tag, CreatedTag = DateTime.UtcNow })));
 
             CreateMap<AdvertAdditionalDataIDTO, AdvertAdditionalDataDTO>()
-                .ForMember(additionalDataDTO => additionalDataDTO.AdvertType, config => config.MapFrom(additionalDataIDTO => additionalDataIDTO.AdvertType.Select(adType => adType.Id)))
+                .ForMember(additionalDataDTO => additionalDataDTO.RealtyType, config => config.MapFrom(additionalDataIDTO => additionalDataIDTO.RealtyType.Select(realtyType => realtyType.Id)))
                 .ForMember(additionalDataDTO => additionalDataDTO.SettlementType, config => config.MapFrom(additionalDataIDTO => additionalDataIDTO.SettlementType.Select(settlementType => settlementType.Id)))
                 .ForMember(additionalDataDTO => additionalDataDTO.StreetType, config => config.MapFrom(additionalDataIDTO => additionalDataIDTO.StreetType.Select(streetType => streetType.Id)))
                 .ForMember(additionalDataDTO => additionalDataDTO.Locations, config => config.MapFrom(additionalDataIDTO => GetAdvertLocationDTO(additionalDataIDTO.Locations)))

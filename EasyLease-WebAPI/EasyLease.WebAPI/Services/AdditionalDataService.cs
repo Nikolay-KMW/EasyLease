@@ -35,7 +35,7 @@ namespace EasyLease.WebAPI.Services {
                 try {
                     if (!_memoryCache.TryGetValue(nameof(AdvertAdditionalDataDTO), out advertAdditionalData)) {
                         var additionalDataIDTO = new AdvertAdditionalDataIDTO {
-                            AdvertType = await _repository.AdvertType.GetAllAdvertTypeAsync(trackChanges: false).ConfigureAwait(false),
+                            RealtyType = await _repository.RealtyType.GetAllRealtyTypeAsync(trackChanges: false).ConfigureAwait(false),
                             SettlementType = await _repository.SettlementType.GetAllSettlementTypeAsync(trackChanges: false).ConfigureAwait(false),
                             StreetType = await _repository.StreetType.GetAllStreetTypeAsync(trackChanges: false).ConfigureAwait(false),
                             Locations = await _repository.Location.GetAllLocationAsync(trackChanges: false).ConfigureAwait(false),

@@ -6,10 +6,10 @@ using EasyLease.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyLease.Repository {
-    public class AdvertTypeRepository : RepositoryBase<AdvertType>, IAdvertTypeRepository {
-        public AdvertTypeRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
+    public class RealtyTypeRepository : RepositoryBase<RealtyType>, IRealtyTypeRepository {
+        public RealtyTypeRepository(RepositoryContext repositoryContext) : base(repositoryContext) { }
 
-        public async Task<IEnumerable<AdvertType>> GetAllAdvertTypeAsync(bool trackChanges) =>
+        public async Task<IEnumerable<RealtyType>> GetAllRealtyTypeAsync(bool trackChanges) =>
              await FindAll(trackChanges).ToListAsync().ConfigureAwait(false);
     }
 }

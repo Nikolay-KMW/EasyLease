@@ -3,7 +3,7 @@ import {AdvertLocation} from './advertLocation.interface';
 import {PriceTypeExtended} from './priceTypeExtended.interface';
 
 export interface AdvertAdditionalData {
-  advertType: string[];
+  realtyType: string[];
   settlementType: string[];
   streetType: string[];
   locations: AdvertLocation[];

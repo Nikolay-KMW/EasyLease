@@ -95,9 +95,9 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
   additionalDataSubscription: Subscription;
 
-  advertTypeForm: FormGroup;
-  advertTypeControl: FormControl;
-  advertTypes: string[] = [];
+  realtyTypeForm: FormGroup;
+  realtyTypeControl: FormControl;
+  realtyTypes: string[] = [];
 
   descriptionForm: FormGroup;
   titleControl: FormControl;
@@ -217,13 +217,12 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     this.store.dispatch(getAdditionalDataAction());
 
     // Initialize Forms
-    // TODO: rename advertType to immovablesType !!!!!!!!!!!
     //--------------------------------------------------------------------------------
-    this.advertTypeForm = this.fb.group({
-      advertType: [[], [Validators.required]],
+    this.realtyTypeForm = this.fb.group({
+      realtyType: [null, [Validators.required]],
     });
 
-    this.advertTypeControl = this.advertTypeForm.controls['advertType'] as FormControl;
+    this.realtyTypeControl = this.realtyTypeForm.controls['realtyType'] as FormControl;
 
     //--------------------------------------------------------------------------------
     this.descriptionForm = this.fb.group({
@@ -236,16 +235,16 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
     //--------------------------------------------------------------------------------
     this.apartmentParametersForm = this.fb.group({
-      area: ['', [Validators.required, Validators.min(this.minArea), Validators.max(this.maxArea)]],
+      area: [0, [Validators.required, Validators.min(this.minArea), Validators.max(this.maxArea)]],
       numberOfRooms: [
-        '',
+        0,
         [Validators.required, Validators.min(this.minNumberOfRooms), Validators.max(this.maxNumberOfRooms)],
       ],
       numberOfStoreys: [
-        '',
+        0,
         [Validators.required, Validators.min(this.minNumberOfStoreys), Validators.max(this.maxNumberOfStoreys)],
       ],
-      storey: ['', [Validators.required, Validators.min(this.minStorey), Validators.max(this.maxStorey)]],
+      storey: [0, [Validators.required, Validators.min(this.minStorey), Validators.max(this.maxStorey)]],
     });
 
     this.areaControl = this.apartmentParametersForm.controls['area'] as FormControl;
@@ -257,7 +256,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     this.addressForm = this.fb.group({
       region: ['', [Validators.required, (control: AbstractControl) => this.corresponds(control)]],
       district: ['', [Validators.required, (control: AbstractControl) => this.correspondsToRegion(control, 'region')]],
-      settlementType: [[], [Validators.required]],
+      settlementType: [null, [Validators.required]],
       settlementName: [
         '',
         [
@@ -266,7 +265,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
           Validators.maxLength(this.maxSettlementName),
         ],
       ],
-      streetType: [[], [Validators.required]],
+      streetType: [null, [Validators.required]],
       streetName: [
         '',
         [Validators.required, Validators.minLength(this.minStreetName), Validators.maxLength(this.maxStreetName)],
@@ -306,8 +305,8 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
     //--------------------------------------------------------------------------------
     this.priceForm = this.fb.group({
-      priceType: [[], [Validators.required]],
-      price: ['', [Validators.required, Validators.min(this.minPrice), Validators.max(this.maxPrice)]],
+      priceType: [null, [Validators.required]],
+      price: [0, [Validators.required, Validators.min(this.minPrice), Validators.max(this.maxPrice)]],
     });
 
     this.priceTypeControl = this.priceForm.controls['priceType'] as FormControl;
@@ -413,16 +412,18 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
       .subscribe((error) => {
         this.errorsProps = error;
 
+        console.log(error);
+
         this.snackBar.open('Проверьте правильность заполнения полей!', 'X', {
           panelClass: ['snackBar-warning'],
           horizontalPosition: 'end',
           verticalPosition: 'bottom',
-          duration: 15000,
+          duration: 10000,
         });
       });
 
     if (this.additionalData) {
-      this.advertTypes = this.additionalData.advertType;
+      this.realtyTypes = this.additionalData.realtyType;
       this.settlementTypes = this.additionalData.settlementType;
       this.streetTypes = this.additionalData.streetType;
       this.priceTypes = this.additionalData.priceType;
@@ -430,7 +431,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     }
 
     if (this.initialValuesProps) {
-      this.advertTypeControl.setValue(this.initialValuesProps.advertType);
+      this.realtyTypeControl.setValue(this.initialValuesProps.realtyType);
 
       this.titleControl.setValue(this.initialValuesProps.title);
       this.descriptionControl.setValue(this.initialValuesProps.description);
@@ -517,11 +518,11 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   resetFormAdvert(): void {
     this.initialValuesProps = {
       id: '',
-      advertType: '',
+      realtyType: '',
       title: '',
       description: '',
-      numberOfRooms: null!,
-      area: null!,
+      numberOfRooms: 0,
+      area: 0,
       storey: null,
       numberOfStoreys: null,
       region: '',
@@ -551,7 +552,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const advertInput: AdvertInputInterface = {
-      ...this.advertTypeForm.value,
+      ...this.realtyTypeForm.value,
       ...this.descriptionForm.value,
       ...this.apartmentParametersForm.value,
       ...this.addressForm.value,

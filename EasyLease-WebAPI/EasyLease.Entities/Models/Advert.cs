@@ -9,18 +9,18 @@ namespace EasyLease.Entities.Models {
         [Column("AdvertId")]
         public Guid Id { get; set; }
 
-        [ForeignKey(nameof(AdvertType))]
-        public string AdvertTypeId { get; set; }
+        [ForeignKey(nameof(RealtyType))]
+        public string RealtyTypeId { get; set; }
 
-        [Required(ErrorMessage = "Type of advert is a required field.")]
-        public AdvertType AdvertType { get; set; }
+        [Required(ErrorMessage = "Type of realty is a required field.")]
+        public RealtyType RealtyType { get; set; }
 
         [Required(ErrorMessage = "Title is a required field.")]
         [MaxLength(150, ErrorMessage = "Maximum length for the Title is 150 characters.")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Description is a required field.")]
-        [MaxLength(1000, ErrorMessage = "Maximum length for the Description is 1000 characters.")]
+        [MaxLength(10000, ErrorMessage = "Maximum length for the Description is 10000 characters.")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Number of rooms is a required field.")]

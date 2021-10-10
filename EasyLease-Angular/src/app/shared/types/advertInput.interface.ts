@@ -3,7 +3,7 @@ import {PriceType} from './price.type';
 import {TagType} from './tag.type';
 
 export interface AdvertInputInterface {
-  advertType: string;
+  realtyType: string;
   title: string;
   description: string;
   numberOfRooms: number;

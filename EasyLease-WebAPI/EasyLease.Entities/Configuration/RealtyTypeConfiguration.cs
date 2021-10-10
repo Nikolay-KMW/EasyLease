@@ -3,16 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EasyLease.Entities.Configuration {
-    public class AdvertTypeConfiguration : IEntityTypeConfiguration<AdvertType> {
-        public void Configure(EntityTypeBuilder<AdvertType> builder) {
+    public class RealtyTypeConfiguration : IEntityTypeConfiguration<RealtyType> {
+        public void Configure(EntityTypeBuilder<RealtyType> builder) {
             builder.HasData(
-                new AdvertType {
+                new RealtyType {
                     Id = "дом"
                 },
-                new AdvertType {
+                new RealtyType {
                     Id = "квартира"
                 },
-                new AdvertType {
+                new RealtyType {
                     Id = "комната"
                 }
             );

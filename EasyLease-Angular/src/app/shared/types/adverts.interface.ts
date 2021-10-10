@@ -6,7 +6,7 @@ import {TagType} from './tag.type';
 
 export interface AdvertsInterface {
   id: string;
-  advertType: string;
+  realtyType: string;
   title: string;
   description: string;
   fullAddress: string;

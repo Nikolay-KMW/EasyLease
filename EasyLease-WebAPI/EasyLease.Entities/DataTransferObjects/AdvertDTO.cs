@@ -5,7 +5,7 @@ using EasyLease.Entities.Models;
 namespace EasyLease.Entities.DataTransferObjects {
     public class AdvertDTO {
         public Guid Id { get; set; }
-        public string AdvertType { get; set; }
+        public string RealtyType { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public int NumberOfRooms { get; set; }

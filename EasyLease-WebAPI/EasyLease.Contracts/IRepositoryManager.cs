@@ -6,7 +6,7 @@ namespace EasyLease.Contracts {
         IAdvertRepository Advert { get; }
         IComfortRepository Comfort { get; }
         ITagRepository Tag { get; }
-        IAdvertTypeRepository AdvertType { get; }
+        IRealtyTypeRepository RealtyType { get; }
         ISettlementTypeRepository SettlementType { get; }
         IStreetTypeRepository StreetType { get; }
         ILocationRepository Location { get; }

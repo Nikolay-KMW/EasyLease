@@ -67,7 +67,7 @@ namespace EasyLease.Entities {
 
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new AdvertConfiguration());
-            modelBuilder.ApplyConfiguration(new AdvertTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new RealtyTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TagConfiguration());
             modelBuilder.ApplyConfiguration(new AdvertTagConfiguration());
             modelBuilder.ApplyConfiguration(new LocationConfiguration());

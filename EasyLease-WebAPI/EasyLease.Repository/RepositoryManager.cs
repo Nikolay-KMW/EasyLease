@@ -9,7 +9,7 @@ namespace EasyLease.Repository {
         private IAdvertRepository _advertRepository;
         private IComfortRepository _comfortRepository;
         private ITagRepository _tagRepository;
-        private AdvertTypeRepository _advertTypeRepository;
+        private RealtyTypeRepository _realtyTypeRepository;
         private SettlementTypeRepository _settlementTypeRepository;
         private StreetTypeRepository _streetTypeRepository;
         private LocationRepository _LocationRepository;
@@ -22,7 +22,7 @@ namespace EasyLease.Repository {
         public IAdvertRepository Advert => _advertRepository ??= new AdvertRepository(_repositoryContext);
         public IComfortRepository Comfort => _comfortRepository ??= new ComfortRepository(_repositoryContext);
         public ITagRepository Tag => _tagRepository ??= new TagRepository(_repositoryContext);
-        public IAdvertTypeRepository AdvertType => _advertTypeRepository ??= new AdvertTypeRepository(_repositoryContext);
+        public IRealtyTypeRepository RealtyType => _realtyTypeRepository ??= new RealtyTypeRepository(_repositoryContext);
         public ISettlementTypeRepository SettlementType => _settlementTypeRepository ??= new SettlementTypeRepository(_repositoryContext);
         public IStreetTypeRepository StreetType => _streetTypeRepository ??= new StreetTypeRepository(_repositoryContext);
         public ILocationRepository Location => _LocationRepository ??= new LocationRepository(_repositoryContext);

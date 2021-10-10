@@ -15,7 +15,7 @@ export const environment = {
   maxTitle: 150,
   maxDescription: 1000,
   minArea: 1,
-  maxArea: 100000,
+  maxArea: 10000,
   minNumberOfRooms: 1,
   maxNumberOfRooms: 500,
   minNumberOfStoreys: 1,
