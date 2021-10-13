@@ -29,7 +29,6 @@ namespace EasyLease.WebAPI.ActionFilters {
             }
 
             var trustedFileNameForDisplay = WebUtility.HtmlEncode(namePhoto);
-            var namePhotoWithoutExtension = Path.GetFileNameWithoutExtension(namePhoto);
 
             ICollection<Image> images = advert.Images;
 
@@ -38,7 +37,7 @@ namespace EasyLease.WebAPI.ActionFilters {
                 context.Result = new NotFoundResult();
             }
 
-            Image image = images.FirstOrDefault(image => image.Name == namePhotoWithoutExtension);
+            Image image = images.FirstOrDefault(image => image.Name == namePhoto);
 
             if (image == null) {
                 _logger.LogInfo($"Photo {trustedFileNameForDisplay} not found");

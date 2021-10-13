@@ -18,5 +18,4 @@ export interface AdvertsInterface {
   comfortList: ComfortType[];
   tagList: TagType[];
   favorited: boolean;
-  // author: ProfileInterface | null; // Deleted
 }

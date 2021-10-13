@@ -14,13 +14,13 @@ namespace EasyLease.Entities.DataTransferObjects {
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Description is a required field.")]
-        [MaxLength(1000, ErrorMessage = "Maximum length for the Description is 1000 characters.")]
+        [MaxLength(10000, ErrorMessage = "Maximum length for the Description is 10000 characters.")]
         public string Description { get; set; }
 
         [Range(1, 500, ErrorMessage = "Number of rooms is required and it can't be less then 1 and more then 500")]
         public int NumberOfRooms { get; set; }
 
-        [Range(1, 100000, ErrorMessage = "Area is required and it can't be less than 1 m2 and more then 100000 m2.")]
+        [Range(1, 10000, ErrorMessage = "Area is required and it can't be less than 1 m2 and more then 10000 m2.")]
         public int Area { get; set; }
 
         [Range(1, 1000, ErrorMessage = "Storey can't be be below than 1 and above then 1000.")]
@@ -76,10 +76,6 @@ namespace EasyLease.Entities.DataTransferObjects {
         public string[] TagList { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
-            if (!Enum.TryParse<PriceType>(this.PriceType, ignoreCase: true, out PriceType enumValue)) {
-                yield return new ValidationResult($"Enum value {this.PriceType} is not valid for the PriceType.", new[] { nameof(this.PriceType) });
-            }
-
             if (TagList.Length > 5) {
                 yield return new ValidationResult("The list of tags can't be more then 5 words.", new[] { nameof(TagList) });
             }

@@ -17,7 +17,7 @@ namespace EasyLease.Repository {
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
-            .OrderBy(advert => advert.CreatedAd)
+            .OrderByDescending(advert => advert.CreatedAd)
             .Skip(advertParameters.PageOffset)
             .Take(advertParameters.PageSize)
             .ToListAsync().ConfigureAwait(false);
@@ -40,7 +40,7 @@ namespace EasyLease.Repository {
             .Include(advert => advert.Images)
             .Include(advert => advert.AdvertComforts)
             .Include(advert => advert.AdvertTags)
-            .OrderBy(advert => advert.CreatedAd)
+            .OrderByDescending(advert => advert.CreatedAd)
             .Skip(advertParameters.PageOffset)
             .Take(advertParameters.PageSize)
             .ToListAsync().ConfigureAwait(false);

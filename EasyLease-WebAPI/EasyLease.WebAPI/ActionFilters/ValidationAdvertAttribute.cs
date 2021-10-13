@@ -61,6 +61,11 @@ namespace EasyLease.WebAPI.ActionFilters {
                 context.ModelState.AddModelError(nameof(advertDTO.Region), "The Region is invalid.");
             }
 
+            if (!Enum.TryParse<PriceType>(advertDTO.PriceType, ignoreCase: true, out PriceType enumValue)) {
+                _logger.LogError($"Enum value {advertDTO.PriceType} is not valid for the PriceType.");
+                context.ModelState.AddModelError(nameof(advertDTO.PriceType), "The type of price is invalid.");
+            }
+
             DateTime currenDateTime = DateTime.UtcNow.AddHours(_generalSettings.HoursOffsetForUkraine);
 
             if (advertDTO.StartOfLease < currenDateTime) {

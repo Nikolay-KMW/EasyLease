@@ -1,3 +1,7 @@
 .mat-sidenav {
   width: 260px;
 }
+
+::ng-deep .mat-list-base {
+  display: block !important;
+}

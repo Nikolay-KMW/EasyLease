@@ -40,6 +40,7 @@ const editAdvertReducer = createReducer(
     updateAdvertAction,
     (state): EditAdvertStateInterface => ({
       ...state,
+      validationErrors: null,
       isSubmitting: true,
     })
   ),

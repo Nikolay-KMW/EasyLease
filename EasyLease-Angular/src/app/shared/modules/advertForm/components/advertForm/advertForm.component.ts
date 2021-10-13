@@ -45,6 +45,7 @@ import {ComfortType} from 'src/app/shared/types/comfort.type';
 import {environment} from 'src/environments/environment';
 import {AdvertInterface} from 'src/app/shared/types/advert.interface';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {UtilsService} from 'src/app/shared/services/utils.service';
 
 export const DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -196,7 +197,8 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     private store: Store<AppStateInterface>,
     private fb: FormBuilder,
     private breakpointObserver: BreakpointObserver,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private utilService: UtilsService
   ) {
     // Initialize values
     this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.TabletPortrait]).pipe(
@@ -348,13 +350,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
 
     //--------------------------------------------------------------------------------
     this.tagForm = this.fb.group({
-      tagList: [
-        this.tags,
-        [
-          (control: AbstractControl) => this.maxTagLength(control, this.maxTag),
-          (control: AbstractControl) => this.backendErrorForTags(control),
-        ],
-      ],
+      tagList: [this.tags, [(control: AbstractControl) => this.maxTagLength(control, this.maxTag)]],
     });
 
     this.tagListControl = this.tagForm.controls['tagList'] as FormControl;
@@ -388,19 +384,16 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     if (this.tagList?.errorState != undefined) {
       this.tagList.errorState = false;
 
+      for (const tag of this.tags) {
+        if (tag.length > maxLength) {
+          this.tagList.errorState = true;
+          return {maxLength: true};
+        }
+      }
+
       if ((control.value as string).length > maxLength) {
         this.tagList.errorState = true;
         return {maxLength: true};
-      }
-    }
-    return null;
-  }
-
-  private backendErrorForTags(control: AbstractControl): ValidationErrors | null {
-    if (this.tagList?.errorState != undefined) {
-      if (this.errorsProps != null && this.errorsProps['TagList']) {
-        this.tagList.errorState = true;
-        return {backendErrorForTags: true};
       }
     }
     return null;
@@ -411,8 +404,6 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
       .pipe(filter((error) => error != null))
       .subscribe((error) => {
         this.errorsProps = error;
-
-        console.log(error);
 
         this.snackBar.open('Проверьте правильность заполнения полей!', 'X', {
           panelClass: ['snackBar-warning'],
@@ -506,10 +497,6 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
   removeTag(tag: TagType): void {
     const index = this.tags.indexOf(tag);
 
-    if (this.tagList?.errorState != undefined) {
-      this.tagList.errorState = false;
-    }
-
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
@@ -550,6 +537,10 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     this.ngOnInit();
   }
 
+  scrollTo(className: string): void {
+    this.utilService.scrollTo(className, 'smooth', 'end');
+  }
+
   onSubmit(): void {
     const advertInput: AdvertInputInterface = {
       ...this.realtyTypeForm.value,
@@ -563,6 +554,7 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
     };
 
     this.advertSubmitEvent.emit(advertInput);
+    this.errorsProps = null;
   }
 
   ngOnDestroy(): void {

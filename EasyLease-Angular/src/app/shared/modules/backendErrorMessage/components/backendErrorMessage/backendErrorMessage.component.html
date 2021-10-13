@@ -1,6 +1,6 @@
-<div *ngIf="errorMessage">
-    <u *ngFor="let error of errorMessage">
+<div *ngIf="show && errorMessage">
+    <div *ngFor="let error of errorMessage">
         <strong>{{error}}</strong>
-    </u>
+    </div>
     <!-- <u><strong>{{errorMessage}}</strong></u> -->
 </div>

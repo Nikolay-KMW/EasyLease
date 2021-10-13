@@ -115,11 +115,7 @@ namespace EasyLease.WebAPI.Controllers {
         public async Task<IActionResult> DeleteAdvertById(Guid advertId) {
             var advert = HttpContext.Items["advert"] as Advert;
 
-            Image image = advert.Images?.FirstOrDefault();
-
-            if (image != null) {
-                _fileStorageManager.DeletePhotosById(advertId);
-            }
+            _fileStorageManager.DeletePhotosById(advertId);
 
             _repository.Advert.DeleteAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);
@@ -131,7 +127,7 @@ namespace EasyLease.WebAPI.Controllers {
         [ServiceFilter(typeof(ValidationPhotoForAdvertAttribute))]
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         //===============================================================================
-        public async Task<IActionResult> UploadPhotoForAdvert(Guid advertId, List<IFormFile> photos) {
+        public async Task<IActionResult> UploadPhotosForAdvert(Guid advertId, List<IFormFile> photos) {
             User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
             var advert = HttpContext.Items["advert"] as Advert;
 
@@ -145,7 +141,7 @@ namespace EasyLease.WebAPI.Controllers {
             return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, new { advert = advertToReturn });
         }
 
-        [HttpDelete("{advertId}/photos"), Authorize(Policy = "UserVisit"), Authorize(Policy = "UserIsOwnerAdvert")]
+        [HttpDelete("{advertId}/photo"), Authorize(Policy = "UserVisit"), Authorize(Policy = "UserIsOwnerAdvert")]
         [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
         [ServiceFilter(typeof(ValidateImageExistsAttribute))]
         //===============================================================================
@@ -157,6 +153,25 @@ namespace EasyLease.WebAPI.Controllers {
             _fileStorageManager.DeletePhotoByPath(image.Path);
 
             advert.Images.Remove(image);
+
+            _repository.Advert.UpdateAdvert(advert);
+            await _repository.SaveAsync().ConfigureAwait(false);
+
+            var advertToReturn = BuildAdvertDTOToReturn(advert, user);
+
+            return CreatedAtRoute("GetAdvertById", new { advertId = advertToReturn.Id }, new { advert = advertToReturn });
+        }
+
+        [HttpDelete("{advertId}/photos"), Authorize(Policy = "UserVisit"), Authorize(Policy = "UserIsOwnerAdvert")]
+        [ServiceFilter(typeof(ValidateAdvertExistsAttribute))]
+        //===============================================================================
+        public async Task<IActionResult> DeleteAllPhotosForAdvert(Guid advertId) {
+            User user = await GetAuthorizedUserWhitFavoriteAdsAsync(HttpContext.User, trackChanges: false).ConfigureAwait(false);
+            var advert = HttpContext.Items["advert"] as Advert;
+
+            _fileStorageManager.DeletePhotosById(advertId);
+
+            advert.Images = null;
 
             _repository.Advert.UpdateAdvert(advert);
             await _repository.SaveAsync().ConfigureAwait(false);

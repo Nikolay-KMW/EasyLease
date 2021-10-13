@@ -23,8 +23,10 @@ namespace EasyLease.WebAPI.Services {
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserIsOwnerAdvertRequirement requirement) {
             var method = _httpContextAccessor.HttpContext.Request.Method;
-            var namePhoto = _httpContextAccessor.HttpContext.Request.Query["namePhoto"].ToString();
-            var trackChanges = method.Equals("PUT") || (method.Equals("DELETE") && !String.IsNullOrWhiteSpace(namePhoto));
+            // var namePhoto = _httpContextAccessor.HttpContext.Request.Query["namePhoto"].ToString();
+            // var trackChanges = method.Equals("PUT") || (method.Equals("DELETE") && !String.IsNullOrWhiteSpace(namePhoto));
+
+            var trackChanges = method.Equals("PUT") || method.Equals("DELETE");
             var isParsedAdvertId = Guid.TryParse(_httpContextAccessor.HttpContext.GetRouteValue("advertId").ToString(), out Guid advertId);
 
             Advert advert = null;

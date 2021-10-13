@@ -40,7 +40,7 @@
                                         </fieldset>
                                         <div class="col-12">
                                             <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
-                                                color="secondary" matStepperNext>
+                                                color="secondary" (click)="scrollTo('descriptionStep')" matStepperNext>
                                                 Далее
                                                 <fa-icon [icon]="faStepForward" size="lg" class="pl-2"
                                                     transform="grow-1">
@@ -53,7 +53,7 @@
                         </mat-step>
 
                         <mat-step [stepControl]="descriptionForm" state="descriptionStep">
-                            <form [formGroup]="descriptionForm">
+                            <form [formGroup]="descriptionForm" class="descriptionStep">
                                 <ng-template matStepLabel>Описание объявления</ng-template>
                                 <fieldset class="container">
                                     <div class="row row-cols-1">
@@ -91,7 +91,7 @@
                                                     </el-backend-error-message>
                                                 </mat-error>
                                                 <mat-error
-                                                    *ngIf="!descriptionControl.hasError('maxLength') && !descriptionControl.hasError('required')">
+                                                    *ngIf="!descriptionControl.hasError('maxLength') && !descriptionControl.hasError('required') && !titleControl.hasError('backendErrorMessage')">
                                                     Краткое описание должно быть не более {{maxDescription}} символов
                                                 </mat-error>
                                                 <mat-error *ngIf="descriptionControl.hasError('required')">
@@ -108,7 +108,8 @@
                                                 Назад
                                             </button>
                                             <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
-                                                color="secondary" matStepperNext>
+                                                color="secondary" (click)="scrollTo('apartmentParametersStep')"
+                                                matStepperNext>
                                                 Далее
                                                 <fa-icon [icon]="faStepForward" size="lg" class="pl-2"
                                                     transform="grow-1">
@@ -121,7 +122,7 @@
                         </mat-step>
 
                         <mat-step [stepControl]="apartmentParametersForm" state="apartmentParametersStep">
-                            <form [formGroup]="apartmentParametersForm">
+                            <form [formGroup]="apartmentParametersForm" class="apartmentParametersStep">
                                 <ng-template matStepLabel>Характеристики сдаваемой недвижимости</ng-template>
                                 <fieldset class="container">
                                     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
@@ -222,7 +223,7 @@
                                                 Назад
                                             </button>
                                             <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
-                                                color="secondary" matStepperNext>
+                                                color="secondary" (click)="scrollTo('addressStep')" matStepperNext>
                                                 Далее
                                                 <fa-icon [icon]="faStepForward" size="lg" class="pl-2"
                                                     transform="grow-1">
@@ -235,7 +236,7 @@
                         </mat-step>
 
                         <mat-step [stepControl]="addressForm" state="addressStep">
-                            <form [formGroup]="addressForm">
+                            <form [formGroup]="addressForm" class="addressStep">
                                 <ng-template matStepLabel>Адрес</ng-template>
                                 <fieldset class="container">
                                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-2">
@@ -433,7 +434,7 @@
                                                 Назад
                                             </button>
                                             <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
-                                                color="secondary" matStepperNext>
+                                                color="secondary" (click)="scrollTo('priceStep')" matStepperNext>
                                                 Далее
                                                 <fa-icon [icon]="faStepForward" size="lg" class="pl-2"
                                                     transform="grow-1">
@@ -446,7 +447,7 @@
                         </mat-step>
 
                         <mat-step [stepControl]="priceForm" state="priceStep">
-                            <form [formGroup]="priceForm">
+                            <form [formGroup]="priceForm" class="priceStep">
                                 <ng-template matStepLabel>Цена</ng-template>
                                 <fieldset class="container">
                                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2">
@@ -501,7 +502,7 @@
                                                 Назад
                                             </button>
                                             <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
-                                                color="secondary" matStepperNext>
+                                                color="secondary" (click)="scrollTo('datepickerStep')" matStepperNext>
                                                 Далее
                                                 <fa-icon [icon]="faStepForward" size="lg" class="pl-2"
                                                     transform="grow-1">
@@ -514,7 +515,7 @@
                         </mat-step>
 
                         <mat-step [stepControl]="datepickerForm" state="datepickerStep">
-                            <form [formGroup]="datepickerForm">
+                            <form [formGroup]="datepickerForm" class="datepickerStep">
                                 <ng-template matStepLabel>Дата сдачи в аренду</ng-template>
                                 <fieldset class="container">
                                     <div class="row row-cols-1 row-cols-md-2">
@@ -539,7 +540,7 @@
                                                     Не верный формат даты
                                                 </mat-error>
                                                 <mat-error
-                                                    *ngIf="!startOfLeaseControl.hasError('required') && startOfLeaseControl.hasError('matDatepickerMin')">
+                                                    *ngIf="!startOfLeaseControl.hasError('required') && !startOfLeaseControl.hasError('backendErrorMessage') && startOfLeaseControl.hasError('matDatepickerMin')">
                                                     Дата начала аренды не может быть в прошлом
                                                 </mat-error>
                                                 <mat-error
@@ -570,7 +571,7 @@
                                                     Не верный формат даты
                                                 </mat-error>
                                                 <mat-error
-                                                    *ngIf="!endOfLeaseControl.hasError('required') && endOfLeaseControl.hasError('matDatepickerMin')">
+                                                    *ngIf="!endOfLeaseControl.hasError('required') && !endOfLeaseControl.hasError('backendErrorMessage') && endOfLeaseControl.hasError('matDatepickerMin')">
                                                     Дата окончания аренды не может быть позже начала аренды
                                                 </mat-error>
                                             </mat-form-field>
@@ -584,7 +585,7 @@
                                                 Назад
                                             </button>
                                             <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
-                                                color="secondary" matStepperNext>
+                                                color="secondary" (click)="scrollTo('comfortStep')" matStepperNext>
                                                 Далее
                                                 <fa-icon [icon]="faStepForward" size="lg" class="pl-2"
                                                     transform="grow-1">
@@ -597,7 +598,7 @@
                         </mat-step>
 
                         <mat-step [stepControl]="comfortForm" state="comfortStep">
-                            <form [formGroup]="comfortForm">
+                            <form [formGroup]="comfortForm" class="comfortStep">
                                 <ng-template matStepLabel>Список удобств</ng-template>
                                 <fieldset class="container">
                                     <fieldset class="form-group">
@@ -625,7 +626,7 @@
                                             Назад
                                         </button>
                                         <button class="my-1 py-1 col-sm-auto float-right" mat-raised-button
-                                            color="secondary" matStepperNext>
+                                            color="secondary" (click)="scrollTo('tagStep')" matStepperNext>
                                             Далее
                                             <fa-icon [icon]="faStepForward" size="lg" class="pl-2" transform="grow-1">
                                             </fa-icon>
@@ -636,7 +637,7 @@
                         </mat-step>
 
                         <mat-step [stepControl]="tagForm" state="tagStep">
-                            <form [formGroup]="tagForm">
+                            <form [formGroup]="tagForm" class="tagStep">
                                 <ng-template matStepLabel>Список тегов</ng-template>
                                 <fieldset class="container">
                                     <div class="row row-cols-1">
@@ -671,7 +672,7 @@
                                         </fieldset>
                                         <div class="col-12">
                                             <button class="my-1 py-1 mr-md-1 col-md-auto" mat-raised-button
-                                                color="elegant" matStepperPrevious>
+                                                color="elegant" color="secondary" matStepperPrevious>
                                                 <fa-icon [icon]="faStepBackward" size="lg" class="pr-2"
                                                     transform="grow-1">
                                                 </fa-icon>
@@ -684,7 +685,7 @@
                                                 </fa-icon>
                                                 Сбросить все
                                             </button>
-                                            <button class="my-1 py-1 col-md-auto float-right" type="submit"
+                                            <!-- <button class="my-1 py-1 col-md-auto float-right" type="submit"
                                                 mat-raised-button (click)="onSubmit()" [disabled]="(isSubmittingProps)"
                                                 color="success">
                                                 <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
@@ -694,19 +695,20 @@
                                                     transform="grow-2">
                                                 </fa-icon>
                                                 Опубликовать
-                                            </button>
-                                            <!-- <button class="my-1 py-1 col-md-auto float-right" type="submit" mat-raised-button
-                                            (click)="onSubmit()" [disabled]="(isSubmittingProps || realtyTypeForm.invalid || descriptionForm.invalid 
+                                            </button> -->
+                                            <button class="my-1 py-1 col-md-auto float-right" type="submit"
+                                                mat-raised-button (click)="onSubmit()" [disabled]="(isSubmittingProps || realtyTypeForm.invalid || descriptionForm.invalid 
                                             || apartmentParametersForm.invalid || addressForm.invalid || priceForm.invalid 
                                             || datepickerForm.invalid || comfortForm.invalid || tagForm.invalid)"
-                                            color="success">
-                                            <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
-                                                *ngIf="isSubmittingProps">
-                                            </fa-icon>
-                                            <fa-icon [icon]="faFlagCheckered" size="lg" class="pr-2" transform="grow-2">
-                                            </fa-icon>
-                                            Опубликовать
-                                        </button> -->
+                                                color="success">
+                                                <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
+                                                    *ngIf="isSubmittingProps">
+                                                </fa-icon>
+                                                <fa-icon [icon]="faFlagCheckered" size="lg" class="pr-2"
+                                                    transform="grow-2">
+                                                </fa-icon>
+                                                Опубликовать
+                                            </button>
                                         </div>
                                     </div>
                                 </fieldset>

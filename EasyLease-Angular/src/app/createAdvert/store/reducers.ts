@@ -14,6 +14,7 @@ const createAdvertReducer = createReducer(
     createAdvertAction,
     (state): CreateAdvertStateInterface => ({
       ...state,
+      validationErrors: null,
       isSubmitting: true,
     })
   ),

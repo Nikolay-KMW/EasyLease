@@ -32,7 +32,8 @@ namespace EasyLease.WebAPI.Utilities {
                     var fileExtension = Path.GetExtension(photo.FileName).ToLower();
 
                     var generatedFileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
-                    var filePath = Path.Combine(path, $"{generatedFileName}{fileExtension}");
+                    var fileNameWithExtension = $"{generatedFileName}{fileExtension}";
+                    var filePath = Path.Combine(path, fileNameWithExtension);
 
                     using (var stream = System.IO.File.Create(filePath)) {
                         await photo.CopyToAsync(stream).ConfigureAwait(false);
@@ -40,7 +41,7 @@ namespace EasyLease.WebAPI.Utilities {
 
                     var filePathForImage = filePath[filePath.LastIndexOf(_fileStorageSettings.PathInWebRoot)..];
 
-                    images.Add(new Image() { Name = generatedFileName, Path = filePathForImage });
+                    images.Add(new Image() { Name = fileNameWithExtension, Path = filePathForImage });
                 }
             }
 

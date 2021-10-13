@@ -12,12 +12,14 @@ export const environment = {
   hoursOffsetForUkraine: 3,
   additionalTimeOnExpenses: 1,
 
+  timeShowBackendError: 60000,
+
   minUserName: 1,
   maxUserName: 10,
   minUserPassword: 8,
 
   maxTitle: 150,
-  maxDescription: 1000,
+  maxDescription: 10000,
   minArea: 1,
   maxArea: 10000,
   minNumberOfRooms: 1,

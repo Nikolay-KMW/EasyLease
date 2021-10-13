@@ -28,7 +28,7 @@ namespace EasyLease.Repository {
             .ThenInclude(favoriteAd => favoriteAd.Advert.AdvertTags)
             .SingleOrDefaultAsync().ConfigureAwait(false);
 
-            var adverts = user.FavoriteAdverts.Select(favoriteAd => favoriteAd.Advert).OrderBy(advert => advert.CreatedAd);
+            var adverts = user.FavoriteAdverts.Select(favoriteAd => favoriteAd.Advert).OrderByDescending(advert => advert.CreatedAd);
 
             return (PagedList<Advert>.ToPagedList(adverts,
                                                   advertParameters.PageNumber,

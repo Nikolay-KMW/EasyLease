@@ -3,6 +3,7 @@ import {OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'el-backend-error-message',
@@ -15,10 +16,13 @@ export class BackendErrorMessageComponent implements OnInit {
   @Input('formControlForBackendError') formControlProps?: FormControl;
 
   errorMessage: string[] | undefined;
+  show: boolean = true;
 
   constructor() {}
 
   ngOnInit(): void {
+    this.show = true;
+
     if (this.backendErrorsProps && this.namePropertyProps) {
       //this.errorMessage = this.backendErrorsProps[this.namePropertyProps]?.join(', ');
       this.errorMessage = this.backendErrorsProps[this.namePropertyProps];
@@ -26,6 +30,8 @@ export class BackendErrorMessageComponent implements OnInit {
 
     if (this.errorMessage !== undefined) {
       setTimeout(() => this.formControlProps?.setErrors({backendErrorMessage: true}));
+
+      setTimeout(() => (this.show = false), environment.timeShowBackendError);
 
       // setTimeout(() => {
       //   this.formControlProps?.setErrors({backendErrorMessage: true});
