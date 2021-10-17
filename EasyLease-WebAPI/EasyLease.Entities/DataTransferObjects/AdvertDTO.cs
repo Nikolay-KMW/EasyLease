@@ -24,7 +24,7 @@ namespace EasyLease.Entities.DataTransferObjects {
         public int? ApartmentNumber { get; set; }
         // ======================================
 
-        public string[] Images { get; set; }
+        public ImageDTO[] Images { get; set; }
         public PriceType PriceType { get; set; }
         public decimal Price { get; set; }
         public DateTime StartOfLease { get; set; }

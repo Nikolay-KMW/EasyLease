@@ -31,14 +31,18 @@ ngx-dropzone,
         background: rgb(236, 32, 17);
       }
     }
+
+    ngx-dropzone-label {
+      opacity: 1 !important;
+    }
+
+    img {
+      opacity: 0.3 !important;
+    }
   }
 
   img {
     opacity: 1 !important;
-    // &:hover,
-    // &:focus ngx-dropzone-remove-badge {
-    //   opacity: 0.6 !important;
-    // }
   }
 
   ngx-dropzone-remove-badge {
@@ -47,8 +51,9 @@ ngx-dropzone,
 }
 
 .label {
+  opacity: 0;
   font-size: x-large;
-  color: rgb(40, 230, 221);
+  color: rgb(6, 91, 250);
 }
 
 .error-photo {

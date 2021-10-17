@@ -1,4 +1,5 @@
 import {createAction, props} from '@ngrx/store';
+import {ImageInterface} from 'src/app/shared/types/image.interface';
 
 import {ActionTypes} from '../actionTypes';
 
@@ -9,7 +10,10 @@ export const quantityDownloadPhotoAction = createAction(
   props<{quantity: number}>()
 );
 
-export const downloadPhotoForAdvertAction = createAction(ActionTypes.DOWNLOAD_PHOTO, props<{imagesPath: string[]}>());
+export const downloadPhotoForAdvertAction = createAction(
+  ActionTypes.DOWNLOAD_PHOTO,
+  props<{images: ImageInterface[]}>()
+);
 
 export const getPhotoForAdvertSuccessAction = createAction(ActionTypes.GET_PHOTO_SUCCESS, props<{photos: File[]}>());
 

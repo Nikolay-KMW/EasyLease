@@ -11,7 +11,7 @@
                             [loop]="true" [hideArrows]="true" [hideIndicators]="false" [useKeyboard]="true"
                             [useMouseWheel]="true" orientation="ltr">
                             <mat-carousel-slide #matCarouselSlide *ngFor="let slide of slides; let i = index"
-                                [image]="slide.image" overlayColor="#f2f9c820" [hideOverlay]="true"
+                                [image]="slide.path" overlayColor="#f2f9c820" [hideOverlay]="true"
                                 class="card-img img-raised">
                             </mat-carousel-slide>
                         </mat-carousel>
@@ -37,6 +37,48 @@
                                     <strong>{{advert.streetName}}</strong>,
                                     дом <strong>№{{advert.houseNumber}}</strong>,
                                     кв. <strong>№{{advert.apartmentNumber}}</strong>
+                                </div>
+                            </div>
+                            <mat-divider class="my-2"></mat-divider>
+                            <div>
+                                <div class="subtitle my-3">Характеристики:</div>
+                                <div class="ml-2 mb-1 parameters">
+                                    <span [ngSwitch]="advert.realtyType">
+                                        <div *ngSwitchCase="'дом'">
+                                            Площадь дома:
+                                            <strong class="text-white bg-info rounded px-2">{{advert.area}}</strong>
+                                            м2,
+                                            Количество комнат:
+                                            <strong
+                                                class="text-white bg-info rounded px-2">{{advert.numberOfRooms}}</strong>,
+                                            Количество этажей в доме:
+                                            <strong
+                                                class="text-white bg-info rounded px-2">{{advert.numberOfStoreys}}</strong>
+                                        </div>
+                                        <div *ngSwitchCase="'квартира'">
+                                            Площадь квартиры:
+                                            <strong class="text-white bg-info rounded px-2">{{advert.area}}</strong>
+                                            м2,
+                                            Количество комнат:
+                                            <strong
+                                                class="text-white bg-info rounded px-2">{{advert.numberOfRooms}}</strong>,
+                                            Количество этажей в много. кв. доме:
+                                            <strong
+                                                class="text-white bg-info rounded px-2">{{advert.numberOfStoreys}}</strong>,
+                                            Этаж расположения квартиры:
+                                            <strong class="text-white bg-info rounded px-2">{{advert.storey}}</strong>,
+                                        </div>
+                                        <div *ngSwitchCase="'комната'">
+                                            Площадь комнаты:
+                                            <strong class="text-white bg-info rounded px-2">{{advert.area}}</strong>
+                                            м2,
+                                            Количество этажей в много. кв. доме:
+                                            <strong
+                                                class="text-white bg-info rounded px-2">{{advert.numberOfStoreys}}</strong>,
+                                            Этаж расположения комнаты:
+                                            <strong class="text-white bg-info rounded px-2">{{advert.storey}}</strong>,
+                                        </div>
+                                    </span>
                                 </div>
                             </div>
                             <mat-divider class="my-2"></mat-divider>
@@ -71,17 +113,17 @@
                     <div class="card my-2" *ngIf="isAuthor$ | async">
                         <div class="card-body">
                             <div class="row px-3">
-                                <button mat-raised-button color="success" class="col-12 my-1 py-1 px-md-1"
+                                <button mat-raised-button color="secondary" class="col-12 my-1 py-1 px-md-1"
                                     [routerLink]="[ '/advert', advert.slug, 'edit' ]">
                                     <fa-icon [icon]="faEdit" size="lg" class="pr-1">
                                     </fa-icon>
                                     Редактировать
                                 </button>
-                                <button mat-raised-button color="secondary" class="col-12 my-1 py-1 px-md-1"
+                                <button mat-raised-button color="success" class="col-12 my-1 py-1 px-md-1"
                                     [routerLink]="[ '/advert', advert.slug, 'photos', 'edit' ]">
-                                    <fa-icon [icon]="faEdit" size="lg" class="pr-1">
+                                    <fa-icon [icon]="faImages" size="lg" class="pr-1">
                                     </fa-icon>
-                                    Редактировать фото
+                                    Изменить фото
                                 </button>
                                 <button mat-raised-button color="warn" class="col-12 my-1 py-1 px-md-1"
                                     (click)="deleteAdvert()">

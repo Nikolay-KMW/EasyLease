@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, switchMap} from 'rxjs/operators';
 import {from, of} from 'rxjs';
-import {HttpErrorResponse} from '@angular/common/http';
 
 import {AdvertInterface} from 'src/app/shared/types/advert.interface';
 import {
@@ -38,7 +37,7 @@ export class GetPhotoEffect {
               return getPhotoForAdvertSuccessAction({photos: []});
             }
 
-            return downloadPhotoForAdvertAction({imagesPath: advert.images});
+            return downloadPhotoForAdvertAction({images: advert.images});
           }),
           catchError(() => {
             return of(getPhotoForAdvertFailureAction());
@@ -51,10 +50,10 @@ export class GetPhotoEffect {
   downloadPhotoForAdvert$ = createEffect(() =>
     this.actions$.pipe(
       ofType(downloadPhotoForAdvertAction),
-      switchMap(({imagesPath}) => {
-        return from(imagesPath).pipe(
-          mergeMap((imagePath) =>
-            this.downloadPhotoService.downloadPhotoForAdvert(imagePath).pipe(
+      switchMap(({images}) => {
+        return from(images).pipe(
+          mergeMap((image) =>
+            this.downloadPhotoService.downloadPhotoForAdvert(image).pipe(
               map((photo: File) => {
                 this.fileBuffer.push(photo);
 

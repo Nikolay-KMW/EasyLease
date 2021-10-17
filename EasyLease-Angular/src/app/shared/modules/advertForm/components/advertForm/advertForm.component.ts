@@ -243,10 +243,10 @@ export class AdvertFormComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.min(this.minNumberOfRooms), Validators.max(this.maxNumberOfRooms)],
       ],
       numberOfStoreys: [
-        0,
+        null,
         [Validators.required, Validators.min(this.minNumberOfStoreys), Validators.max(this.maxNumberOfStoreys)],
       ],
-      storey: [0, [Validators.required, Validators.min(this.minStorey), Validators.max(this.maxStorey)]],
+      storey: [null, [Validators.min(this.minStorey), Validators.max(this.maxStorey)]],
     });
 
     this.areaControl = this.apartmentParametersForm.controls['area'] as FormControl;

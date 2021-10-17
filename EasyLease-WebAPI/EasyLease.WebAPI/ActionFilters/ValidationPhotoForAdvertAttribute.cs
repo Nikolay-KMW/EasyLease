@@ -43,35 +43,40 @@ namespace EasyLease.WebAPI.ActionFilters {
             foreach (var photo in photos) {
                 var trustedFileNameForDisplay = WebUtility.HtmlEncode(photo.FileName);
 
-                if (photo.Length > 0) {
-                    if (photo.Length > _fileStorageSettings.FileSizeLimit) {
-                        _logger.LogError($"Photo sent from client is more than {_fileStorageSettings.FileSizeLimit / (1024 * 1024)} Mb.");
-                        context.ModelState.AddModelError(nameof(photos), $"Photo < {trustedFileNameForDisplay} > is more than {_fileStorageSettings.FileSizeLimit / (1024 * 1024)} Mb.");
+                if (photo.Length == 0) {
+                    _logger.LogError("Photo sent from client is empty.");
+                    context.ModelState.AddModelError(nameof(photos), $"Photo < {trustedFileNameForDisplay} > is empty.");
+                    context.Result = new BadRequestObjectResult(context.ModelState);
+                    return;
+                }
+
+                if (photo.Length > _fileStorageSettings.FileSizeLimit) {
+                    _logger.LogError($"Photo sent from client is more than {_fileStorageSettings.FileSizeLimit / (1024 * 1024)} Mb.");
+                    context.ModelState.AddModelError(nameof(photos), $"Photo < {trustedFileNameForDisplay} > is more than {_fileStorageSettings.FileSizeLimit / (1024 * 1024)} Mb.");
+                    context.Result = new BadRequestObjectResult(context.ModelState);
+                    return;
+                }
+
+                var fileExtension = Path.GetExtension(photo.FileName).ToLower();
+
+                if (!_fileStorageSettings.AllowedExtensions.Any(ext => ext == fileExtension)) {
+                    _logger.LogError($"Photo sent from client has extension {fileExtension}");
+                    context.ModelState.AddModelError(nameof(photos), $"Photo < {trustedFileNameForDisplay} > must has one of the extensions: { string.Join(',', _fileStorageSettings.AllowedExtensions)}.");
+                    context.Result = new BadRequestObjectResult(context.ModelState);
+                    return;
+                }
+
+                using (var reader = new BinaryReader(photo.OpenReadStream())) {
+                    var signatures = _fileStorageSettings.FileSignature[fileExtension];
+                    var headerfile = reader.ReadBytes(signatures.Max(m => m.Length));
+
+                    bool isValidSignature = signatures.Any(signature => headerfile.Take(signature.Length).SequenceEqual(signature));
+
+                    if (!isValidSignature) {
+                        _logger.LogError($"Photo sent from client has not valid signature: {fileExtension}");
+                        context.ModelState.AddModelError(nameof(photos), $"Photo < {trustedFileNameForDisplay} > must has one of the extensions.: { string.Join(',', _fileStorageSettings.AllowedExtensions)}.");
                         context.Result = new BadRequestObjectResult(context.ModelState);
                         return;
-                    }
-
-                    var fileExtension = Path.GetExtension(photo.FileName).ToLower();
-
-                    if (!_fileStorageSettings.AllowedExtensions.Any(ext => ext == fileExtension)) {
-                        _logger.LogError($"Photo sent from client has extension {fileExtension}");
-                        context.ModelState.AddModelError(nameof(photos), $"Photo < {trustedFileNameForDisplay} > must has one of the extensions: { string.Join(',', _fileStorageSettings.AllowedExtensions)}.");
-                        context.Result = new BadRequestObjectResult(context.ModelState);
-                        return;
-                    }
-
-                    using (var reader = new BinaryReader(photo.OpenReadStream())) {
-                        var signatures = _fileStorageSettings.FileSignature[fileExtension];
-                        var headerfile = reader.ReadBytes(signatures.Max(m => m.Length));
-
-                        bool isValidSignature = signatures.Any(signature => headerfile.Take(signature.Length).SequenceEqual(signature));
-
-                        if (!isValidSignature) {
-                            _logger.LogError($"Photo sent from client has not valid signature: {fileExtension}");
-                            context.ModelState.AddModelError(nameof(photos), $"Photo < {trustedFileNameForDisplay} > must has one of the extensions.: { string.Join(',', _fileStorageSettings.AllowedExtensions)}.");
-                            context.Result = new BadRequestObjectResult(context.ModelState);
-                            return;
-                        }
                     }
                 }
             }

@@ -16,12 +16,12 @@ import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {getAdvertAction} from '../../store/actions/getAdvert.action';
 import {advertSelector, errorSelector, isFallingSelector, isLoadingSelector} from '../../store/selectors';
 import {deleteAdvertAction} from '../../store/actions/deleteAdvert.action';
-import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {faEdit, faImages, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banner/store/action/sync.action';
 import {PriceType} from 'src/app/shared/types/price.type';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {ImagePathType} from 'src/app/shared/types/imagePath.type';
 import {environment} from 'src/environments/environment';
+import {ImageInterface} from 'src/app/shared/types/image.interface';
 
 @Component({
   selector: 'el-advert',
@@ -45,8 +45,9 @@ export class AdvertComponent implements OnInit, OnDestroy {
 
   faTrash: IconDefinition = faTrash;
   faEdit: IconDefinition = faEdit;
+  faImages: IconDefinition = faImages;
 
-  slides = [{image: 'assets/img/apartment.png'}];
+  slides: ImageInterface[] = [{name: 'apartment.png', path: 'assets/img/apartment.png'}];
 
   constructor(private store: Store<AppStateInterface>, private route: ActivatedRoute, private sanitizer: DomSanitizer) {
     // Initialize values
@@ -77,11 +78,11 @@ export class AdvertComponent implements OnInit, OnDestroy {
 
     // Initialize listeners
     this.advertSubscription = this.store.pipe(select(advertSelector)).subscribe((advert: AdvertInterface | null) => {
-      this.advert = advert;
       if (advert) {
+        this.advert = advert;
         this.priceType = PriceType[advert.priceType as string as keyof typeof PriceType];
         if (advert.images.length > 0) {
-          this.slides = this.getSlideImage(advert.images);
+          this.slides = this.transformImagePhat(advert.images);
         }
       }
     });
@@ -92,12 +93,12 @@ export class AdvertComponent implements OnInit, OnDestroy {
   //   return PriceType[key as keyof typeof PriceType];
   // };
 
-  getSlideImage(imagePaths: ImagePathType[]): {image: string}[] {
-    let slides: {image: string}[] = [];
+  transformImagePhat(images: ImageInterface[]): ImageInterface[] {
+    let slides: ImageInterface[] = [];
 
-    for (let index = 0; index < imagePaths.length; index++) {
-      const slide = environment.uploadUrl + imagePaths[index];
-      slides[index] = {image: slide};
+    for (const image of images) {
+      const fullUrl = environment.uploadUrl + image.path;
+      slides.push({name: image.name, path: fullUrl});
     }
     return slides;
   }

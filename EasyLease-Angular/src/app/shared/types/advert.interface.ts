@@ -1,5 +1,5 @@
 import {ComfortType} from './comfort.type';
-import {ImagePathType} from './imagePath.type';
+import {ImageInterface} from './image.interface';
 import {PriceType} from './price.type';
 import {ProfileInterface} from './profile.Interface';
 import {TagType} from './tag.type';
@@ -21,7 +21,7 @@ export interface AdvertInterface {
   streetName: string;
   houseNumber: string | null;
   apartmentNumber: number | null;
-  images: ImagePathType[];
+  images: ImageInterface[];
   priceType: PriceType;
   price: number;
   startOfLease: string;

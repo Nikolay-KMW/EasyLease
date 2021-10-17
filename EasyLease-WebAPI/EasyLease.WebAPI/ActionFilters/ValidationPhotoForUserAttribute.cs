@@ -38,6 +38,20 @@ namespace EasyLease.WebAPI.ActionFilters {
             var trustedFileNameForDisplay = WebUtility.HtmlEncode(avatar.FileName);
             var fileExtension = Path.GetExtension(avatar.FileName).ToLower();
 
+            if (avatar.Length == 0) {
+                _logger.LogError("Photo sent from client is empty.");
+                context.ModelState.AddModelError(nameof(avatar), $"Photo < {trustedFileNameForDisplay} > is empty.");
+                context.Result = new BadRequestObjectResult(context.ModelState);
+                return;
+            }
+
+            if (avatar.Length > _userProfileSettings.FileSizeLimitForAvatar) {
+                _logger.LogError($"Photo sent from client is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
+                context.ModelState.AddModelError(nameof(avatar), $"Photo < {trustedFileNameForDisplay} > is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
+                context.Result = new BadRequestObjectResult(context.ModelState);
+                return;
+            }
+
             if (!_userProfileSettings.AllowedExtensions.Any(ext => ext == fileExtension)) {
                 _logger.LogError($"Photo sent from client has extension {fileExtension}");
                 context.ModelState.AddModelError(nameof(avatar), $"Photo < {trustedFileNameForDisplay} > must has one of the extensions: { string.Join(',', _userProfileSettings.AllowedExtensions)}.");
@@ -47,13 +61,6 @@ namespace EasyLease.WebAPI.ActionFilters {
 
             using (var memoryStream = new MemoryStream()) {
                 await avatar.CopyToAsync(memoryStream).ConfigureAwait(false);
-
-                if (memoryStream.Length > _userProfileSettings.FileSizeLimitForAvatar) {
-                    _logger.LogError($"Photo sent from client is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
-                    context.ModelState.AddModelError(nameof(avatar), $"Photo < {trustedFileNameForDisplay} > is more than {_userProfileSettings.FileSizeLimitForAvatar / 1024}KB.");
-                    context.Result = new BadRequestObjectResult(context.ModelState);
-                    return;
-                }
 
                 memoryStream.Position = 0;
 

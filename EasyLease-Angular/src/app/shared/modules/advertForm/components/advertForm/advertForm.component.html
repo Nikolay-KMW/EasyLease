@@ -209,9 +209,6 @@
                                                     *ngIf="!storeyControl.hasError('min', 'max') && !storeyControl.hasError('required') && !storeyControl.hasError('backendErrorMessage')">
                                                     Этажей должна быть не меньше {{minStorey}} и не больше {{maxStorey}}
                                                 </mat-error>
-                                                <mat-error *ngIf="storeyControl.hasError('required')">
-                                                    Указание этажа <strong>обязательное</strong>
-                                                </mat-error>
                                             </mat-form-field>
                                         </fieldset>
                                         <div class="col-12 col-md-12 col-xl-12">
@@ -672,7 +669,7 @@
                                         </fieldset>
                                         <div class="col-12">
                                             <button class="my-1 py-1 mr-md-1 col-md-auto" mat-raised-button
-                                                color="elegant" color="secondary" matStepperPrevious>
+                                                color="elegant" color="elegant" matStepperPrevious>
                                                 <fa-icon [icon]="faStepBackward" size="lg" class="pr-2"
                                                     transform="grow-1">
                                                 </fa-icon>
@@ -700,7 +697,7 @@
                                                 mat-raised-button (click)="onSubmit()" [disabled]="(isSubmittingProps || realtyTypeForm.invalid || descriptionForm.invalid 
                                             || apartmentParametersForm.invalid || addressForm.invalid || priceForm.invalid 
                                             || datepickerForm.invalid || comfortForm.invalid || tagForm.invalid)"
-                                                color="success">
+                                                color="secondary">
                                                 <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
                                                     *ngIf="isSubmittingProps">
                                                 </fa-icon>

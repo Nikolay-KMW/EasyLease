@@ -1,7 +1,6 @@
 import {ComfortType} from './comfort.type';
-import {ImagePathType} from './imagePath.type';
+import {ImageInterface} from './image.interface';
 import {PriceType} from './price.type';
-import {ProfileInterface} from './profile.Interface';
 import {TagType} from './tag.type';
 
 export interface AdvertsInterface {
@@ -10,7 +9,7 @@ export interface AdvertsInterface {
   title: string;
   description: string;
   fullAddress: string;
-  image: ImagePathType | null;
+  image: ImageInterface | null;
   createdAd: string;
   slug: string;
   priceType: PriceType;

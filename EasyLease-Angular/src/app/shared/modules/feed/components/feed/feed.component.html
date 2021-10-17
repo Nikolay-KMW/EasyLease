@@ -8,7 +8,7 @@
                 <div class="col-lg-4 col-md-12 img-wrapper">
                     <a [routerLink]="[ '/advert', advert.slug ]">
                         <img *ngIf="!advert.image" src="assets/img/apartment.png" class="card-img img-raised" />
-                        <img *ngIf="advert.image" src="{{uploadUrl + advert.image}}" class="card-img img-raised" />
+                        <img *ngIf="advert.image" src="{{uploadUrl + advert.image.path}}" class="card-img img-raised" />
                     </a>
                 </div>
                 <div class="col-lg-6 col-md-9 d-flex flex-column justify-content-between pl-lg-1 desc">

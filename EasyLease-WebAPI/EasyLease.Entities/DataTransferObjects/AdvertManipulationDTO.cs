@@ -69,10 +69,7 @@ namespace EasyLease.Entities.DataTransferObjects {
         public DateTime StartOfLease { get; set; }
         public DateTime? EndOfLease { get; set; }
 
-        // public IEnumerable<AdvertComfortCreationDTO> ComfortList { get; set; }
         public string[] ComfortList { get; set; }
-
-        // public IEnumerable<AdvertTagCreationDTO> TagList { get; set; }
         public string[] TagList { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
@@ -98,14 +95,4 @@ namespace EasyLease.Entities.DataTransferObjects {
             TagList = tagsWithoutDuplicates.ToArray();
         }
     }
-
-    // Most likely it will not be needed
-    // public class AdvertComfortCreationDTO {
-    //     public string Comfort { get; set; }
-    // }
-
-    // Most likely it will not be needed
-    // public class AdvertTagCreationDTO {
-    //     public string TagList { get; set; }
-    // }
 }

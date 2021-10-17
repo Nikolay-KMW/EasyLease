@@ -2,6 +2,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {ImageInterface} from 'src/app/shared/types/image.interface';
 
 import {environment} from 'src/environments/environment';
 
@@ -9,9 +10,8 @@ import {environment} from 'src/environments/environment';
 export class DownloadPhotoService {
   constructor(private http: HttpClient) {}
 
-  downloadPhotoForAdvert(imagePath: string): Observable<File> {
-    const downloadUrl = environment.uploadUrl + imagePath;
-    const namePhoto = imagePath.slice(imagePath.lastIndexOf('/') + 1);
+  downloadPhotoForAdvert(image: ImageInterface): Observable<File> {
+    const downloadUrl = environment.uploadUrl + image.path;
 
     const headers = new HttpHeaders()
       // .set('Access-Control-Allow-Headers', 'Content-Type')
@@ -22,14 +22,14 @@ export class DownloadPhotoService {
 
     return this.http.get(downloadUrl, {responseType: 'arraybuffer', headers: headers}).pipe(
       map((photo) => {
-        let blob = new File([photo], namePhoto, {type: 'image/jpeg'});
+        let blob = new File([photo], image.name, {type: 'image/jpeg'});
         return blob as File;
       })
     );
 
     // return this.http.get<Blob>(downloadUrl, {headers: headers, responseType: 'blob' as 'json'}).pipe(
     //   map((photo) => {
-    //     let file = new File([photo], namePhoto, {type: 'image/jpeg'});
+    //     let file = new File([photo], image.name, {type: 'image/jpeg'});
     //     return file;
     //   })
     // );
