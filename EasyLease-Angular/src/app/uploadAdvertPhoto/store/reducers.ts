@@ -3,6 +3,11 @@ import {Action, createReducer, on} from '@ngrx/store';
 
 import {UploadAdvertPhotoStateInterface} from '../types/uploadAdvertPhotoState.interface';
 import {
+  deleteAllPhotoAction,
+  deleteAllPhotoFailureAction,
+  deleteAllPhotoSuccessAction,
+} from './actions/deleteAllPhoto.action';
+import {
   getPhotoForAdvertAction,
   getPhotoForAdvertFailureAction,
   getPhotoForAdvertSuccessAction,
@@ -15,6 +20,7 @@ const initialState: UploadAdvertPhotoStateInterface = {
   quantityPhoto: 0,
   isLoading: false,
   isSubmitting: false,
+  isDeleting: false,
   validationErrors: null,
   isFalling: false,
 };
@@ -71,6 +77,27 @@ const uploadAdvertPhotoReducer = createReducer(
       ...state,
       isSubmitting: false,
       validationErrors: action.errors,
+    })
+  ),
+  on(
+    deleteAllPhotoAction,
+    (state): UploadAdvertPhotoStateInterface => ({
+      ...state,
+      isDeleting: true,
+    })
+  ),
+  on(
+    deleteAllPhotoSuccessAction,
+    (state): UploadAdvertPhotoStateInterface => ({
+      ...state,
+      isDeleting: false,
+    })
+  ),
+  on(
+    deleteAllPhotoFailureAction,
+    (state): UploadAdvertPhotoStateInterface => ({
+      ...state,
+      isDeleting: false,
     })
   ),
   on(

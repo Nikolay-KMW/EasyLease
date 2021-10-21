@@ -22,6 +22,7 @@ import {PriceType} from 'src/app/shared/types/price.type';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {environment} from 'src/environments/environment';
 import {ImageInterface} from 'src/app/shared/types/image.interface';
+import {RealtyType} from '../../types/realtyType.enum';
 
 @Component({
   selector: 'el-advert',
@@ -30,6 +31,7 @@ import {ImageInterface} from 'src/app/shared/types/image.interface';
 })
 export class AdvertComponent implements OnInit, OnDestroy {
   //PriceType = PriceType;
+  RealtyType = RealtyType;
   priceType: string = PriceType.PricePerMonth;
 
   slug: string | null;

@@ -7,6 +7,10 @@ export enum ActionTypes {
   QUANTITY_DOWNLOAD_PHOTO = '[Quantity download Photo] Quantity of downloaded Photo for Advert',
 
   UPLOAD_PHOTO = '[Upload Photo] Upload Photo for Advert',
-  UPLOAD_PHOTO_SUCCESS = '[Upload Photo] Create Advert for Advert success',
-  UPLOAD_PHOTO_FAILURE = '[Upload Photo] Create Advert for Advert failure',
+  UPLOAD_PHOTO_SUCCESS = '[Upload Photo] Upload Photo for Advert success',
+  UPLOAD_PHOTO_FAILURE = '[Upload Photo] Upload Photo for Advert failure',
+
+  DELETE_All_PHOTO = '[Delete All Photo] Delete all photo for Advert',
+  DELETE_All_PHOTO_SUCCESS = '[Delete All Photo] Delete all photo for Advert success',
+  DELETE_All_PHOTO_FAILURE = '[Delete All Photo] Delete all photo for Advert failure',
 }

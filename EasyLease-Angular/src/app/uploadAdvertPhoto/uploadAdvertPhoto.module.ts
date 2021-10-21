@@ -15,6 +15,8 @@ import {LoadingModule} from '../shared/modules/loading/loading.module';
 import {ErrorMessageModule} from '../shared/modules/errorMessage/errorMessage.module';
 import {DownloadPhotoService} from './services/downloadPhoto.service';
 import {GetPhotoEffect} from './store/effects/getPhoto.effect';
+import {DeleteAllPhotoService} from './services/deleteAllPhoto.service';
+import {DeleteAllPhotoEffect} from './store/effects/deleteAllPhoto.effect';
 
 const routes = [{path: 'advert/:slug/photos/:mode', component: UploadAdvertPhotoComponent}];
 
@@ -23,7 +25,7 @@ const routes = [{path: 'advert/:slug/photos/:mode', component: UploadAdvertPhoto
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    EffectsModule.forFeature([GetPhotoEffect, UploadPhotoEffect]),
+    EffectsModule.forFeature([GetPhotoEffect, UploadPhotoEffect, DeleteAllPhotoEffect]),
     StoreModule.forFeature('uploadAdvertPhoto', reducers),
     PhotoDropzoneModule,
     LoadingModule,
@@ -32,6 +34,6 @@ const routes = [{path: 'advert/:slug/photos/:mode', component: UploadAdvertPhoto
     FontAwesomeModule,
   ],
   exports: [],
-  providers: [DownloadPhotoService, UploadPhotoService],
+  providers: [DownloadPhotoService, UploadPhotoService, DeleteAllPhotoService],
 })
 export class UploadAdvertPhotoModule {}

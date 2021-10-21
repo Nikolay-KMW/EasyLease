@@ -2,7 +2,7 @@ import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/lay
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
-import {faFlagCheckered, faSpinner} from '@fortawesome/free-solid-svg-icons';
+import {faSave, faSpinner, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
@@ -11,16 +11,18 @@ import {setDescriptionAction, setTitleAction} from 'src/app/shared/modules/banne
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 import {BackendErrorInterface} from 'src/app/shared/types/backendError.interface';
 import {environment} from 'src/environments/environment';
+import {deleteAllPhotoAction} from '../../store/actions/deleteAllPhoto.action';
 import {getPhotoForAdvertAction} from '../../store/actions/getPhoto.action';
 import {uploadPhotoAction} from '../../store/actions/uploadPhoto.action';
 import {
+  isDeletingSelector,
   isFallingSelector,
   isLoadingSelector,
   isSubmittingSelector,
   photosSelector,
   validationErrorsSelector,
 } from '../../store/selectors';
-import {TypeOperation} from '../../types/typeOperation.interface';
+import {TypeOperation} from '../../types/typeOperation.enum';
 
 @Component({
   selector: 'el-upload-advert-photo',
@@ -28,24 +30,28 @@ import {TypeOperation} from '../../types/typeOperation.interface';
   styleUrls: ['./uploadAdvertPhoto.component.scss'],
 })
 export class UploadAdvertPhotoComponent implements OnInit {
-  private photos: File[] | null = null;
+  photos: File[] | null = null;
   initialValues$: Observable<File[] | null>;
 
   isHandset$: Observable<boolean>;
 
   isLoading$: Observable<boolean>;
   isSubmitting$: Observable<boolean>;
+  isDeleting$: Observable<boolean>;
   isFalling$: Observable<boolean>;
   backendErrors$: Observable<BackendErrorInterface | null>;
   slug: string | null;
   type: string | null;
+
+  TypeOperation = TypeOperation;
 
   maxFileSize: number = environment.fileSizeLimit;
   maxNumberPhoto: number = environment.numberOfFilesLimit;
   allowedExtensions: string[] = environment.allowedExtensions;
 
   faSpinner: IconDefinition = faSpinner;
-  faFlagCheckered: IconDefinition = faFlagCheckered;
+  faTimesCircle: IconDefinition = faTimesCircle;
+  faSave: IconDefinition = faSave;
 
   constructor(
     private store: Store<AppStateInterface>,
@@ -64,12 +70,13 @@ export class UploadAdvertPhotoComponent implements OnInit {
 
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+    this.isDeleting$ = this.store.pipe(select(isDeletingSelector));
     this.isFalling$ = this.store.pipe(select(isFallingSelector));
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
     this.initialValues$ = this.store.pipe(select(photosSelector));
 
     // Fetch data
-    if (this.slug && this.type === TypeOperation.editing) {
+    if (this.slug && this.type === TypeOperation.Editing) {
       this.store.dispatch(getPhotoForAdvertAction({slug: this.slug}));
     }
   }
@@ -94,6 +101,12 @@ export class UploadAdvertPhotoComponent implements OnInit {
       this.router.navigate(['/advert', this.slug]);
     } else {
       this.router.navigateByUrl('/');
+    }
+  }
+
+  onDeleteAllPhoto(): void {
+    if (this.slug) {
+      this.store.dispatch(deleteAllPhotoAction({slug: this.slug}));
     }
   }
 }

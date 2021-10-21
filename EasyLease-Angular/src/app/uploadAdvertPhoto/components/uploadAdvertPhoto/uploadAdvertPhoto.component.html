@@ -17,14 +17,24 @@
                     </el-photo-dropzone>
                 </div>
                 <div class="card-header mb-2 mt-0">
-                    <button class="py-1 col-sm-auto float-right" type="submit" mat-raised-button (click)="onSubmit()"
-                        [disabled]="(isSubmitting$ | async)" color="success">
+                    <button *ngIf="type === TypeOperation.Editing" class="my-1 py-1 col-sm-auto float-left"
+                        mat-raised-button (click)="onDeleteAllPhoto()"
+                        [disabled]="(isDeleting$ | async) || (photos && photos.length == 0)" color="warn">
+                        <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3" *ngIf="(isDeleting$ | async)">
+                        </fa-icon>
+                        <fa-icon [icon]="faTimesCircle" size="lg" class="pr-2" transform="grow-1">
+                        </fa-icon>
+                        Удалить все
+                    </button>
+                    <button class="my-1 py-1 col-sm-auto float-right" type="submit" mat-raised-button
+                        (click)="onSubmit()" [disabled]="(isSubmitting$ | async) || (photos && photos.length == 0)"
+                        color="success">
                         <fa-icon [icon]="faSpinner" size="lg" [pulse]="true" class="pr-3"
                             *ngIf="(isSubmitting$ | async)">
                         </fa-icon>
-                        <fa-icon [icon]="faFlagCheckered" size="lg" class="pr-2" transform="grow-2">
+                        <fa-icon [icon]="faSave" size="lg" class="pr-2" transform="grow-2">
                         </fa-icon>
-                        Опубликовать
+                        Сохранить
                     </button>
                 </div>
             </div>

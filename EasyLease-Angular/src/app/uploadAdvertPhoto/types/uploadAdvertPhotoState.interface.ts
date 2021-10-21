@@ -5,6 +5,7 @@ export interface UploadAdvertPhotoStateInterface {
   quantityPhoto: number;
   isLoading: boolean;
   isSubmitting: boolean;
+  isDeleting: boolean;
   validationErrors: BackendErrorInterface | null;
   isFalling: boolean;
 }

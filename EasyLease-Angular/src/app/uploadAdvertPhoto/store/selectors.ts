@@ -23,6 +23,11 @@ export const isSubmittingSelector = createSelector(
   (uploadAdvertPhotoState: UploadAdvertPhotoStateInterface) => uploadAdvertPhotoState.isSubmitting
 );
 
+export const isDeletingSelector = createSelector(
+  uploadAdvertPhotoFeatureSelector,
+  (uploadAdvertPhotoState: UploadAdvertPhotoStateInterface) => uploadAdvertPhotoState.isDeleting
+);
+
 export const validationErrorsSelector = createSelector(
   uploadAdvertPhotoFeatureSelector,
   (uploadAdvertPhotoState: UploadAdvertPhotoStateInterface) => uploadAdvertPhotoState.validationErrors

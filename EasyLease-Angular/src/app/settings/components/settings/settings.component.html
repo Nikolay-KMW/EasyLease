@@ -7,9 +7,10 @@
                     <p class="category text-center">Настройки</p>
                 </div>
                 <div class="card-body">
+                    <h1>TODO: implementation of user settings</h1>
                     <form [formGroup]="form">
                         <fieldset>
-                            <fieldset class="form-group">
+                            <!-- <fieldset class="form-group">
                                 <mat-form-field>
                                     <mat-label>Фото профиля</mat-label>
                                     <input type="text" matInput [formControl]="image"
@@ -20,7 +21,7 @@
                                         </el-backend-error-message>
                                     </mat-error>
                                 </mat-form-field>
-                            </fieldset>
+                            </fieldset> -->
                             <fieldset class="form-group">
                                 <mat-form-field [color]="username.valid && 'accent'">
                                     <mat-label>Имя</mat-label>
@@ -54,7 +55,7 @@
                                     </mat-error>
                                 </mat-form-field>
                             </fieldset>
-                            <fieldset class="form-group">
+                            <!-- <fieldset class="form-group">
                                 <mat-form-field [color]="email.valid && 'accent'">
                                     <mat-label>Электронная почта</mat-label>
                                     <input type="email" matInput [formControl]="email" placeholder="Электронная почта">
@@ -85,7 +86,7 @@
                                         Пароль должен быть не меньше {{minPassword}} символов
                                     </mat-error>
                                 </mat-form-field>
-                            </fieldset>
+                            </fieldset> -->
                         </fieldset>
                         <div>
                             <button class="my-1 py-1 col-md-auto" mat-raised-button color="warn" (click)="logout()">

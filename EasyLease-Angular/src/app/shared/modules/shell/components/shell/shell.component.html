@@ -2,7 +2,7 @@
     <mat-sidenav #drawer fixedInViewport fixedTopGap=65 class=""
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="(isOpenedSidenav$ | async)" (closed)="closeSidenav()">
-        <mat-nav-list>
+        <mat-nav-list class="list">
             <mat-divider class="m-2"></mat-divider>
             <button mat-list-item class="el-btn-side-nav" [routerLink]="['/advert']" (click)="goTo()">
                 <fa-icon [icon]="faEdit" size="lg" class="el-icon-side-nav px-2" [fixedWidth]="true" transform="grow-2">

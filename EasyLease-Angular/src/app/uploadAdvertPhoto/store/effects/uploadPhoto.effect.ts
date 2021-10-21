@@ -13,7 +13,7 @@ import {uploadPhotoAction, uploadPhotoFailureAction, uploadPhotoSuccessAction} f
 export class UploadPhotoEffect {
   constructor(private actions$: Actions, private uploadPhotoService: UploadPhotoService, private router: Router) {}
 
-  UploadPhotoForAdvert$ = createEffect(() =>
+  uploadPhotoForAdvert$ = createEffect(() =>
     this.actions$.pipe(
       ofType(uploadPhotoAction),
       switchMap(({slug, files}) => {
